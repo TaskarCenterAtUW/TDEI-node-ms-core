@@ -109,10 +109,56 @@ Eg. @Validate, @UUID, @Required
 These will help in easily modelling the classes along with the required validation.
 
 ### Queue
-Queue component offers easy way to listen to and send messages over Azure Queues.
+Queue component offers easy way to listen to and send messages over Azure Queues/Cloud queues.
+
 All the queue messages have to be derived from the base class `QueueMessage` which has some inherent properties that may be filled (eg. messageType is needed).
 
-Documentation pending
+### Accessing specific queue
+All the interactions will be handled by the class `Queue` which can be initialized with `Core`
+
+```typescript
+    let sampleQueue = Core.getQueue('name');
+```
+
+### Sending message to queue
+
+Use the `send` method in `Queue` to send the message
+```typescript
+let sampleQueue = Core.getQueue('name');
+const queueMessage = QueueMessage.from({messageType:'sampleevent',messageId:''1,message:"Sample message"});
+sampleQueue.send([queueMessage]);
+```
+
+
+### Storage
+For all the azure blobs and other storages, storage components will offer simple ways to upload/download and read the existing data.
+```typescript
+// Create storage client
+const storageClient: StorageClient =  Core.getStorageClient();
+
+// Get a container in the storage client
+const storageContaiener: StorageContainer = await storageClient.getContainer(containerName);
+
+// To get the list of files
+const filesList:FileEntity[] = await storageContaiener.listFiles();
+
+```
+There are two ways to fetch the content of the file.
+1. ReadStream - use `file.getStream()` which gives a `NodeJS.ReadableStream` object 
+2. GetText - use `file.getText()` which gives a `string` object containing all the data of the file in `utf-8` format.
+
+File upload is done only through read stream.
+```typescript
+// Get the storage container
+const storageContainer: StorageContainer = await storageClient.getContainer(containerName);
+    // Create an instance of `AzureFileEntity` with name and mime-type
+    const testFile = storageContainer.createFile('sample-file2.txt','text/plain');
+    // Get the read stream from the local file
+    const readStream = fs.createReadStream(path.join(__dirname,"assets/sample_upload_file.txt"));
+    // Call the upload method with the readstream.
+    testFile.upload(readStream);
+```
+Documentation pending for Queues and initial Core configuration
 
 https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
 
