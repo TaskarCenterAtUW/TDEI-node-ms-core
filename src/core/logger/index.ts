@@ -1,1 +1,1 @@
-export { TDEILogger } from './tdei-logger';
+export { Logger } from './logger';

@@ -1,3 +1,4 @@
-import { TDEILogger } from './core';
+import { Logger, Queue } from './core';
 
-export { TDEILogger }
+export { Logger }
+export { Queue }

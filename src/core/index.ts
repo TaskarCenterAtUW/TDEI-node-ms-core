@@ -1,3 +1,5 @@
-import {TDEILogger} from './logger';
+import { Logger } from './logger';
+import { Queue } from './queue';
 
-export { TDEILogger };
+export { Logger };
+export { Queue };
