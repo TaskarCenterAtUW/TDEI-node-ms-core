@@ -1,5 +1,6 @@
-import { Logger } from './logger';
-import { Queue } from './queue';
+// import { Logger } from './logger';
+// import { Queue } from './queue';
 
-export { Logger };
-export { Queue };
+export { Logger } from './logger';
+export { Queue } from './queue';
+export {StorageClient,StorageContainer, FileEntity} from './storage';
