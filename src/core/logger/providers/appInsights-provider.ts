@@ -1,5 +1,6 @@
 import { ILoggable } from "../abstracts/ILoggable";
 import * as appInsights from 'applicationinsights';
+import { Config } from "../../../models/config";
 
 const appInsightConnectionString =  "InstrumentationKey=f98ba6d5-58e1-4267-827e-ccac68caf50f;IngestionEndpoint=https://westus2-2.in.applicationinsights.azure.com/;LiveEndpoint=https://westus2.livediagnostics.monitor.azure.com/";
 
@@ -7,9 +8,9 @@ export class AppInsightsProvider implements ILoggable
 {
     private client: appInsights.TelemetryClient;
     
-    constructor()
+    constructor(config : Config)
     {
-        appInsights.setup(appInsightConnectionString)
+        appInsights.setup(config.azure.connectionString.appInsights)
         .setAutoCollectConsole(true, true)
         .start();
        this.client = appInsights.defaultClient;
