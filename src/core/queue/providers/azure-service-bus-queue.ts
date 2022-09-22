@@ -17,7 +17,7 @@ export class AzureServiceBusQueue implements IMessageQueue {
      * @param shouldComplete Whether the message should be completed after receiving (defaults to true)
      */
     constructor(config: Config , queueName:string) {
-        this.sbClient = new ServiceBusClient(config.azure.connectionString.serviceBus);
+        this.sbClient = new ServiceBusClient(config.cloudConfig.connectionString.serviceBus);
         this.listener = this.sbClient.createReceiver(queueName);
         this.sender = this.sbClient.createSender(queueName);
         

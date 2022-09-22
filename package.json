@@ -6,6 +6,7 @@
   "scripts": {
     "build": "rimraf ./lib && tsc",
     "start:dev": "nodemon",
+    "start:test":"npm run build && node lib/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

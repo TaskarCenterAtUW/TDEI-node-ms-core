@@ -9,7 +9,7 @@ export class AppInsightsProvider implements ILoggable
     
     constructor(config : Config)
     {
-        appInsights.setup(config.azure.connectionString.appInsights)
+        appInsights.setup(config.cloudConfig.connectionString.appInsights)
         .setAutoCollectConsole(true, true)
         .start();
        this.client = appInsights.defaultClient;

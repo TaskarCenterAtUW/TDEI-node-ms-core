@@ -1,22 +1,40 @@
-export class Config {
-    provider!: Provider;
+import { NestedModel } from "../decorators";
+import { Prop } from ".";
+import { AbstractDomainEntity } from "./base/abstract-domain-entity";
 
-    azure!: Azure;
 
-    static from(configJson: string): Config {
-        return Object.assign(new Config(), configJson);
-    }
-}
 
 type Provider = "Azure" | "GCP" | "AWS";
 
-class Azure {
-    connectionString: ConnectionString = new ConnectionString();
+class ConnectionString extends AbstractDomainEntity{
+
+    @Prop()
+    serviceBus!: string;
+    @Prop()
+    blobStorage!: string;
+    @Prop()
+    appInsights!: string;
+}
+
+class CloudConfig extends AbstractDomainEntity {
+
+    @Prop()
+    @NestedModel(ConnectionString)
+    connectionString!: ConnectionString;
+
     queueNames: string[] = [];
 }
 
-class ConnectionString {
-    serviceBus!: string;
-    blobStorage!: string;
-    appInsights!: string;
+
+
+export class Config extends AbstractDomainEntity{
+    provider!: Provider;
+
+    @Prop()
+    @NestedModel(CloudConfig)
+    cloudConfig!: CloudConfig;
+
+    // static from(configJson: string): Config {
+    //     return Object.assign(new Config(), configJson);
+    // }
 }

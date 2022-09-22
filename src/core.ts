@@ -35,7 +35,7 @@ export class Core {
     }
 
     static getStorageClient():StorageClient{
-        return new AzureStorageClient(this.config.azure.connectionString.blobStorage);
+        return new AzureStorageClient(this.config.cloudConfig.connectionString.blobStorage);
     }
 
     

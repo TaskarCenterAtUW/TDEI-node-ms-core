@@ -1,0 +1,9 @@
+{
+    "cloudConfig": {
+        "connectionString":{
+            "appInsights":"abc",
+            "blobStorage":"def",
+            "serviceBus":"serviceBus"
+        }
+    }
+}
