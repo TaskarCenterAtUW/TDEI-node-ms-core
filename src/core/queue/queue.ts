@@ -6,9 +6,9 @@ import { AzureServiceBusQueue } from "./providers/azure-service-bus-queue";
 
 export class Queue extends MessageQueue implements IMessageQueue {
 
-    constructor(config: Config) {
+    constructor(config: Config,queueName:string) {
         super();
-        this.initializeProvider(config);
+        this.initializeProvider(config,queueName);
     }
 
     listen(): Promise<void> {
@@ -23,7 +23,7 @@ export class Queue extends MessageQueue implements IMessageQueue {
         return this.client.add(message);
     }
 
-    protected initializeProvider(config: Config): void {
-        this.client = new AzureServiceBusQueue(config);
+    protected initializeProvider(config: Config,queueName:string): void {
+        this.client = new AzureServiceBusQueue(config,queueName);
     }
 }
