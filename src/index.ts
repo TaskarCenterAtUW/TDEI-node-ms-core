@@ -1,19 +1,3 @@
-import { Logger, Queue } from './core';
-import { Config } from './models/config';
 
-export { Logger }
-export { Queue }
+export { Core } from './core';
 
-export class TDEICore {
-
-
-    initialize(config: Config) {
-        switch (config.provider) {
-            case 'Azure':
-                
-                break;        
-            default:
-                break;
-        }
-    }
-}

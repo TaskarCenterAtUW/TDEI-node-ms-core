@@ -8,6 +8,7 @@ export class AzureServiceBusQueue implements IMessageQueue {
     private listener: ServiceBusReceiver;
     private sender: ServiceBusSender;
     private currentMessages: QueueMessage[] = [];
+    private shouldComplete : boolean = true;
 
     /**
      * Constructor for the queue listener
@@ -19,6 +20,7 @@ export class AzureServiceBusQueue implements IMessageQueue {
         this.sbClient = new ServiceBusClient(config.azure.connectionString.serviceBus);
         this.listener = this.sbClient.createReceiver(config.azure.queueNames[0]);
         this.sender = this.sbClient.createSender(config.azure.queueNames[0]);
+        
     }
 
     /**
