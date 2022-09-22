@@ -30,8 +30,12 @@ export class Core {
         }
     }
 
-    static getQueue(name:string):Queue {
-        return new Queue(this.config,name);
+    static getQueue<T extends Queue>(name:string, qInstance: {new (config: Config,queueName:string):T}): T {
+        return new qInstance(this.config,name);
+    }
+
+    static getDefaultQueue(name:string):Queue {
+        return this.getQueue<Queue>(name,Queue);
     }
 
     static getStorageClient():StorageClient{
