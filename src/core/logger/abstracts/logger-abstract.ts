@@ -1,3 +1,4 @@
+import { Config } from "../../../models/config";
 import { ILoggable } from "./ILoggable";
 
 /**
@@ -5,5 +6,5 @@ import { ILoggable } from "./ILoggable";
  */
 export abstract class LoggerAbstract {
     protected client!: ILoggable;
-    protected abstract initializeProvider() : void;
+    protected abstract initializeProvider(config : Config) : void;
 }

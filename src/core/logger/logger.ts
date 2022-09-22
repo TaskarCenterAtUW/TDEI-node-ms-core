@@ -1,12 +1,13 @@
+import { Config } from '../../models/config';
 import { ILoggable } from './abstracts/ILoggable';
 import { LoggerAbstract } from './abstracts/logger-abstract';
 import { AppInsightsProvider } from './providers/appInsights-provider';
 
 export class Logger extends LoggerAbstract implements ILoggable {
 
-  constructor() {
+  constructor(config : Config) {
     super();
-    this.initializeProvider();
+    this.initializeProvider(config);
   }
  
   recordMetric(name: string, value: number): void {
@@ -21,8 +22,8 @@ export class Logger extends LoggerAbstract implements ILoggable {
     this.client.recordRequest(req, res);
   }
 
-  protected initializeProvider() {
+  protected initializeProvider(config : Config) {
     //Change this line in the case we want to change the logging provider
-    this.client = new AppInsightsProvider();
+    this.client = new AppInsightsProvider(config);
   }
 }
