@@ -1,17 +1,16 @@
 {
   "name": "node-ms-core",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "NodeJS Typescript Boilerplate",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "start": "npm run build && node lib/index.js",
     "build": "rimraf ./lib && tsc",
     "start:dev": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://dev.azure.com/TDEI-UW/TDEI/_git/node-ms-core"
+    "url": ""
   },
   "keywords": [
     "nodejs",
@@ -35,5 +34,11 @@
     "applicationinsights": "^2.3.4",
     "@azure/service-bus": "^7.7.0",
     "@azure/storage-blob": "^12.11.0"
-  }
+  },
+  "files": [
+    "lib/**/*.js",
+    "lib/**/*.d.ts",
+    "lib/index.d.ts"
+  ],
+  "types":"lib/index.d.ts"
 }

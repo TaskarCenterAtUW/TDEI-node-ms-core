@@ -8,7 +8,7 @@ export class Logger extends LoggerAbstract implements ILoggable {
     super();
     this.initializeProvider();
   }
-
+ 
   recordMetric(name: string, value: number): void {
     this.client.recordMetric(name, value);
   }
