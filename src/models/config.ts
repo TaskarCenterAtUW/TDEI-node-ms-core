@@ -28,13 +28,11 @@ class CloudConfig extends AbstractDomainEntity {
 
 
 export class Config extends AbstractDomainEntity{
+    @Prop()
     provider!: Provider;
 
     @Prop()
     @NestedModel(CloudConfig)
     cloudConfig!: CloudConfig;
 
-    // static from(configJson: string): Config {
-    //     return Object.assign(new Config(), configJson);
-    // }
 }
