@@ -129,6 +129,30 @@ const queueMessage = QueueMessage.from({messageType:'sampleevent',messageId:''1,
 sampleQueue.send([queueMessage]);
 ```
 
+### Listening to message queue
+Inorder to listen to messages, use `@When` decorator in a `Queue` subclass and create methods appropriately.
+However, the object will be got by `getCustomQueue` method of `Core`
+
+```typescript
+// Example of custom Queue implementation
+class CustomQueue extends Queue{
+
+    // Add listener function to the event type `sampleevent`
+    @When('sampleevent')
+    public onSampleEvent(message: QueueMessage){
+        console.log('Received message');
+        console.debug(message.messageId);
+    }
+
+}
+
+// Accessing or creating queueInstance
+
+let customQueueObject = Core.getCustomQueue<CustomQueue>('queueName',CustomQueue);
+
+
+```
+
 
 ### Storage
 For all the azure blobs and other storages, storage components will offer simple ways to upload/download and read the existing data.
