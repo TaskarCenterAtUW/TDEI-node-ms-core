@@ -17,7 +17,28 @@
 
 
 ## Core
-Contains all the abstract and Azure implementation classes for connecting to Azure components. 
+Contains all the abstract and Azure implementation classes for connecting to Azure components.
+
+## Initialize and Configuration
+All the cloud connections are initialized with `initialize` function of core which takes a `Config` parameter. A `Config` object can be initialized with `from` static method. The structure of the configuration can be extended. However, the base configuration will have information about cloud provider and also connection strings.
+
+Eg.
+```typescript
+ let configuration = Config.from({
+            provider:'Azure', // default
+            cloudConfig:{
+                connectionString:{
+                    appInsights:"<appInsights-connection string>",
+                    blobStorage:"<blob storage connection string>",
+                    serviceBus:"<service bus connection string>"
+                }
+            }
+        });
+
+Core.initialize(configuration); // Pre-configures all the services required for the project.
+```
+A developer can employ loading the configuration from JSON file as well.
+
 
 ### Logger
 Offers helper classes to help log the information.
@@ -182,7 +203,4 @@ const storageContainer: StorageContainer = await storageClient.getContainer(cont
     // Call the upload method with the readstream.
     testFile.upload(readStream);
 ```
-Documentation pending for Queues and initial Core configuration
-
-https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
 
