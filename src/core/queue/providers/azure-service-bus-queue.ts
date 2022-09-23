@@ -2,6 +2,7 @@ import { IMessageQueue } from "../abstracts/IMessage-queue";
 import { QueueMessage } from "../models/queue-message";
 import { ServiceBusClient, ServiceBusReceivedMessage, ServiceBusReceiver, ServiceBusSender, ServiceBusMessage } from "@azure/service-bus";
 import { Config } from "../../../models/config";
+import { Queue } from "../queue";
 
 export class AzureServiceBusQueue implements IMessageQueue {
     private sbClient: ServiceBusClient;
@@ -9,6 +10,7 @@ export class AzureServiceBusQueue implements IMessageQueue {
     private sender: ServiceBusSender;
     private currentMessages: QueueMessage[] = [];
     private shouldComplete : boolean = true;
+    private parent: Queue;
 
     /**
      * Constructor for the queue listener
@@ -16,10 +18,11 @@ export class AzureServiceBusQueue implements IMessageQueue {
      * @param queueName Name of the queue
      * @param shouldComplete Whether the message should be completed after receiving (defaults to true)
      */
-    constructor(config: Config , queueName:string) {
+    constructor(config: Config , queueName:string, queue:Queue) {
         this.sbClient = new ServiceBusClient(config.cloudConfig.connectionString.serviceBus);
         this.listener = this.sbClient.createReceiver(queueName);
         this.sender = this.sbClient.createSender(queueName);
+        this.parent = queue;
         
     }
 
@@ -64,7 +67,7 @@ export class AzureServiceBusQueue implements IMessageQueue {
         // console.log(body['type']);
         const messageType = body['messageType'];
         // Check if there is any method listening to it.
-        const eventMap = Reflect.getMetadata('eventHandlers', this.constructor.prototype) as Map<
+        const eventMap = Reflect.getMetadata('eventHandlers', this.parent.constructor.prototype) as Map<
             string,
             // eslint-disable-next-line @typescript-eslint/ban-types
             { handler: Function }[]

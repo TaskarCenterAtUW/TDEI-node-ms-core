@@ -24,6 +24,6 @@ export class Queue extends MessageQueue implements IMessageQueue {
     }
 
     protected initializeProvider(config: Config,queueName:string): void {
-        this.client = new AzureServiceBusQueue(config,queueName);
+        this.client = new AzureServiceBusQueue(config,queueName,this);
     }
 }
