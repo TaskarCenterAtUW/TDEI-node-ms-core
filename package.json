@@ -1,5 +1,5 @@
 {
-  "name": "node-ms-core",
+  "name": "nodets-ms-core",
   "version": "0.0.2",
   "description": "NodeJS Typescript Boilerplate",
   "main": "lib/index.js",
