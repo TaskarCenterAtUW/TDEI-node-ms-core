@@ -19,7 +19,7 @@ steps:
     script: |
       localversion=`echo "console.log(require('./package.json').version);" | node`      
       npmversion=`echo npm view nodets-ms-core version`
-
+      echo $(localversion)
 - script: |
     npm install
     npm run build
