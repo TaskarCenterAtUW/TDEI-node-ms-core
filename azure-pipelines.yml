@@ -15,23 +15,23 @@ steps:
     versionSpec: '16.x'
   displayName: 'Install Node.js'
 # Sets FOO to be "some value" in the script and the next ones
-- bash: |
-    FOO="runtime value"
-    echo "##vso[task.setvariable variable=Fo]$FOO"
-
-# Using the $() syntax during "compile time", the pipeline expands the variable
-- bash: |
-    echo "$(Fo)"
-
-# Using an environment variable in the script context at "runtime", bash expands the variable
-- bash: |
-    echo "$FOO"
-- task: CmdLine@2
+- task: Bash@3
   inputs:
-    script: |
-      localversion=`echo "console.log(require('./package.json').version);" | node`      
-      npmversion=`echo npm view nodets-ms-core version`
-      echo $(localversion)
+    targetType: 'inline'
+    script: localversion=`echo "console.log(require('./package.json').version);" | node`      
+    #npmversion=`echo npm view nodets-ms-core version`
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: echo $localversion
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: echo "##vso[task.setvariable variable=version]$localversion"
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: echo $(version)
 # - script: |
 #     npm install
 #     npm run build
