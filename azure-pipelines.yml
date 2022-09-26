@@ -32,10 +32,10 @@ steps:
       localversion=`echo "console.log(require('./package.json').version);" | node`      
       npmversion=`echo npm view nodets-ms-core version`
       echo $(localversion)
-- script: |
-    npm install
-    npm run build
-  displayName: 'npm install and build'
+# - script: |
+#     npm install
+#     npm run build
+#   displayName: 'npm install and build'
 # - task: Npm@1
 #   condition: and(succeeded(), eq($(localversion), $(npmversion)))
 #   inputs:
