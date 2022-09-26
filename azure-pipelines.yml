@@ -36,8 +36,8 @@ steps:
     npm install
     npm run build
   displayName: 'npm install and build'
-- task: Npm@1
-  condition: and(succeeded(), eq($(localversion), $(npmversion)))
-  inputs:
-    command: 'publish'
-    publishEndpoint: 'NPM Publish Account'
+# - task: Npm@1
+#   condition: and(succeeded(), eq($(localversion), $(npmversion)))
+#   inputs:
+#     command: 'publish'
+#     publishEndpoint: 'NPM Publish Account'
