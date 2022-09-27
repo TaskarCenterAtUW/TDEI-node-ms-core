@@ -9,7 +9,7 @@
 
 ## Starting a new project with template
 
-- Add `node-ms-core` package as dependency in your `package.json`
+- Add `nodets-ms-core` package as dependency in your `package.json`
 - Start using the core packages in your code.
 
 # Structure and components
