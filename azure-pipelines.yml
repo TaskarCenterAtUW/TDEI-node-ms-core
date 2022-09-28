@@ -32,11 +32,27 @@ steps:
 #   inputs:
 #     targetType: 'inline'
 #     script: echo $(version)
+
+- script: | 
+    npmVersionString=$(node -p "require('./package.json').version")
+    echo "##vso[task.setvariable variable=localVersion;]$npmVersionString"
+  displayName: 'Getting local version'
+
+- script: | 
+    npmRemoteVersion=$(npm view nodets-ms-core version) 
+    echo "##vso[task.setvariable variable=remoteVersion;]$npmRemoteVersion"
+  displayName: 'Getting remote version'
+
+- script: 
+   echo "Local version $(localVersion) and remote version $(remoteVersion)"
+  displayName: 'Printing local and remote versions.'
+
 - script: |
     npm install
     npm run build
   displayName: 'npm install and build'
 - task: Npm@1
+  condition: gt(variables['localVersion'],variables['remoteVersion'])
   inputs:
     command: 'publish'
     publishEndpoint: 'NPM Publish Account'
