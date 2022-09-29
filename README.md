@@ -146,9 +146,10 @@ All the interactions will be handled by the class `Queue` which can be initializ
 Use the `send` method in `Queue` to send the message
 ```typescript
 let sampleQueue = Core.getQueue('name');
-const queueMessage = QueueMessage.from({messageType:'sampleevent',messageId:''1,message:"Sample message"});
+const queueMessage = QueueMessage.from({messageType:'sampleevent',messageId:'1',message:"Sample message",publishedDate: new Date(2022,7,13)});
 sampleQueue.send([queueMessage]);
 ```
+
 
 ### Listening to message queue
 Inorder to listen to messages, use `@When` decorator in a `Queue` subclass and create methods appropriately.
