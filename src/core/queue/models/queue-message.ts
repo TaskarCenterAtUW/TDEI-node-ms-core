@@ -22,6 +22,13 @@ export class QueueMessage extends AbstractDomainEntity {
     messageType!:string;
 
     /**
+     * Published Date for the queue message.
+     * Defaults to local time if not specified.
+     */
+    @Prop()
+    publishedDate:Date = new Date();
+
+    /**
      * Optional message string for the message
      */
     @Prop()

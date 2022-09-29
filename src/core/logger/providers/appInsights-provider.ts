@@ -17,7 +17,7 @@ export class AppInsightsProvider implements ILoggable
     
 
     recordMetric(name: string, value: number) {
-        this.client.trackMetric({ name: name, value: value });
+        this.client.trackMetric({ name: name, value: value, namespace: process.env.npm_package_name });
     }
 
     recordRequest(req:any,res:any){

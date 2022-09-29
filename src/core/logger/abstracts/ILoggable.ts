@@ -1,13 +1,14 @@
-export interface ILoggable
-{
+export interface ILoggable {
   /**
      * Records a specific metric for logging.
-     * This is further used for monitoring and auditing purpose
-     *
+     * This is further used for monitoring and auditing purpose.
+     * To filter out the similar metrics for different services, use
+     * namespace filter. Each microservice will have a different
+     * namespace.
      * @param name Name of the metric
      * @param value Value of the metric (number)
      */
-  recordMetric(name: string, value: number) : void;
+  recordMetric(name: string, value: number): void;
 
   /**
       * Flushes all the existing messages into the system
@@ -16,7 +17,7 @@ export interface ILoggable
       * delay of about 15 seconds for the application to send
       * the data.
       */
-  sendAll() : void;
+  sendAll(): void;
 
   /**
       * Record a request into the logger
@@ -24,5 +25,5 @@ export interface ILoggable
       * @param res Response object
       */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  recordRequest(req:any, res:any) : void;
+  recordRequest(req: any, res: any): void;
 }
