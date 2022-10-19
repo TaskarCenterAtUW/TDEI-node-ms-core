@@ -6,9 +6,10 @@
   "scripts": {
     "build": "rimraf ./lib && tsc",
     "start:dev": "nodemon",
-    "start:test":"npm run build && node lib/index.js",
-    "start:exp" : "npm run build && node lib/test.js",
-    "test": "npm run build && node lib/__tests__/queue-message.unit.js"
+    "start:test": "npm run build && node lib/index.js",
+    "start:exp": "npm run build && node lib/test.js",
+    "test": "npm run build && node lib/__tests__/queue-message.unit.js",
+    "lint": "tslint 'src/**/*.ts?(x)'"
   },
   "repository": {
     "type": "git",
@@ -29,12 +30,13 @@
     "nodemon": "^2.0.20",
     "rimraf": "^3.0.2",
     "ts-node": "^10.9.1",
+    "tslint": "^6.1.3",
     "typescript": "^4.8.3"
   },
   "dependencies": {
-    "applicationinsights": "^2.3.4",
     "@azure/service-bus": "^7.7.0",
     "@azure/storage-blob": "^12.11.0",
+    "applicationinsights": "^2.3.4",
     "reflect-metadata": "^0.1.13"
   },
   "files": [
@@ -42,5 +44,5 @@
     "lib/**/*.d.ts",
     "lib/index.d.ts"
   ],
-  "types":"lib/index.d.ts"
+  "types": "lib/index.d.ts"
 }
