@@ -25,7 +25,7 @@ export class Logger extends LoggerAbstract implements ILoggable {
   protected initializeProvider(config : Config) {
     //Change this line in the case we want to change the logging provider
     this.client = new AppInsightsProvider(config);    
-    this.auditor = new AzureAuditor(); // TO be done.
+    this.auditor = new AzureAuditor(config.cloudConfig.logQueue); // TO be done.
   }
 
   info(message?: any, ...optionalParams: any[]): void {
@@ -34,6 +34,7 @@ export class Logger extends LoggerAbstract implements ILoggable {
   debug(message?: any, ...optionalParams: any[]): void {
     this.client.debug(message,optionalParams);
   }
+  
   recordMessage(message: QueueMessage): void {
     this.client.recordMessage(message);
   }

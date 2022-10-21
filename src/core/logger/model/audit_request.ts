@@ -1,7 +1,7 @@
 import { Prop } from "../../../models";
 
 export class AuditRequest {
-    
+
     @Prop()
     requestId!: string;
 
@@ -15,10 +15,10 @@ export class AuditRequest {
     resourceUrl?: string;
 
     @Prop()
-    responseStatus? : string;
+    responseStatus?: string;
 
     @Prop()
-    responseResult? : string;
+    responseResult?: string;
 
     @Prop()
     startDate: Date = new Date()

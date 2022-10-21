@@ -4,22 +4,31 @@ export class AuditEvent {
 
     @Prop()
     requestId!: string;
+
     @Prop()
     sender!: string;
+
     @Prop()
     stage!: string;
+
     @Prop()
-    status!:string;
+    status!: string;
+
     @Prop()
-    description?:string;
+    description?: string;
+
     @Prop()
-    requestInfo:any;
+    requestInfo: any;
+
     @Prop()
-    responseInfo:any;
+    responseInfo: any;
+
     @Prop()
-    isActive:boolean = true;
+    isActive: boolean = true;
+
     @Prop()
     startDate: Date = new Date();
+    
     @Prop()
     endDate?: Date;
 }
