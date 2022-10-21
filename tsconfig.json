@@ -102,6 +102,8 @@
     "node_modules",
     "lib",
     "coverage",
-    "src/**/*.unit.ts"
+    "src/**/*.unit.ts",
+    "*.config.ts",
+    "*.config.js"
   ]
 }

@@ -16,7 +16,7 @@ class ConnectionString extends AbstractDomainEntity{
     appInsights!: string;
 }
 
-class CloudConfig extends AbstractDomainEntity {
+export class CloudConfig extends AbstractDomainEntity {
 
     @Prop()
     @NestedModel(ConnectionString)
