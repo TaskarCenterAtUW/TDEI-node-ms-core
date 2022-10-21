@@ -7,31 +7,38 @@ import { AuditRequest } from "../model/audit_request";
 export class AzureAuditor implements IAuditor {
 
     private logQueue: Queue;
-    addRequest(request: AuditRequest) {
-        this.logQueue.add(QueueMessage.from(
+    addRequest(request: AuditRequest) :QueueMessage {
+        const message = QueueMessage.from(
             {
                 messageType:'addRequest',
-                message:request.toString(),
+                data:request
             }
-        ));
+        );
+        this.logQueue.add(message);
+        return message;
     }
-    updateRequest(request: AuditRequest) {
-         this.logQueue.add(QueueMessage.from(
+    updateRequest(request: AuditRequest) :QueueMessage {
+
+        const message = QueueMessage.from(
             {
                 messageType:'updateRequest',
-                message:request.toString()
+                data:request
             }
-         ))
+         );
+         this.logQueue.add(message);
+         return message;
     }
-    addEvent(event: AuditEvent) {
+    addEvent(event: AuditEvent) :QueueMessage {
+        const message =  QueueMessage.from(
+            {
+                messageType:'addEvent',
+                data: event
+            }
+        );
         this.logQueue.add(
-            QueueMessage.from(
-                {
-                    messageType:'addEvent',
-                    message:event.toString()
-                }
-            )
+           message
         )
+        return message;
     }
 
     constructor(queueName: string){

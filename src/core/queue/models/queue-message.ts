@@ -34,4 +34,10 @@ export class QueueMessage extends AbstractDomainEntity {
     @Prop()
     message:string | undefined;
 
+    /**
+     * Additional data that is related to the message
+     */
+    @Prop()
+    data: any;
+
 }

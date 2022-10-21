@@ -19,12 +19,14 @@ describe('Configuration',()=>{
         expect(configuration.cloudConfig).toBeInstanceOf(CloudConfig);
     });
     it('Should have cloud Config',()=>{
+        console.log(configuration);
         expect(configuration.cloudConfig.connectionString.appInsights).toBe("AppInsightsConnectionString");
         expect(configuration.cloudConfig.connectionString.blobStorage).toBe("BlobStorageConnectionString");
         expect(configuration.cloudConfig.connectionString.serviceBus).toBe("ServiceBusConnectionString");
     })
     it('Should instantiate', () => {
         let newConfig = Config.from();
+        
         expect(newConfig).toBeInstanceOf(Config);
     });
 
