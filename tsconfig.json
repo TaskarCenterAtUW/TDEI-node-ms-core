@@ -100,6 +100,8 @@
   },
   "exclude": [
     "node_modules",
-    "lib"
+    "lib",
+    "coverage",
+    "src/**/*.unit.ts"
   ]
 }
