@@ -4,6 +4,7 @@ import { IAuditor } from './abstracts/IAuditor';
 import { ILoggable } from './abstracts/ILoggable';
 import { LoggerAbstract } from './abstracts/logger-abstract';
 import { AppInsightsProvider } from './providers/appInsights-provider';
+import { AzureAnalytic } from './providers/azure_analytic';
 import { AzureAuditor } from './providers/azure_auditor';
 
 export class Logger extends LoggerAbstract implements ILoggable {
@@ -26,6 +27,7 @@ export class Logger extends LoggerAbstract implements ILoggable {
     //Change this line in the case we want to change the logging provider
     this.client = new AppInsightsProvider(config);    
     this.auditor = new AzureAuditor(config.cloudConfig.logQueue); // TO be done.
+    this.analytic = new AzureAnalytic(config.cloudConfig.logQueue);
   }
 
   info(message?: any, ...optionalParams: any[]): void {
@@ -34,7 +36,7 @@ export class Logger extends LoggerAbstract implements ILoggable {
   debug(message?: any, ...optionalParams: any[]): void {
     this.client.debug(message,optionalParams);
   }
-  
+
   recordMessage(message: QueueMessage): void {
     this.client.recordMessage(message);
   }
