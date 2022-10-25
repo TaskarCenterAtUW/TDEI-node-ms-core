@@ -1,6 +1,7 @@
 // Testing code
 
 import { Core } from "./core";
+import { AuditEvent } from "./core/logger/model/audit_event";
 import { AuditRequest } from "./core/logger/model/audit_request";
 import { Config } from "./models/config";
 
@@ -46,5 +47,16 @@ let auditRequest = AuditRequest.from({
 logger.getAuditor()?.addRequest(auditRequest);
 auditRequest.responseStatus = '201';
 logger.getAuditor()?.updateRequest(auditRequest);
+logger.getAuditor()?.addEvent(AuditEvent.from({
+    requestId:'83832',
+    requestInfo:{
+        fileInfo:'gtfs-path',
+        fileLocation:'/gtfs/path'
+    },
+    stage:'Initialized',
+    status:"OK"
+}));
+
+
 // logger
 logger.sendAll();
