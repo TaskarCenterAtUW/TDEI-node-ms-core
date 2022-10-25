@@ -27,6 +27,15 @@ export class Logger extends LoggerAbstract implements ILoggable {
 
   recordRequest(req: any, res: any): void {
     this.client.recordRequest(req, res);
+    this.analyticQueue.add(QueueMessage.from(
+      {
+        messageType:'apiRequest',
+        data:{
+          req:req,
+          res:res
+        }
+      }
+    ));
   }
 
   protected initializeProvider(config : Config) {
@@ -62,6 +71,13 @@ export class Logger extends LoggerAbstract implements ILoggable {
  
   recordMetric(name: string, value: number): void {
     this.client.recordMetric(name, value);
+    this.analyticQueue.add(QueueMessage.from({
+      messageType:'metric',
+      data: {
+        name:name,
+        value:value
+      }
+    }))
   }
 
   getAuditor(): IAuditor | null {
