@@ -1,6 +1,6 @@
-import { Prop } from "../../../models";
+import { AbstractDomainEntity, Prop } from "../../../models";
 
-export class AuditEvent {
+export class AuditEvent extends AbstractDomainEntity {
 
     @Prop()
     requestId!: string;

@@ -1,4 +1,5 @@
 import { QueueMessage } from "../../queue";
+import { IAnalytics } from "./IAnalytics";
 import { IAuditor } from "./IAuditor";
 
 export interface ILoggable {
@@ -38,5 +39,9 @@ export interface ILoggable {
   debug(message?: any, ...optionalParams: any[]): void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   recordMessage(message:QueueMessage):void;
+
+  getAuditor(): IAuditor|null;
+
+  getAnalytic(): IAnalytics|null;
 
 }

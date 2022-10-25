@@ -2,6 +2,8 @@ import { ILoggable } from "../abstracts/ILoggable";
 import * as appInsights from 'applicationinsights';
 import { Config } from "../../../models/config";
 import { QueueMessage } from "../../queue";
+import { IAnalytics } from "../abstracts/IAnalytics";
+import { IAuditor } from "../abstracts/IAuditor";
 
 
 export class AppInsightsProvider implements ILoggable
@@ -32,13 +34,19 @@ export class AppInsightsProvider implements ILoggable
     }
 
     info(message?: any, ...optionalParams: any[]): void {
-        throw new Error("Method not implemented.");
+        console.info(message);
     }
     debug(message?: any, ...optionalParams: any[]): void {
-        throw new Error("Method not implemented.");
+        console.debug(message);
     }
     recordMessage(message: QueueMessage): void {
-        throw new Error("Method not implemented.");
+        console.log(message);
     }
     
+    getAnalytic(): IAnalytics|null {
+        return null;
+    }
+    getAuditor(): IAuditor | null {
+        return null;
+    }
 }

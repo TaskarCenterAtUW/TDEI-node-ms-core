@@ -15,7 +15,8 @@ export class AzureAnalytic implements IAnalytics {
                 messageType:'analytic',
                 message:message
             }
-        ))
+        ));
+        this.analyticQueue.send();
     }
 
 }

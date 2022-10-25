@@ -1,3 +1,4 @@
+import { Node } from "@babel/types";
 import { Config } from "../../models/config";
 import { IMessageQueue } from "./abstracts/IMessage-queue";
 import { MessageQueue } from "./abstracts/message-queue";
@@ -10,6 +11,8 @@ export class Queue extends MessageQueue implements IMessageQueue {
         super();
         this.initializeProvider(config,queueName);
     }
+
+    private autoTimer: NodeJS.Timer|null = null;
 
     listen(): Promise<void> {
         return this.client.listen();
@@ -25,5 +28,13 @@ export class Queue extends MessageQueue implements IMessageQueue {
 
     protected initializeProvider(config: Config,queueName:string): void {
         this.client = new AzureServiceBusQueue(config,queueName,this);
+    }
+
+    // Enable auto send
+    enableAutoSend(time:number){
+        // Start a timer for 5 seconds and mark send.
+      this.autoTimer =   setInterval(()=>{
+            this.client.send();
+        },time*1000);
     }
 }

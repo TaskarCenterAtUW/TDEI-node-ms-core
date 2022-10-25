@@ -22,8 +22,8 @@ export class Core {
     static initialize(config: Config) {
         switch (config.provider) {
             case 'Azure':
+                this.config = config;    
                 this.logger = new Logger(config);
-                this.config = config;
                 break;
             default:
                 break;

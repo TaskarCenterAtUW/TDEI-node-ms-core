@@ -1,5 +1,7 @@
+import { Core } from '../../core';
 import { Config } from '../../models/config';
-import { QueueMessage } from '../queue';
+import { Queue, QueueMessage } from '../queue';
+import { IAnalytics } from './abstracts/IAnalytics';
 import { IAuditor } from './abstracts/IAuditor';
 import { ILoggable } from './abstracts/ILoggable';
 import { LoggerAbstract } from './abstracts/logger-abstract';
@@ -11,12 +13,16 @@ export class Logger extends LoggerAbstract implements ILoggable {
 
   constructor(config : Config) {
     super();
+    this.analyticQueue = Core.getQueue(config.cloudConfig.logQueue);
     this.initializeProvider(config);
   }
   
-
+  
+  private analyticQueue: Queue;
+  
   sendAll(): void {
     this.client.sendAll();
+    this.analyticQueue.send();
   }
 
   recordRequest(req: any, res: any): void {
@@ -28,13 +34,26 @@ export class Logger extends LoggerAbstract implements ILoggable {
     this.client = new AppInsightsProvider(config);    
     this.auditor = new AzureAuditor(config.cloudConfig.logQueue); // TO be done.
     this.analytic = new AzureAnalytic(config.cloudConfig.logQueue);
+    
   }
 
   info(message?: any, ...optionalParams: any[]): void {
     this.client.info(message,optionalParams);
+    this.analyticQueue.add(QueueMessage.from(
+      {
+        messageType:"info",
+        message:message
+      }
+    ));
   }
   debug(message?: any, ...optionalParams: any[]): void {
     this.client.debug(message,optionalParams);
+    this.analyticQueue.add(QueueMessage.from(
+      {
+        messageType:"debug",
+        message:message
+      }
+    ));
   }
 
   recordMessage(message: QueueMessage): void {
@@ -43,5 +62,13 @@ export class Logger extends LoggerAbstract implements ILoggable {
  
   recordMetric(name: string, value: number): void {
     this.client.recordMetric(name, value);
+  }
+
+  getAuditor(): IAuditor | null {
+      return this.auditor;
+  }
+
+  getAnalytic(): IAnalytics | null {
+      return this.analytic;
   }
 }

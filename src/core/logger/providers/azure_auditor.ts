@@ -7,6 +7,7 @@ import { AuditRequest } from "../model/audit_request";
 export class AzureAuditor implements IAuditor {
 
     private logQueue: Queue;
+
     addRequest(request: AuditRequest) :QueueMessage {
         const message = QueueMessage.from(
             {
@@ -15,8 +16,10 @@ export class AzureAuditor implements IAuditor {
             }
         );
         this.logQueue.add(message);
+        
         return message;
     }
+
     updateRequest(request: AuditRequest) :QueueMessage {
 
         const message = QueueMessage.from(
@@ -37,12 +40,13 @@ export class AzureAuditor implements IAuditor {
         );
         this.logQueue.add(
            message
-        )
+        );
         return message;
     }
 
     constructor(queueName: string){
         this.logQueue = Core.getQueue(queueName);
+        this.logQueue.enableAutoSend(5);
     }
 
 }

@@ -34,15 +34,16 @@ export class AzureServiceBusQueue implements IMessageQueue {
     }
 
     async send(): Promise<any> {
+        if(this.currentMessages.length == 0){
+            return;
+        }
         const messagesToSend: ServiceBusMessage[] = []
         this.currentMessages.forEach((singleMessage) => {
             messagesToSend.push({ body: singleMessage });
         });
         await this.sender.sendMessages(messagesToSend);
-        // Send a log to insights.
-        this.currentMessages.forEach((singleMessage) => {
-            // this.logger?.recordMessage(singleMessage,true);
-        });
+         // Clean the queueu
+         this.currentMessages = [];
     }
 
 

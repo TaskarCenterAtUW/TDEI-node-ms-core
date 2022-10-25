@@ -23,8 +23,8 @@ export class CloudConfig extends AbstractDomainEntity {
     connectionString!: ConnectionString;
 
     queueNames: string[] = [];
-
-    logQueue: string = 'tdei-queue';
+    
+    logQueue: string = 'tdei-ev-logger';
 }
 
 
