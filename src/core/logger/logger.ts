@@ -21,12 +21,12 @@ export class Logger extends LoggerAbstract implements ILoggable {
   private analyticQueue: Queue;
   
   sendAll(): void {
-    this.client.sendAll();
+    // this.client.sendAll();
     this.analyticQueue.send();
   }
 
   recordRequest(req: any, res: any): void {
-    this.client.recordRequest(req, res);
+    // this.client.recordRequest(req, res);
     this.analyticQueue.add(QueueMessage.from(
       {
         messageType:'apiRequest',
@@ -40,14 +40,14 @@ export class Logger extends LoggerAbstract implements ILoggable {
 
   protected initializeProvider(config : Config) {
     //Change this line in the case we want to change the logging provider
-    this.client = new AppInsightsProvider(config);    
+    // this.client = new AppInsightsProvider(config); // Not valid anymore   
     this.auditor = new AzureAuditor(config.cloudConfig.logQueue); // TO be done.
     this.analytic = new AzureAnalytic(config.cloudConfig.logQueue);
     
   }
 
   info(message?: any, ...optionalParams: any[]): void {
-    this.client.info(message,optionalParams);
+    // this.client.info(message,optionalParams);
     this.analyticQueue.add(QueueMessage.from(
       {
         messageType:"info",
@@ -56,7 +56,7 @@ export class Logger extends LoggerAbstract implements ILoggable {
     ));
   }
   debug(message?: any, ...optionalParams: any[]): void {
-    this.client.debug(message,optionalParams);
+    // this.client.debug(message,optionalParams);
     this.analyticQueue.add(QueueMessage.from(
       {
         messageType:"debug",
@@ -66,11 +66,12 @@ export class Logger extends LoggerAbstract implements ILoggable {
   }
 
   recordMessage(message: QueueMessage): void {
-    this.client.recordMessage(message);
+    // this.client.recordMessage(message);
+    // TODO
   }
  
   recordMetric(name: string, value: number): void {
-    this.client.recordMetric(name, value);
+    // this.client.recordMetric(name, value);
     this.analyticQueue.add(QueueMessage.from({
       messageType:'metric',
       data: {

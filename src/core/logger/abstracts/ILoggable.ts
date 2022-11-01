@@ -39,9 +39,16 @@ export interface ILoggable {
   debug(message?: any, ...optionalParams: any[]): void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   recordMessage(message:QueueMessage):void;
-
+  /**
+   * Fetches the auditor
+   * Used for recording all the audit message
+   */
   getAuditor(): IAuditor|null;
 
+  /**
+   * Fetches the Analytic instance
+   * Used for recording miscellaneous analytic information
+   */
   getAnalytic(): IAnalytics|null;
 
 }
