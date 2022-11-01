@@ -1,3 +1,7 @@
+import { QueueMessage } from "../../queue";
+import { IAnalytics } from "./IAnalytics";
+import { IAuditor } from "./IAuditor";
+
 export interface ILoggable {
   /**
      * Records a specific metric for logging.
@@ -26,4 +30,25 @@ export interface ILoggable {
       */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   recordRequest(req: any, res: any): void;
+
+  // audit: IAuditor;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  info(message?: any, ...optionalParams: any[]): void;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  debug(message?: any, ...optionalParams: any[]): void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  recordMessage(message:QueueMessage):void;
+  /**
+   * Fetches the auditor
+   * Used for recording all the audit message
+   */
+  getAuditor(): IAuditor|null;
+
+  /**
+   * Fetches the Analytic instance
+   * Used for recording miscellaneous analytic information
+   */
+  getAnalytic(): IAnalytics|null;
+
 }
