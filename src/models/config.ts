@@ -1,10 +1,9 @@
 import { NestedModel } from "../decorators";
 import { Prop } from ".";
 import { AbstractDomainEntity } from "./base/abstract-domain-entity";
+import { Provider } from "../types/provider";
 
 
-
-type Provider = "Azure" | "GCP" | "AWS";
 
 class ConnectionString extends AbstractDomainEntity{
 

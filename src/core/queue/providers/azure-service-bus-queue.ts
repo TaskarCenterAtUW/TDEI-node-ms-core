@@ -3,6 +3,7 @@ import { QueueMessage } from "../models/queue-message";
 import { ServiceBusClient, ServiceBusReceivedMessage, ServiceBusReceiver, ServiceBusSender, ServiceBusMessage } from "@azure/service-bus";
 import { Config } from "../../../models/config";
 import { Queue } from "../queue";
+import { AzureQueueConfig } from "./azure-queue-config";
 
 export class AzureServiceBusQueue implements IMessageQueue {
     private sbClient: ServiceBusClient;
@@ -18,8 +19,8 @@ export class AzureServiceBusQueue implements IMessageQueue {
      * @param queueName Name of the queue
      * @param shouldComplete Whether the message should be completed after receiving (defaults to true)
      */
-    constructor(config: Config , queueName:string, queue:Queue) {
-        this.sbClient = new ServiceBusClient(config.cloudConfig.connectionString.serviceBus);
+    constructor(config: AzureQueueConfig , queueName:string, queue:Queue) {
+        this.sbClient = new ServiceBusClient(config.connectionString);
         this.listener = this.sbClient.createReceiver(queueName);
         this.sender = this.sbClient.createSender(queueName);
         this.parent = queue;

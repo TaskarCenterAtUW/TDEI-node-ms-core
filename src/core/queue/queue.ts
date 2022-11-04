@@ -1,13 +1,15 @@
 import { Node } from "@babel/types";
+import { IQueueConfig } from "../../models/abstracts/iqueueconfig";
 import { Config } from "../../models/config";
 import { IMessageQueue } from "./abstracts/IMessage-queue";
 import { MessageQueue } from "./abstracts/message-queue";
 import { QueueMessage } from "./models/queue-message";
+import { AzureQueueConfig } from "./providers/azure-queue-config";
 import { AzureServiceBusQueue } from "./providers/azure-service-bus-queue";
 
 export class Queue extends MessageQueue implements IMessageQueue {
 
-    constructor(config: Config,queueName:string) {
+    constructor(config: IQueueConfig,queueName:string) {
         super();
         this.initializeProvider(config,queueName);
     }
@@ -26,8 +28,13 @@ export class Queue extends MessageQueue implements IMessageQueue {
         return this.client.add(message);
     }
 
-    protected initializeProvider(config: Config,queueName:string): void {
-        this.client = new AzureServiceBusQueue(config,queueName,this);
+    protected initializeProvider(config: IQueueConfig,queueName:string): void {
+        if(config.provider == "Azure"){
+            if(config instanceof AzureQueueConfig){
+                this.client = new AzureServiceBusQueue(config,queueName,this);
+            }
+        }
+        // this.client = new AzureServiceBusQueue(config,queueName,this);
     }
 
     // Enable auto send
