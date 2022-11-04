@@ -23,7 +23,7 @@ export class Core {
 
 
 
-    static initialize(config: IConfig = CoreConfig.default()) {
+    static initialize(config: IConfig = CoreConfig.default()): boolean {
         switch (config.provider) {
             case 'Azure':
                 this.config = config;    
@@ -35,7 +35,7 @@ export class Core {
             default:
                 break;
         }
-        this.checkHealth();
+       return this.checkHealth();
     }
 
     static getCustomQueue<T extends Queue>(name:string, qInstance: {new (config: IQueueConfig,queueName:string):T}): T {
@@ -80,9 +80,31 @@ export class Core {
 
     
 
-    protected static checkHealth():void{
+    protected static checkHealth():boolean {
         console.log("Checking health for Core");
         console.log("Configured for "+this.config.provider);
+        if(this.config.provider == "Azure"){
+            // check for the following process variables
+            const loggerQueueName = process.env.LOGGERQUEUE;
+            const queueConnection = process.env.QUEUECONNECTION;
+            const storageConnection = process.env.STORAGECONNECTION;
+            if(!queueConnection) {
+                console.log("Queue connection not available by default");
+                console.log("Please configure QUEUECONNECTION in .env file to ensure queue communication");
+                console.log("Note: All the logger functionality will be restricted to console");
+            }
+            if(!storageConnection) {
+                console.log("Storage connection not available");
+                console.log("Please configure the connection while getting storage client");
+
+            }
+            if(!loggerQueueName){
+                console.log("Logger queue is not configured. App will write to ")
+                console.log("tdei-ms-log queue");
+            }
+            return true;
+        }
+        return true;
     }
 
     
