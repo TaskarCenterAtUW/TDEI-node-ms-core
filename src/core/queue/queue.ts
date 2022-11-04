@@ -1,6 +1,5 @@
 import { Node } from "@babel/types";
 import { IQueueConfig } from "../../models/abstracts/iqueueconfig";
-import { Config } from "../../models/config";
 import { IMessageQueue } from "./abstracts/IMessage-queue";
 import { MessageQueue } from "./abstracts/message-queue";
 import { QueueMessage } from "./models/queue-message";

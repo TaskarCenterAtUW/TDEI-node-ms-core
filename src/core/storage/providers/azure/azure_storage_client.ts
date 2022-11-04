@@ -1,5 +1,4 @@
 import { BlobServiceClient } from "@azure/storage-blob";
-import { Config } from "../../../../models";
 import { IStorageConfig } from "../../../../models/abstracts/istorageconfig";
 import { StorageClient } from "../../abstract/storage_client";
 import { AzureStorageConfig } from "./azure_storage_config";

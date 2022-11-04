@@ -3,18 +3,19 @@
 import { Core } from "./core";
 import { AuditEvent } from "./core/logger/model/audit_event";
 import { AuditRequest } from "./core/logger/model/audit_request";
-import { Config } from "./models/config";
+import { CoreConfig } from "./models/config";
 
-let configuration = Config.from({
-    provider:'Azure', // default
-    cloudConfig:{
-        connectionString:{
-            appInsights:"InstrumentationKey=f98ba6d5-58e1-4267-827e-ccac68caf50f;IngestionEndpoint=https://westus2-2.in.applicationinsights.azure.com/;LiveEndpoint=https://westus2.livediagnostics.monitor.azure.com/",
-            serviceBus:"Endpoint=sb://tdei-sample.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=4UNDrVpThcnbqWlGFFQEcivuPlvMMWcSHwbyHgEv+rg="
-        },
-        logQueue:'tdei-ev-logger'
-    }
-});
+
+// let configuration = Config.from({
+//     provider:'Azure', // default
+//     cloudConfig:{
+//         connectionString:{
+//             appInsights:"InstrumentationKey=f98ba6d5-58e1-4267-827e-ccac68caf50f;IngestionEndpoint=https://westus2-2.in.applicationinsights.azure.com/;LiveEndpoint=https://westus2.livediagnostics.monitor.azure.com/",
+//             serviceBus:"Endpoint=sb://tdei-sample.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=4UNDrVpThcnbqWlGFFQEcivuPlvMMWcSHwbyHgEv+rg="
+//         },
+//         logQueue:'tdei-ev-logger'
+//     }
+// });
 
 // connections:{
 //     serviceBus: "Endpoint=sb://tdei-sample.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=4UNDrVpThcnbqWlGFFQEcivuPlvMMWcSHwbyHgEv+rg=",
@@ -25,7 +26,8 @@ let configuration = Config.from({
 // blobContainerName:"tdei-storage-test",
 // appName: process.env.npm_package_name
 
-Core.initialize(configuration); // Pre-configures all the services required for the project.
+let coreConfig = new CoreConfig();
+Core.initialize(); // Pre-configures all the services required for the project.
 
 // Test the logs one by one
 let logger = Core.getLogger();

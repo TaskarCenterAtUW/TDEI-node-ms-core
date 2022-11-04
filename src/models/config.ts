@@ -1,39 +1,59 @@
-import { NestedModel } from "../decorators";
-import { Prop } from ".";
-import { AbstractDomainEntity } from "./base/abstract-domain-entity";
 import { Provider } from "../types/provider";
+import { IConfig } from "./abstracts/iconfig";
 
 
+declare global {
+    namespace NodeJS {
+      interface ProcessEnv {
+        PROVIDER: Provider;
+      }
+    }
+  }
+  
 
-class ConnectionString extends AbstractDomainEntity{
 
-    @Prop()
-    serviceBus!: string;
-    @Prop()
-    blobStorage!: string;
-    @Prop()
-    appInsights!: string;
+export class CoreConfig implements IConfig{
+    provider: Provider;
+
+    static default(): CoreConfig {
+        return new CoreConfig();
+    }
+
+    constructor(provider:Provider = process.env.PROVIDER || "Azure"){
+        this.provider = provider;
+    }
+
 }
 
-export class CloudConfig extends AbstractDomainEntity {
+// class ConnectionString extends AbstractDomainEntity{
 
-    @Prop()
-    @NestedModel(ConnectionString)
-    connectionString!: ConnectionString;
+//     @Prop()
+//     serviceBus!: string;
+//     @Prop()
+//     blobStorage!: string;
+//     @Prop()
+//     appInsights!: string;
+// }
 
-    queueNames: string[] = [];
+// export class CloudConfig extends AbstractDomainEntity {
+
+//     @Prop()
+//     @NestedModel(ConnectionString)
+//     connectionString!: ConnectionString;
+
+//     queueNames: string[] = [];
     
-    logQueue: string = 'tdei-ev-logger';
-}
+//     logQueue: string = 'tdei-ev-logger';
+// }
 
 
 
-export class Config extends AbstractDomainEntity{
-    @Prop()
-    provider!: Provider;
+// export class Config extends AbstractDomainEntity{
+//     @Prop()
+//     provider!: Provider;
 
-    @Prop()
-    @NestedModel(CloudConfig)
-    cloudConfig!: CloudConfig;
+//     @Prop()
+//     @NestedModel(CloudConfig)
+//     cloudConfig!: CloudConfig;
 
-}
+// }

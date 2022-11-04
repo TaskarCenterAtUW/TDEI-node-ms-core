@@ -1,4 +1,3 @@
-import { Config } from "../../../models";
 import { StorageContainer } from "./storage_container";
 
 /**

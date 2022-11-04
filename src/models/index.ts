@@ -5,4 +5,3 @@ export { Prop } from '../decorators/prop.decorator';
 
 export { DeepPartial } from '../types/deep-partial';
 
-export {Config} from './config';

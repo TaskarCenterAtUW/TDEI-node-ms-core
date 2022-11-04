@@ -1,7 +1,6 @@
 import { IMessageQueue } from "../abstracts/IMessage-queue";
 import { QueueMessage } from "../models/queue-message";
 import { ServiceBusClient, ServiceBusReceivedMessage, ServiceBusReceiver, ServiceBusSender, ServiceBusMessage } from "@azure/service-bus";
-import { Config } from "../../../models/config";
 import { Queue } from "../queue";
 import { AzureQueueConfig } from "./azure-queue-config";
 

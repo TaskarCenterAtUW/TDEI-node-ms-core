@@ -4,7 +4,7 @@ import { ILoggable } from "./core/logger/abstracts/ILoggable";
 import { Queue } from "./core/queue";
 import { StorageClient } from "./core/storage";
 import { AzureStorageClient } from "./core/storage/providers/azure/azure_storage_client";
-import { Config } from "./models/config";
+import { CoreConfig } from "./models/config";
 import { IQueueConfig } from "./models/abstracts/iqueueconfig";
 import { IStorageConfig } from "./models/abstracts/istorageconfig";
 import { AzureStorageConfig } from "./core/storage/providers/azure/azure_storage_config";
@@ -23,7 +23,7 @@ export class Core {
 
 
 
-    static initialize(config: IConfig) {
+    static initialize(config: IConfig = CoreConfig.default()) {
         switch (config.provider) {
             case 'Azure':
                 this.config = config;    
@@ -35,6 +35,7 @@ export class Core {
             default:
                 break;
         }
+        this.checkHealth();
     }
 
     static getCustomQueue<T extends Queue>(name:string, qInstance: {new (config: IQueueConfig,queueName:string):T}): T {
