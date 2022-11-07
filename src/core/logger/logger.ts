@@ -17,6 +17,8 @@ export class Logger extends LoggerAbstract implements ILoggable {
     if(config.provider == "Azure"){
       const azureConfig = config as AzureLoggerConfig;
       this.logQueue = Core.getQueue(azureConfig.loggerQueueName);
+      this.logQueue.enableAutoSend(2);
+      console.log("Logger queue name "+azureConfig.loggerQueueName);
     }
     this.initializeProvider(config);
   }
@@ -64,6 +66,7 @@ export class Logger extends LoggerAbstract implements ILoggable {
   }
   debug(message?: any, ...optionalParams: any[]): void {
     // this.client.debug(message,optionalParams);
+    console.log("Adding message");
     this.logQueue?.add(QueueMessage.from(
       {
         messageType:"debug",

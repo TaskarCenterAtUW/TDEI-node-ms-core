@@ -8,6 +8,7 @@ import { CoreConfig } from "./models/config";
 import { IQueueConfig } from "./models/abstracts/iqueueconfig";
 import { IStorageConfig } from "./models/abstracts/istorageconfig";
 import { AzureStorageConfig } from "./core/storage/providers/azure/azure_storage_config";
+import { AzureLoggerConfig } from "./core/logger/providers/azure_logger_config";
 
 export class Core {
     private static logger: ILoggable | undefined;
@@ -16,8 +17,15 @@ export class Core {
     static getLogger(): ILoggable{
         if (this.logger != undefined)
             return this.logger;
-        else
-            throw new Error("Configuration not initialized");
+        else {
+            if(this.config.provider == "Azure"){
+                this.logger = new Logger(new AzureLoggerConfig());
+                return this.logger;
+            }
+            else {
+                throw new Error("Configuration not initialized");
+            }
+        }
 
     }
 

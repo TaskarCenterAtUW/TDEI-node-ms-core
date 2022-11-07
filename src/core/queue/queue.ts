@@ -31,15 +31,22 @@ export class Queue extends MessageQueue implements IMessageQueue {
         if(config.provider == "Azure"){
             if(config instanceof AzureQueueConfig){
                 this.client = new AzureServiceBusQueue(config,queueName,this);
+            } 
+            else {
+                this.client = new AzureServiceBusQueue(AzureQueueConfig.default(),queueName,this);
             }
         }
     }
 
     // Enable auto send
     enableAutoSend(time:number){
-        // Start a timer for 5 seconds and mark send.
-      this.autoTimer =   setInterval(()=>{
-            this.client.send();
+        this.startAutoSend(time);
+    }
+
+    async startAutoSend(time:number){
+        await this.client.send();
+        setTimeout(()=>{
+            this.startAutoSend(time);
         },time*1000);
     }
 }
