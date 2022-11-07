@@ -5,9 +5,10 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "rimraf ./lib && tsc",
+    "copy:assets": "cp .env lib",
     "start:dev": "nodemon",
     "start:test": "npm run build && node lib/index.js",
-    "start:exp": "npm run build && node lib/test.js",
+    "start:exp": "npm run build && npm run copy:assets && node lib/example.js",
     "test": "jest --coverage",
     "lint": "tslint 'src/**/*.ts?(x)'"
   },
@@ -43,6 +44,7 @@
     "@azure/service-bus": "^7.7.0",
     "@azure/storage-blob": "^12.11.0",
     "applicationinsights": "^2.3.4",
+    "dotenv": "^16.0.3",
     "reflect-metadata": "^0.1.13"
   },
   "files": [

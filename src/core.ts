@@ -30,7 +30,7 @@ export class Core {
                 // this.logger = new Logger(config);
                 break;
             case 'Local':
-                console.log("Unimplemented initialization for core");
+                console.log("Unimplemented initialization for core "+config.provider);
                 break;
             default:
                 break;
@@ -81,27 +81,55 @@ export class Core {
     
 
     protected static checkHealth():boolean {
-        console.log("Checking health for Core");
-        console.log("Configured for "+this.config.provider);
+        console.log(`\x1b[32m ------------------------- \x1b[0m`);
+        console.log(`\x1b[30m\x1b[42m PERFORMING CORE-HEALTH-CHECK \x1b[0m`);
+
+        if(this.config == null){
+            console.log("Unknown/Unimplemented provider");
+            console.log(`\x1b[31m Unknown/Unimplemented provider. Please check the provider supplied \x1b[0m`);
+            console.log(`\x1b[33m Valid providers are \x1b[0m`);
+            console.log(`\x1b[32m Azure \x1b[0m`);
+            
+            return false;
+        }
+        console.log("Configured for \x1b[32m "+this.config.provider+" \x1b[0m \n");
+        
+        
         if(this.config.provider == "Azure"){
             // check for the following process variables
             const loggerQueueName = process.env.LOGGERQUEUE;
             const queueConnection = process.env.QUEUECONNECTION;
             const storageConnection = process.env.STORAGECONNECTION;
+            //\\x1b[30m $1 \\x1b[0m
+            console.log("\x1b[31m > Checking Queue Connections\x1b[0m",);
             if(!queueConnection) {
-                console.log("Queue connection not available by default");
-                console.log("Please configure QUEUECONNECTION in .env file to ensure queue communication");
-                console.log("Note: All the logger functionality will be restricted to console");
+                console.log(`\x1b[33m Queue connection not available by default \x1b[0m`);
+                console.log(`\x1b[33m Please configure QUEUECONNECTION in .env file to ensure queue communication \x1b[0m`);
+                console.log(`\x1b[33m Note: All the logger functionality will be restricted to console \x1b[0m`);
             }
+            else {
+                console.log(`\x1b[32m\x1b[40m Connected to Queues \x1b[0m`);
+                
+            }
+            console.log("\x1b[31m\n > Checking Storage Connections\x1b[0m",);
             if(!storageConnection) {
-                console.log("Storage connection not available");
-                console.log("Please configure the connection while getting storage client");
-
+                console.log(`\x1b[31m Storage connection not available \x1b[0m`);
+                console.log(`\x1b[31m Storage related functionalities will be unavailable \x1b[0m`);
+                console.log(`\x1b[31m Please configure STORAGECONNECTION in .env for storage functions \x1b[0m`);
+                
             }
+            else {
+                console.log(`\x1b[32m\x1b[40m\n Connected to Storage \x1b[0m`);
+            }
+            console.log("\x1b[31m\n > Checking Logger Queue \x1b[0m",);
             if(!loggerQueueName){
-                console.log("Logger queue is not configured. App will write to ")
-                console.log("tdei-ms-log queue");
+                console.log(`\x1b[33m Logger queue is not configured. App will write to  \x1b[0m`);
+                console.log(`\x1b[32m tdei-ms-log queue \x1b[0m`);
+            } else {
+                console.log(`\x1b[32m Logger configured \x1b[0m`);
             }
+            console.log(`\x1b[32m ------------------------- \x1b[0m`);
+            
             return true;
         }
         return true;

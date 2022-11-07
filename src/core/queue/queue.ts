@@ -33,7 +33,6 @@ export class Queue extends MessageQueue implements IMessageQueue {
                 this.client = new AzureServiceBusQueue(config,queueName,this);
             }
         }
-        // this.client = new AzureServiceBusQueue(config,queueName,this);
     }
 
     // Enable auto send

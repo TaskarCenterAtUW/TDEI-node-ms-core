@@ -23,7 +23,6 @@ export class AzureServiceBusQueue implements IMessageQueue {
         this.listener = this.sbClient.createReceiver(queueName);
         this.sender = this.sbClient.createSender(queueName);
         this.parent = queue;
-        
     }
 
     /**
