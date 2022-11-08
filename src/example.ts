@@ -28,7 +28,7 @@ import { CoreConfig } from "./models/config";
 // Get the dotenv things
 require('dotenv').config()
 
-let coreConfig = new CoreConfig();
+// let coreConfig = new CoreConfig();
 Core.initialize(); // Pre-configures all the services required for the project.
 console.log("Hello");
 // Test the logs one by one
@@ -52,15 +52,15 @@ let logger = Core.getLogger();
 // auditRequest.responseStatus = '201';
 // logger.getAuditor()?.updateRequest(auditRequest);
 
-logger.getAuditor()?.addEvent(AuditEvent.from({
-    requestId:'83832',
-    requestInfo:{
-        fileInfo:'gtfs-path',
-        fileLocation:'/gtfs/path'
-    },
-    stage:'Initialized',
-    status:"OK"
-}));
+// logger.getAuditor()?.addEvent(AuditEvent.from({
+//     requestId:'83832',
+//     requestInfo:{
+//         fileInfo:'gtfs-path',
+//         fileLocation:'/gtfs/path'
+//     },
+//     stage:'Initialized',
+//     status:"OK"
+// }));
 
 
 // // logger
