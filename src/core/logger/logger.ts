@@ -14,12 +14,7 @@ export class Logger extends LoggerAbstract implements ILoggable {
   constructor(config : ILoggerConfig) {
     super();
 
-    if(config.provider == "Azure"){
-      const azureConfig = config as AzureLoggerConfig;
-      this.logQueue = Core.getQueue(azureConfig.loggerQueueName);
-      this.logQueue.enableAutoSend(2);
-      console.log("Logger queue name "+azureConfig.loggerQueueName);
-    }
+    
     this.initializeProvider(config);
   }
   
@@ -45,10 +40,15 @@ export class Logger extends LoggerAbstract implements ILoggable {
   }
 
   protected initializeProvider(config : ILoggerConfig) {
+
     //Change this line in the case we want to change the logging provider
     // this.client = new AppInsightsProvider(config); // Not valid anymore   
     if(config.provider == "Azure"){
+
       let azureConfig = config as AzureLoggerConfig;
+      this.logQueue = Core.getQueue(azureConfig.loggerQueueName);
+      this.logQueue.enableAutoSend(2);
+      console.log("Logger queue name "+azureConfig.loggerQueueName);
       this.auditor = new AzureAuditor(azureConfig.loggerQueueName); // TO be done.
       this.analytic = new AzureAnalytic(azureConfig.loggerQueueName);
     }
