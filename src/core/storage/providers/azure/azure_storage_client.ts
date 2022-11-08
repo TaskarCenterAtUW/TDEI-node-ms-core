@@ -1,6 +1,7 @@
 import { BlobServiceClient } from "@azure/storage-blob";
-import { Config } from "../../../../models";
+import { IStorageConfig } from "../../../../models/abstracts/istorageconfig";
 import { StorageClient } from "../../abstract/storage_client";
+import { AzureStorageConfig } from "./azure_storage_config";
 import { AzureStorageContainer } from "./azure_storage_container";
 
 /**
@@ -11,10 +12,10 @@ export class AzureStorageClient implements StorageClient {
     connectionString: string;
     _blobServiceClient: BlobServiceClient;
 
-    constructor(connectionString: string) {
-        this.connectionString = connectionString;
+    constructor(config:AzureStorageConfig) {
+        this.connectionString = config.connectionString;
         this._blobServiceClient = BlobServiceClient.fromConnectionString(
-            connectionString
+            config.connectionString
         );
     }
     

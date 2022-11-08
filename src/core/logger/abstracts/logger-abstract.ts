@@ -1,4 +1,5 @@
-import { Config } from "../../../models/config";
+
+import { ILoggerConfig } from "../../../models/abstracts/iloggerconfig";
 import { IAnalytics } from "./IAnalytics";
 import { IAuditor } from "./IAuditor";
 import { ILoggable } from "./ILoggable";
@@ -10,5 +11,5 @@ export abstract class LoggerAbstract {
     // protected client!: ILoggable;
     protected auditor!: IAuditor; // Probably better this way
     protected analytic!: IAnalytics;
-    protected abstract initializeProvider(config : Config) : void;
+    protected abstract initializeProvider(config : ILoggerConfig) : void;
 }
