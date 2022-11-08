@@ -10,7 +10,6 @@ export class AzureAnalytic implements IAnalytics {
     }
 
     record(message: any) {
-        console.log("Recording message");
         this.analyticQueue.add(QueueMessage.from(
             {
                 messageType:'analytic',
