@@ -20,28 +20,45 @@
 Contains all the abstract and Azure implementation classes for connecting to Azure components.
 
 ## Initialize and Configuration
-All the cloud connections are initialized with `initialize` function of core which takes a `Config` parameter. A `Config` object can be initialized with `from` static method. The structure of the configuration can be extended. However, the base configuration will have information about cloud provider and also connection strings.
+All the cloud connections are initialized with `initialize` function of core which takes an optional parameter of type `CoreConfig`. A `CoreConfig` takes only one parameter called `provider` which by default is set to `Azure`. The Core.initialize method can be called without any parameter or with a constructed CoreConfig object.
 
 Eg.
 ```typescript
- let configuration = Config.from({
-            provider:'Azure', // default
-            cloudConfig:{
-                connectionString:{
-                    appInsights:"<appInsights-connection string>",
-                    blobStorage:"<blob storage connection string>",
-                    serviceBus:"<service bus connection string>"
-                }
-            }
-        });
+Core.initialize();
+//or
+Core.initialize(new CoreConfig(provider:"Azure"));
 
-Core.initialize(configuration); // Pre-configures all the services required for the project.
 ```
-A developer can employ loading the configuration from JSON file as well.
+The method analyzes the `.env` variables and does a health check on what components are available
 
+## Setting up local connections
+`Core` works with all the default options and wherever required, relies on environment variables for connecting. The environment variables can be accessed either by setting them in the local machine or by importing via `dotenv` package which reads from a `.env` file created in the source code. All the variables in the `.env` file are optional. However, some of them will be needed inorder for the specific features to work.
+
+Here is the structure 
+
+```shell
+# Provider information. Only two options available Azure and Local
+# Defaults to Azure if not provided
+PROVIDER=Azure 
+
+# Connection string to queue. 
+# Optional. Logger functionality for Azure may not work 
+# if not provided
+QUEUECONNECTION=
+# connection string to Azure storage if the provider is Azure
+# Same can be used for root folder in Local provider
+STORAGECONNECTION=
+# Name of the queue that the logger writes to.
+# This is optional and defaults value tdei-ms-log
+LOGGERQUEUE=
+
+```
+This file will have to be generated or shared offline as per the developer requirement.
 
 ### Logger
-Offers helper classes to help log the information.
+Offers helper classes to help log the information. It is also used to record the audit messages
+as well as the analytics information required.
+
 Use `Core.getLogger()` to log the following
 
 `queueMessage`  : Message received or sent to Queues. This helps in keeping track of the messages received and sent from the queue.
@@ -49,6 +66,15 @@ Use `Core.getLogger()` to log the following
 `metric`    : Any specific metric that needs to be recorded
 
 `request` : App HTTP request that needs to be logged (for response time, path, method and other information)
+
+Audit messages are logged using the `Core.getLogger().getAuditor()` method. This provides an instance 
+of auditor which can perform the following operations
+
+`addRequest` : Adds request for auditing
+`updateRequst` : Updates a given request
+`addEvent` : Adds a specific event to the request (tree heirarchy)
+`updateEvent`: Updates the given audit event.
+The complete details are available at [Logger flow](https://dev.azure.com/TDEI-UW/TDEI/_git/internaldocs?path=/adr/logger-flow.md&_a=preview)
 
 Eg.
 ```typescript
