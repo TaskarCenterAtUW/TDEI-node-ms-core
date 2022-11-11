@@ -24,11 +24,12 @@ jobs:
       - name: Printing local and remote versions
         run: echo "Local version $localVersion and remote version $remoteVersion"
       
-      - name : Build and publish to NPM
+      - name : Setup node 16.x
         uses: actions/setup-node@v3
         with:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
+      - name: Build and publish to NPM
         if: ${{env.localVersion}} > ${{env.remoteVersion}}          
         run: |
               npm install
