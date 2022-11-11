@@ -22,7 +22,7 @@ jobs:
               npmRemoteVersion=$(npm view nodets-ms-core version) 
               echo "remoteVersion=$npmRemoteVersion >> $GITHUB_ENV"
       - name: Printing local and remote versions
-        run: echo "Local version $(localVersion) and remote version $(remoteVersion)"
+        run: echo "Local version $localVersion and remote version $remoteVersion"
       
       - name : Build and publish to NPM
         if: ${{env.localVersion}} > ${{env.remoteVersion}}
@@ -30,9 +30,9 @@ jobs:
         with:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
-          run: |
-                npm install
-                npm run build
+        run: |
+              npm install
+              npm run build
               # npm publish
           #  env:
           #    NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
