@@ -1,0 +1,53 @@
+name: Test and Publish to NPM
+on:
+  pull_request:
+    branches: [master]
+    #types:
+    #  - closed
+  workflow_dispatch:
+
+jobs:
+  Check-New-Version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+      
+      - name: Fetch local package version
+        run: |
+              npmVersionString=$(node -p "require('./package.json').version")
+              echo "##vso[task.setvariable variable=localVersion;]$npmVersionString"
+      - name: Fetch remote package version
+        run: | 
+              npmRemoteVersion=$(npm view nodets-ms-core version) 
+              echo "##vso[task.setvariable variable=remoteVersion;]$npmRemoteVersion"
+      - name: Printing local and remote versions
+        run: echo "Local version $(localVersion) and remote version $(remoteVersion)"
+      
+      - name : Build and publish to NPM
+        if: $localVersion > $(remoteVersion)
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+          registry-url: 'https://registry.npmjs.org'
+        run: npm install
+        run: npm run build
+        #- run: npm publish
+        #  env:
+        #    NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+          
+
+
+
+
+
+- script: |
+    npm install
+    npm run build
+  displayName: 'npm install and build'
+- task: Npm@1
+  condition: gt(variables['localVersion'],variables['remoteVersion'])
+  inputs:
+    command: 'publish'
+    publishEndpoint: 'NPM Publish Account'
