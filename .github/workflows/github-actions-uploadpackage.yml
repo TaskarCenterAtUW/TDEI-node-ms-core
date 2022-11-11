@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo 'Hello there'
-      - run: echo "${{ secrets.NPM_TOKEN }} .NPM_TOKEN"
+      - run: echo "${{ secrets.NPM_TOKEN }} NPM_TOKEN"
   # Publish-to-Node:
   #   runs-on: ubuntu-latest
   #   steps:
