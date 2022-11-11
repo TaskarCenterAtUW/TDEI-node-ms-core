@@ -9,9 +9,6 @@ on:
 jobs:
   PublishToNPM:
     runs-on: ubuntu-latest
-    env:
-      localVersion: ${{ 0.0.0 }} # Initialize to float number
-      remoteVersion: ${{ 0.0.0 }} # Initialize to float number
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
@@ -26,6 +23,11 @@ jobs:
               echo "remoteVersion=$npmRemoteVersion" >> $GITHUB_ENV
       - name: Printing local and remote versions
         run: echo "Local version ${{env.localVersion}} and remote version ${{env.remoteVersion}}"
+
+      - name: Compare local and remote version with dpkg
+        run: |
+              dpkg --compare-versions ${{env.localVersion}} "lt" ${{env.remoteVersion}}
+              echo flag=$? >> $GITHUB_ENV
       
       - name : Setup node 16.x
         uses: actions/setup-node@v3
@@ -33,7 +35,7 @@ jobs:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
       - name: Build and publish to NPM
-        if: ${{env.localVersion}} > ${{env.remoteVersion}}
+        if: ${{env.flag}} == 0 
         run: |
               npm install
               npm run build
