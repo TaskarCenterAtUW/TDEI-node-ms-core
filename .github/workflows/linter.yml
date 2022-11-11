@@ -4,7 +4,7 @@
 ## Super Linter GitHub Actions ##
 #################################
 #################################
-name: Unit Tests
+name: Code Review
 
 #############################
 # Start the job on all push #
@@ -75,5 +75,5 @@ jobs:
       - name: Install npm dependencies
         run : npm install
 
-      - name: Lint code base
+      - name: Run unit test cases
         run : npm run test
