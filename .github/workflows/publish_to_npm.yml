@@ -35,19 +35,3 @@ jobs:
         #- run: npm publish
         #  env:
         #    NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-          
-
-
-
-
-
-- script: |
-    npm install
-    npm run build
-  displayName: 'npm install and build'
-- task: Npm@1
-  condition: gt(variables['localVersion'],variables['remoteVersion'])
-  inputs:
-    command: 'publish'
-    publishEndpoint: 'NPM Publish Account'
