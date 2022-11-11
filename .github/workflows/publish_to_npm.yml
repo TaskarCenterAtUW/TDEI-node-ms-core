@@ -28,9 +28,8 @@ jobs:
         continue-on-error: true
         run: |
               dpkg --compare-versions ${{env.localVersion}} "lt" ${{env.remoteVersion}}
+              echo "Dpkg status: $?"
               echo flag=$? >> $GITHUB_ENV
-      - name: Echo Flag
-        run: echo "Flag - ${{env.flag}}"
       - name : Setup node 16.x
         uses: actions/setup-node@v3
         with:
