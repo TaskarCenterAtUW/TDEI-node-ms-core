@@ -25,11 +25,11 @@ jobs:
         run: echo "Local version $localVersion and remote version $remoteVersion"
       
       - name : Build and publish to NPM
-        if: ${{env.localVersion}} > ${{env.remoteVersion}}
         uses: actions/setup-node@v3
         with:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
+        if: ${{env.localVersion}} > ${{env.remoteVersion}}          
         run: |
               npm install
               npm run build
