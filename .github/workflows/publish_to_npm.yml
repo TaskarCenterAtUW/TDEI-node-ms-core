@@ -1,4 +1,4 @@
-name: Test and Publish to NPM
+name: Publish to NPM
 on:
   pull_request:
     branches: [master]
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  Check-New-Version:
+  PublishToNPM:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
@@ -22,7 +22,7 @@ jobs:
               npmRemoteVersion=$(npm view nodets-ms-core version) 
               echo "remoteVersion=$npmRemoteVersion >> $GITHUB_ENV"
       - name: Printing local and remote versions
-        run: echo "Local version $localVersion and remote version $remoteVersion"
+        run: echo "Local version ${{env.localVersion}} and remote version ${{env.remoteVersion}}"
       
       - name : Setup node 16.x
         uses: actions/setup-node@v3
