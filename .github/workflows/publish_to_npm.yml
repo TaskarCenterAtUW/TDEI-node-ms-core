@@ -25,7 +25,6 @@ jobs:
         run: echo "Local version ${{env.localVersion}} and remote version ${{env.remoteVersion}}"
 
       - name: Compare local and remote version with dpkg
-        continue-on-error: true
         run: |
               dpkg --compare-versions ${{env.localVersion}} "lt" ${{env.remoteVersion}}
               echo "Dpkg status: $?"
@@ -36,10 +35,9 @@ jobs:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
       - name: Build and publish to NPM
-        if: ${{env.flag}} == 0
         run: |
               npm install
               npm run build
               # npm publish
-          #  env:
-          #    NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
