@@ -16,20 +16,39 @@ export class Queue extends MessageQueue implements IMessageQueue {
     private autoTimer: NodeJS.Timer|null = null;
 
     listen(): Promise<void> {
-        return this.client.listen();
+        if(this.client){
+            return this.client.listen();
+        }
+        else {
+            return Promise.resolve();
+        }
     }
 
     send(): Promise<any> {
-        return this.client.send();
+        if(this.client){
+            return this.client.send();
+        }
+        return Promise.resolve({});
     }
 
     add(message: QueueMessage): Promise<any> {
-        return this.client.add(message);
+        if(this.client){
+            return this.client.add(message);
+        }
+        else {
+            console.log(message.toJSON());
+            return Promise.resolve({});
+        }
     }
 
     protected initializeProvider(config: IQueueConfig,queueName:string): void {
         if(config.provider == "Azure"){
+            try {
             this.client = new AzureServiceBusQueue(config,queueName,this);
+            } catch(e) {
+                console.log('Faield to initialize queue');
+                // console.log(e);
+            }
         }
     }
 
@@ -39,7 +58,7 @@ export class Queue extends MessageQueue implements IMessageQueue {
     }
 
     async startAutoSend(time:number){
-        await this.client.send();
+        await this.client?.send();
         setTimeout(()=>{
             this.startAutoSend(time);
         },time*1000);
