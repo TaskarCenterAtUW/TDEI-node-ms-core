@@ -9,6 +9,8 @@ on:
 jobs:
   PublishToNPM:
     runs-on: ubuntu-latest
+    env:
+      flag: ${{ true }}
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
@@ -36,7 +38,7 @@ jobs:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
       - name: Build and publish to NPM
-        if: ${{env.flag}} == 0 
+        if: ${{env.flag}} == false
         run: |
               npm install
               npm run build
