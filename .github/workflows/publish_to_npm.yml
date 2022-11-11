@@ -9,8 +9,6 @@ on:
 jobs:
   PublishToNPM:
     runs-on: ubuntu-latest
-    env:
-      flag: ${{ true }}
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
@@ -31,14 +29,15 @@ jobs:
         run: |
               dpkg --compare-versions ${{env.localVersion}} "lt" ${{env.remoteVersion}}
               echo flag=$? >> $GITHUB_ENV
-      
+      - name: Echo Flag
+        run: echo "Flag - ${{env.flag}}"
       - name : Setup node 16.x
         uses: actions/setup-node@v3
         with:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
       - name: Build and publish to NPM
-        if: ${{env.flag}} == false
+        if: ${{env.flag}} == 0
         run: |
               npm install
               npm run build
