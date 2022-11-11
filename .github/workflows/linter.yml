@@ -86,5 +86,9 @@ jobs:
           envkey_QUEUECONNECTION: ${{ secrets.QUEUECONNECTION }}
           envkey_STORAGECONNECTION: ${{ secrets.STORAGECONNECTION }}
           file_name: .env
+
+      - name: Display contents of .env
+        run : cat .env
+
       - name: Run unit test cases
         run : npm run test
