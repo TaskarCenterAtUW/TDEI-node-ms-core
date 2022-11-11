@@ -16,11 +16,11 @@ jobs:
       - name: Fetch local package version
         run: |
               npmVersionString=$(node -p "require('./package.json').version")
-              echo "##vso[task.setvariable variable=localVersion;]$npmVersionString"
+              echo "localVersion=$npmVersionString >> $GITHUB_ENV"
       - name: Fetch remote package version
         run: | 
               npmRemoteVersion=$(npm view nodets-ms-core version) 
-              echo "##vso[task.setvariable variable=remoteVersion;]$npmRemoteVersion"
+              echo "remoteVersion=$npmRemoteVersion >> $GITHUB_ENV"
       - name: Printing local and remote versions
         run: echo "Local version $(localVersion) and remote version $(remoteVersion)"
       
