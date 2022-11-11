@@ -26,7 +26,7 @@ Eg.
 ```typescript
 Core.initialize();
 //or
-Core.initialize(new CoreConfig(provider:"Azure"));
+Core.initialize(new CoreConfig());
 
 ```
 The method analyzes the `.env` variables and does a health check on what components are available
