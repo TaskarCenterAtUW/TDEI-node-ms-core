@@ -27,17 +27,19 @@ jobs:
       - name: Compare local and remote version with dpkg
         run: |
               dpkg --compare-versions ${{env.localVersion}} "lt" ${{env.remoteVersion}}
-              echo "Dpkg status: $?"
-              echo flag=$? >> $GITHUB_ENV
+      - name: Compare local and remote version with dpkg
+        run: dpkg --compare-versions ${{env.localVersion}} "lt" ${{env.remoteVersion}}
+    
       - name : Setup node 16.x
         uses: actions/setup-node@v3
         with:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
+
       - name: Build and publish to NPM
         run: |
               npm install
               npm run build
               # npm publish
-          env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          #  env:
+          #    NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
