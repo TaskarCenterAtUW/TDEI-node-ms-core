@@ -25,6 +25,7 @@ jobs:
         run: echo "Local version ${{env.localVersion}} and remote version ${{env.remoteVersion}}"
 
       - name: Compare local and remote version with dpkg
+        continue-on-error: true
         run: |
               dpkg --compare-versions ${{env.localVersion}} "lt" ${{env.remoteVersion}}
               echo flag=$? >> $GITHUB_ENV
