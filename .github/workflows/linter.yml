@@ -75,5 +75,20 @@ jobs:
       - name: Install npm dependencies
         run : npm install
 
+      ################################
+      # Create .env file from secrets #
+      ################################
+
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@v1
+        with:
+          envkey_PROVIDER: ${{ secrets.PROVIDER }}
+          envkey_QUEUECONNECTION: ${{ secrets.QUEUECONNECTION }}
+          envkey_STORAGECONNECTION: ${{ secrets.STORAGECONNECTION }}
+          file_name: .env
+
+      - name: Display contents of .env
+        run : cat .env
+
       - name: Run unit test cases
         run : npm run test

@@ -41,7 +41,7 @@ export abstract class AbstractDomainEntity {
    * of the class from an object literal
    */
   public static from<T>(
-    this: { new(...args: any[]): T },
+    this: new(...args: any[])=> T,
     json: DeepPartial<T> & Record<string, any> = {},
     options: AbstractDomainEntityFromOptions = {}
   ): T {

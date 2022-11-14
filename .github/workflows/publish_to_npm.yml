@@ -1,0 +1,44 @@
+name: Check and Publish to NPM
+on:
+  pull_request:
+    branches: [master]
+    types:
+     - closed
+  workflow_dispatch:
+
+jobs:
+  PublishToNPM:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+      
+      - name: Fetch local package version
+        run: |
+              npmVersionString=$(node -p "require('./package.json').version")
+              echo "localVersion=$npmVersionString" >> $GITHUB_ENV
+      - name: Fetch remote package version
+        run: | 
+              npmRemoteVersion=$(npm view nodets-ms-core version) 
+              echo "remoteVersion=$npmRemoteVersion" >> $GITHUB_ENV
+      - name: Printing local and remote versions
+        run: echo "Local version ${{env.localVersion}} and remote version ${{env.remoteVersion}}"
+
+      # If local version is greater than remote next step will be executed.
+      # or else the step will fail and stop from deploying to npm.
+      - name: Compare local and remote version with dpkg
+        run:  dpkg --compare-versions ${{env.localVersion}} "lt" ${{env.remoteVersion}}
+    
+      - name : Setup node 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Build and publish to NPM
+        run: |
+              npm install
+              npm run build
+              npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
