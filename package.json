@@ -1,6 +1,6 @@
 {
   "name": "nodets-ms-core",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "NodeJS Typescript Boilerplate",
   "main": "lib/index.js",
   "scripts": {

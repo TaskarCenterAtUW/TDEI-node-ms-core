@@ -13,7 +13,7 @@ require('dotenv').config()
 Core.initialize(); // Pre-configures all the services required for the project.
 console.log("Hello");
 // Test the logs one by one
-let logger = Core.getLogger();
+// let logger = Core.getLogger();
 
 // logger.debug("This is a test debug message");
 // logger.info("This is an info message");
@@ -29,7 +29,7 @@ let logger = Core.getLogger();
 //     responseStatus:'200',
 //     responseResult:'succeeded'
 // });
-// // logger.getAuditor()?.addRequest(auditRequest);
+//  logger.getAuditor()?.addRequest(auditRequest);
 // auditRequest.responseStatus = '201';
 // logger.getAuditor()?.updateRequest(auditRequest);
 
