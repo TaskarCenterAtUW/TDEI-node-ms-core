@@ -46,7 +46,7 @@ export class Core {
        return this.checkHealth();
     }
 
-    static getCustomQueue<T extends Queue>(name:string, qInstance: {new (config: IQueueConfig,queueName:string):T}): T {
+    static getCustomQueue<T extends Queue>(name:string, qInstance: new (config: IQueueConfig,queueName:string)=>T): T {
         return new qInstance(this.config,name);
     }
 
