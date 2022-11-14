@@ -15,10 +15,10 @@ export class Core {
     private static config: IConfig;
 
     static getLogger(): ILoggable{
-        if (this.logger != undefined)
+        if (this.logger !== undefined)
             return this.logger;
         else {
-            if(this.config.provider == "Azure"){
+            if(this.config.provider === "Azure"){
                 this.logger = new Logger(new AzureLoggerConfig());
                 return this.logger;
             }
@@ -34,11 +34,11 @@ export class Core {
     static initialize(config: IConfig = CoreConfig.default()): boolean {
         switch (config.provider) {
             case 'Azure':
-                this.config = config;    
+                this.config = config;
                 // this.logger = new Logger(config);
                 break;
             case 'Local':
-                console.log("Unimplemented initialization for core "+config.provider);
+                console.error("Unimplemented initialization for core "+config.provider);
                 break;
             default:
                 break;
@@ -56,31 +56,31 @@ export class Core {
 
     static getStorageClient(config: IStorageConfig|null = null): StorageClient | null{
         if(config == null){
-            // figure out the configuration based on 
+            // figure out the configuration based on
             // Default configuration
-            if(this.config.provider == "Azure"){
+            if(this.config.provider === "Azure"){
                 // Figure out and send the azure storage client
                 return new AzureStorageClient(AzureStorageConfig.default());
 
             }
             else {
-                console.log('Storage not configured for '+this.config.provider);
+                console.error('Storage not configured for '+this.config.provider);
                 return null;
             }
         }
         else{
-            if(config.provider == "Azure"){
+            if(config.provider === "Azure"){
                 if(config instanceof AzureStorageConfig){
                     return new AzureStorageClient(config);
                 }
                 else {
-                    console.log("Provided configuration is mismatched");
-                    console.log(config);
+                    console.debug("Provided configuration is mismatched");
+                    console.debug(config);
                     return null;
                 }
             }
             else {
-                console.log("No implementation for type "+config.provider);
+                console.error("No implementation for type "+config.provider);
                 return null;
             }
         }
