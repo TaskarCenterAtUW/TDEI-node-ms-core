@@ -2,7 +2,7 @@
 // import { QueueMessage } from "../core/queue";
 // Create a queuemessage and print its value
 
-import { QueueMessage } from "../../lib/core/queue";
+import { QueueMessage } from "../core/queue";
 
 
 // console.log('Published date is ');
@@ -18,12 +18,12 @@ describe('QueueMessage', () => {
 
     it('Should create Queue appropriately',()=>{
 
-        let publishedDate = new Date(2022,5,18);
-        let queuemessage = QueueMessage.from({
+        const publishedDate = new Date(2022,5,18);
+        const queuemessage = QueueMessage.from({
             message:'Sample message',
             messageId:'123',
             messageType:'sample-event',
-            publishedDate: publishedDate
+            publishedDate: ('{publishedDate}')
         });
         expect(queuemessage.message).toBe("Sample message");
         expect(queuemessage.messageId).toBe("123");
@@ -31,7 +31,7 @@ describe('QueueMessage', () => {
         // expect(queuemessage.publishedDate).toBe(publishedDate);
     });
     it('Should Instantiate', () => {
-        let queueMessage = QueueMessage.from();
+        const queueMessage = QueueMessage.from();
         expect(queueMessage).toBeInstanceOf(QueueMessage);
     })
 

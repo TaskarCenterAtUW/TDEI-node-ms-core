@@ -75,7 +75,8 @@ export class AzureServiceBusQueue implements IMessageQueue {
         // Check if there is any method listening to it.
         const eventMap = Reflect.getMetadata('eventHandlers', this.parent.constructor.prototype) as Map<
             string,
-            // eslint-disable-next-line @typescript-eslint/ban-types
+            // eslint-disable-next-line 
+            //@typescript-eslint/ban-types
             { handler: Function }[]
         >;
         const eventHandlers = eventMap.get(messageType);
