@@ -1,13 +1,14 @@
 name: Check and Publish to NPM
 on:
-  pull_request:
-    branches: [master]
-    types:
-     - closed
+  push:
+    tags:
+      - '*.*.*' # Eg. 0.0.1
   workflow_dispatch:
 
 jobs:
   PublishToNPM:
+    environment:
+      name: Production
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
