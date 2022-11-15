@@ -2,7 +2,7 @@ name: Check and Publish to NPM
 on:
   push:
     tags:
-      - '*.*.*' # Eg. 0.0.1
+      - 'v*.*.*' # Eg. v0.0.1
   workflow_dispatch:
 
 jobs:
