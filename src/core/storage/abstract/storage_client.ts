@@ -1,3 +1,4 @@
+import { FileEntity } from "./file_entity";
 import { StorageContainer } from "./storage_container";
 
 /**
@@ -9,6 +10,12 @@ export abstract class StorageClient {
      * @param name Name of the container
      */
     abstract getContainer(name:string): Promise<StorageContainer>;
+
+
+    abstract getFile(containerName:string, fileName:string): Promise<FileEntity>;
+
+
+    abstract getFileFromUrl(fullUrl:string): Promise<FileEntity>;
 
 
  }

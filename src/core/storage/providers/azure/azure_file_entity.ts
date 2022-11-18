@@ -19,11 +19,13 @@ export class AzureFileEntity implements FileEntity {
      */
     mimeType: string;
 
+    filePath: string;
     
     _blobClient: BlockBlobClient;
 
     constructor(name: string, blobClient: BlockBlobClient, mimeType: string = 'text/plain') {
-        this.fileName = name;
+        this.filePath = name;
+        this.fileName = name.replace(/^.*[\\\/]/, ''); // Get the last name;
         this.mimeType = mimeType;
         this._blobClient = blobClient;
     }
