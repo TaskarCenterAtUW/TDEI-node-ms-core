@@ -28,7 +28,7 @@ jobs:
       # If local version is greater than remote next step will be executed.
       # or else the step will fail and stop from deploying to npm.
       - name: Compare local and remote version with dpkg
-        run:  dpkg --compare-versions ${{env.localVersion}} "lt" ${{env.remoteVersion}}
+        run:  dpkg --compare-versions ${{env.localVersion}} "gt" ${{env.remoteVersion}}
     
       - name : Setup node 16.x
         uses: actions/setup-node@v3
