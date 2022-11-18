@@ -46,3 +46,31 @@ console.log("Hello");
 
 // // logger
 // logger.sendAll();
+// https://tdeisamplestorage.blob.core.windows.net/gtfspathways/2022/NOVEMBER/102/
+const storageClient = Core.getStorageClient();
+
+//  storageClient?.getFile('gtfspathways','2022/NOVEMBER/102/file_1668600056782_bce3e0a8b6e94ce7a76ac94426c1be04.zip').then((fileEntity)=>{
+//     console.log("Received file entity");
+//     console.log(fileEntity.fileName);
+//     console.log(fileEntity.mimeType);
+//     // fileEntity.getStream().then((stream)=>{
+//     //     console.log("Stream received");
+//     // });
+
+// }).catch((err)=>{
+//     console.log('Error while getting the file information');
+//     console.log(err);
+// });
+//https://tdeisamplestorage.blob.core.windows.net/gtfspathways/2022/NOVEMBER/102/file_1668600056782_bce3e0a8b6e94ce7a76ac94426c1be04.zip
+storageClient?.getFileFromUrl("https://tdeisamplestorage.blob.core.windows.net/gtfspathways/2022/NOVEMBER/102/file_1668600056782_bce3e0a8b6e94ce7a76ac94426c1be04.zip").then((fileEntity)=>{
+    console.log("Received file entity");
+    console.log(fileEntity.fileName);
+    console.log(fileEntity.mimeType);
+    // fileEntity.getStream().then((stream)=>{
+    //     console.log("Stream received");
+    // });
+
+}).catch((err)=>{
+    console.log('Error while getting the file information');
+    console.log(err);
+});
