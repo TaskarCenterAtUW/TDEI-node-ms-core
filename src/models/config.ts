@@ -1,3 +1,4 @@
+import { AzureQueueConfig } from "../core/queue/providers/azure-queue-config";
 import { Provider } from "../types/provider";
 import { IConfig } from "./abstracts/iconfig";
 
@@ -12,7 +13,7 @@ declare global {
   
 
 
-export class CoreConfig implements IConfig{
+export class CoreConfig implements IConfig {
     provider: Provider;
 
     static default(): CoreConfig {

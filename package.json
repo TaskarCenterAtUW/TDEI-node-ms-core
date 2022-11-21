@@ -1,7 +1,7 @@
 {
   "name": "nodets-ms-core",
-  "version": "0.0.5",
-  "description": "NodeJS Typescript Boilerplate",
+  "version": "0.0.6",
+  "description": "NodeJS Typescript Boilerplate with cloud interaction",
   "main": "lib/index.js",
   "scripts": {
     "build": "rimraf ./lib && tsc",
@@ -18,7 +18,8 @@
   },
   "keywords": [
     "nodejs",
-    "typescript"
+    "typescript",
+    "cloud"
   ],
   "author": "Gaussian Solutions",
   "license": "ISC",
