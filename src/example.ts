@@ -109,7 +109,7 @@ topicObject.subscribe(subscription,{
 
 topicObject.publish(QueueMessage.from(
     {
-        message:"Hello there naresh"
+        message:"Hello there"
     }
 ));
 
