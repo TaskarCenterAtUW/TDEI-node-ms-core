@@ -12,8 +12,8 @@ import { CoreConfig } from "./models/config";
 // Get the dotenv things
 require('dotenv').config()
 
-// let coreConfig = new CoreConfig();
-Core.initialize(); // Pre-configures all the services required for the project.
+let coreConfig = new CoreConfig("Local");
+Core.initialize(coreConfig); // Pre-configures all the services required for the project.
 console.log("Hello");
 // Test the logs one by one
 // let logger = Core.getLogger();

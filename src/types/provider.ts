@@ -1,1 +1,1 @@
-export type Provider = "Azure" | "Local" | "Docker";
+export type Provider = "Azure" | "Local";

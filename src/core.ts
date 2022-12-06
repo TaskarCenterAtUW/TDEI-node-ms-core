@@ -10,6 +10,8 @@ import { IStorageConfig } from "./models/abstracts/istorageconfig";
 import { AzureStorageConfig } from "./core/storage/providers/azure/azure_storage_config";
 import { AzureLoggerConfig } from "./core/logger/providers/azure_logger_config";
 import { Topic } from "./core/queue/topic";
+import { LocalLogger } from "./core/logger/providers/local/local_logger";
+import { LocalStorageClient } from "./core/storage/providers/local/local_storage_client";
 
 export class Core {
     private static logger: ILoggable | undefined;
@@ -21,6 +23,10 @@ export class Core {
         else {
             if (this.config.provider === "Azure") {
                 this.logger = new Logger(new AzureLoggerConfig());
+                return this.logger;
+            }
+            else if(this.config.provider == 'Local') {
+                this.logger = new LocalLogger();
                 return this.logger;
             }
             else {
@@ -74,6 +80,9 @@ export class Core {
                 return new AzureStorageClient(AzureStorageConfig.default());
 
             }
+            else if(this.config.provider == 'Local'){
+                return new LocalStorageClient(); // yet to get things moving.
+            }   
             else {
                 console.error('Storage not configured for ' + this.config.provider);
                 return null;
