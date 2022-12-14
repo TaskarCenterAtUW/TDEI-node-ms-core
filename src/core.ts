@@ -10,8 +10,10 @@ import { IStorageConfig } from "./models/abstracts/istorageconfig";
 import { AzureStorageConfig } from "./core/storage/providers/azure/azure_storage_config";
 import { AzureLoggerConfig } from "./core/logger/providers/azure_logger_config";
 import { Topic } from "./core/queue/topic";
-import { LocalLogger } from "./core/logger/providers/local/local_logger";
 import { LocalStorageClient } from "./core/storage/providers/local/local_storage_client";
+import { LocalLogger } from "./core/logger/providers/local/local_logger";
+// import { LocalLogger } from "./core/logger/providers/local/local_logger";
+// import { LocalStorageClient } from "./core/storage/providers/local/local_storage_client";
 
 export class Core {
     private static logger: ILoggable | undefined;
@@ -45,7 +47,7 @@ export class Core {
                 // this.logger = new Logger(config);
                 break;
             case 'Local':
-                console.error("Unimplemented initialization for core " + config.provider);
+                this.config = config;
                 break;
             default:
                 break;
@@ -92,6 +94,9 @@ export class Core {
             if (config.provider === "Azure") {
                 if (config instanceof AzureStorageConfig) {
                     return new AzureStorageClient(config);
+                }
+                else if(this.config.provider == 'Local'){
+                    return new LocalStorageClient(); // yet to get things moving.
                 }
                 else {
                     console.debug("Provided configuration is mismatched");
