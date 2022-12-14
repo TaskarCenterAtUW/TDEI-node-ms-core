@@ -25,13 +25,13 @@ console.log("Hello");
 //     apiKeysIssued:2
 // });
 
-// let auditRequest = AuditRequest.from({
-//     agencyId:'8383',
-//     requestId:'83832',
-//     resourceUrl:'/gtfs-flex/',
-//     responseStatus:'200',
-//     responseResult:'succeeded'
-// });
+let auditRequest = AuditRequest.from({
+    agencyId:'8383',
+    requestId:'83832',
+    resourceUrl:'/gtfs-flex/',
+    responseStatus:'200',
+    responseResult:'succeeded'
+});
 //  logger.getAuditor()?.addRequest(auditRequest);
 // auditRequest.responseStatus = '201';
 // logger.getAuditor()?.updateRequest(auditRequest);
@@ -78,6 +78,11 @@ const storageClient = Core.getStorageClient();
 //     console.log(err);
 // });
 
+
+/**
+ * Testing for topics
+ */
+/*
 // Some experiment regarding service bus and subscription.
 const topic = "gtfs-flex-upload";
 const subscription = "uploadprocessor";
@@ -89,7 +94,6 @@ topicConfig.connectionString = process.env.PUBSUBCONNECTION as string;
 
 const topicObject = Core.getTopic(topic,topicConfig);
 
-const topic2Object = Core.getTopic('tipic');
 
 function processMessage(message:QueueMessage) {
     console.log("Received Message");
@@ -112,5 +116,12 @@ topicObject.publish(QueueMessage.from(
         message:"Hello there"
     }
 ));
+*/
 
+/**
+ * Internal section for logger testing
+ */
+let coreLogger = Core.getLogger();
 
+coreLogger.info('One Information','another information');
+coreLogger.getAuditor()?.addRequest(auditRequest);
