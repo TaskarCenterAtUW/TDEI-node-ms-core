@@ -123,5 +123,12 @@ topicObject.publish(QueueMessage.from(
  */
 let coreLogger = Core.getLogger();
 
-coreLogger.info('One Information','another information');
-coreLogger.getAuditor()?.addRequest(auditRequest);
+// coreLogger.info('One Information','another information');
+// coreLogger.getAuditor()?.addRequest(auditRequest);
+
+ storageClient?.getContainer('gtfspathways').then((container)=>{
+    container.listFiles().then((files)=>{
+        console.log(files);
+    });
+
+});
