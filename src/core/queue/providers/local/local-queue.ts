@@ -3,6 +3,7 @@ import { QueueMessage } from "../../models/queue-message";
 
 import client, { Channel, Connection } from "amqplib";
 import { Queue } from "../../queue";
+import { LocalQueueConfig } from "./local-queue-config";
 
 type LocalQueueMessage = {
     body: QueueMessage
@@ -17,8 +18,9 @@ export class LocalQueue implements IMessageQueue {
     private currentMessages: QueueMessage[] = [];
     private parent: Queue;
 
-    constructor(queueName:string, parent: Queue) {
-         client.connect('amqp://localhost').then((con)=>{
+    constructor(queueName:string, parent: Queue, config: LocalQueueConfig = LocalQueueConfig.default()) {
+        
+         client.connect(config.connectionString).then((con)=>{
             this.connection = con;
             this.connection?.createChannel().then((chan)=>{
                 this.channel = chan;
