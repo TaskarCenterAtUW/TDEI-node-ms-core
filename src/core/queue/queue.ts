@@ -52,7 +52,7 @@ export class Queue extends MessageQueue implements IMessageQueue {
             }
         }
         if(config.provider == 'Local'){
-            this.client = new LocalQueue(queueName);
+            this.client = new LocalQueue(queueName,this);
         }
     }
 
