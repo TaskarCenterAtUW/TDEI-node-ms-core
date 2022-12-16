@@ -1,6 +1,7 @@
 // Testing code
 
 import { ServiceBusClient, ServiceBusError } from "@azure/service-bus";
+import client, { Channel, Connection } from "amqplib";
 import { Core } from "./core";
 import { AuditEvent } from "./core/logger/model/audit_event";
 import { AuditRequest } from "./core/logger/model/audit_request";
@@ -121,14 +122,61 @@ topicObject.publish(QueueMessage.from(
 /**
  * Internal section for logger testing
  */
-let coreLogger = Core.getLogger();
+// let coreLogger = Core.getLogger();
 
 // coreLogger.info('One Information','another information');
 // coreLogger.getAuditor()?.addRequest(auditRequest);
 
- storageClient?.getContainer('gtfspathways').then((container)=>{
-    container.listFiles().then((files)=>{
-        console.log(files);
-    });
+//  storageClient?.getContainer('gtfspathways').then((container)=>{
+//     container.listFiles().then((files)=>{
+//         console.log(files);
+//     });
 
-});
+// });
+
+async function tryLocalMessages(){
+
+const connection : Connection = await client.connect('amqp://localhost');
+
+const channel: Channel = await connection.createChannel();
+
+const queueName: string = 'tdei-sample';
+await channel.assertQueue(queueName);
+
+channel.sendToQueue(queueName, Buffer.from('Hello there'));
+
+channel.consume(queueName,(msg)=>{
+    console.log('received message');
+    console.log(msg?.content.toString());
+},{noAck:true});
+
+}
+
+// tryLocalMessages().then(()=>{
+//     console.log('completed');
+// }).catch((e)=>{
+//     console.log('exception to be handled');
+//     console.log(e);
+// });
+
+const delay = ms => new Promise(res=>setTimeout(res,ms));
+
+async function testMessages(){
+
+    let queue = Core.getQueue('tdei-sample');
+    const message = QueueMessage.from({
+        messageId:'28282',
+        message:'Sample message',
+        messageType:'sample-type',
+        data:{
+            flexPath:'sdfs/sdfs/sds',
+            isValid:true
+        }
+    });
+    
+    await delay(1000);
+    queue.add(message);
+    queue.send();
+
+}
+testMessages();

@@ -5,6 +5,7 @@ import { MessageQueue } from "./abstracts/message-queue";
 import { QueueMessage } from "./models/queue-message";
 import { AzureQueueConfig } from "./providers/azure-queue-config";
 import { AzureServiceBusQueue } from "./providers/azure-service-bus-queue";
+import { LocalQueue } from "./providers/local/local-queue";
 
 export class Queue extends MessageQueue implements IMessageQueue {
 
@@ -49,6 +50,9 @@ export class Queue extends MessageQueue implements IMessageQueue {
                 console.log('Faield to initialize queue');
                 // console.log(e);
             }
+        }
+        if(config.provider == 'Local'){
+            this.client = new LocalQueue(queueName);
         }
     }
 
