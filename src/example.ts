@@ -5,7 +5,7 @@ import client, { Channel, Connection } from "amqplib";
 import { Core } from "./core";
 import { AuditEvent } from "./core/logger/model/audit_event";
 import { AuditRequest } from "./core/logger/model/audit_request";
-import { QueueMessage } from "./core/queue";
+import { Queue, QueueMessage, When } from "./core/queue";
 import { AzureQueueConfig } from "./core/queue/providers/azure-queue-config";
 import { CoreConfig } from "./models/config";
 
@@ -134,6 +134,18 @@ topicObject.publish(QueueMessage.from(
 
 // });
 
+
+class CustomQueue extends Queue{
+
+    // Add listener function to the event type `sampleevent`
+    @When('sampletype')
+    public onSampleEvent(message: QueueMessage){
+        console.log('Received message');
+        console.debug(message.messageId);
+    }
+
+}
+
 async function tryLocalMessages(){
 
 const connection : Connection = await client.connect('amqp://localhost');
@@ -167,16 +179,25 @@ async function testMessages(){
     const message = QueueMessage.from({
         messageId:'28282',
         message:'Sample message',
-        messageType:'sample-type',
+        messageType:'sampletype',
         data:{
             flexPath:'sdfs/sdfs/sds',
             isValid:true
         }
     });
-    
+
+
+    // Accessing or creating queueInstance
+
+let customQueueObject = Core.getCustomQueue<CustomQueue>('tdei-sample',CustomQueue);
     await delay(1000);
+    customQueueObject.listen();
     queue.add(message);
     queue.send();
 
+
 }
 testMessages();
+
+
+
