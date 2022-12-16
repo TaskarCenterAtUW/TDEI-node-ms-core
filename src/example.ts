@@ -146,23 +146,23 @@ class CustomQueue extends Queue{
 
 }
 
-async function tryLocalMessages(){
+// async function tryLocalMessages(){
 
-const connection : Connection = await client.connect('amqp://localhost');
+// const connection : Connection = await client.connect('amqp://localhost');
 
-const channel: Channel = await connection.createChannel();
+// const channel: Channel = await connection.createChannel();
 
-const queueName: string = 'tdei-sample';
-await channel.assertQueue(queueName);
+// const queueName: string = 'tdei-sample';
+// await channel.assertQueue(queueName);
 
-channel.sendToQueue(queueName, Buffer.from('Hello there'));
+// channel.sendToQueue(queueName, Buffer.from('Hello there'));
 
-channel.consume(queueName,(msg)=>{
-    console.log('received message');
-    console.log(msg?.content.toString());
-},{noAck:true});
+// channel.consume(queueName,(msg)=>{
+//     console.log('received message');
+//     console.log(msg?.content.toString());
+// },{noAck:true});
 
-}
+// }
 
 // tryLocalMessages().then(()=>{
 //     console.log('completed');
@@ -190,7 +190,7 @@ async function testMessages(){
     // Accessing or creating queueInstance
 
 let customQueueObject = Core.getCustomQueue<CustomQueue>('tdei-sample',CustomQueue);
-    await delay(1000);
+    await delay(1000); // Have to do without delay.
     customQueueObject.listen();
     queue.add(message);
     queue.send();
