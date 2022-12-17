@@ -9,7 +9,7 @@ import { FileEntity } from "../../abstract/file_entity";
 export class AzureFileEntity implements FileEntity {
     /**
      * Name of the file
-     *  */ 
+     */
     fileName: string;
 
     /**
@@ -20,7 +20,7 @@ export class AzureFileEntity implements FileEntity {
     mimeType: string;
 
     filePath: string;
-    
+
     _blobClient: BlockBlobClient;
 
     constructor(name: string, blobClient: BlockBlobClient, mimeType: string = 'text/plain') {
@@ -39,7 +39,7 @@ export class AzureFileEntity implements FileEntity {
     }
 
     /**
-     * Reads the file as text and returns the string 
+     * Reads the file as text and returns the string
      * @returns string content of the file
      */
     async getBodyText(): Promise<string> {
@@ -65,7 +65,7 @@ export class AzureFileEntity implements FileEntity {
      * @returns object of type Buffer with all the data
      */
     async streamToData(stream: NodeJS.ReadableStream): Promise<Buffer> {
-        let chunks: Buffer[] = []
+        const chunks: Buffer[] = []
         for await (const chunk of stream) {
             chunks.push(chunk as Buffer);
         }

@@ -16,7 +16,7 @@ export class AzureAuditor implements IAuditor {
             }
         );
         this.logQueue?.add(message);
-        
+
         return message;
     }
 
@@ -52,7 +52,7 @@ export class AzureAuditor implements IAuditor {
         }
         this.logQueue = Core.getQueue(queueName);
         this.logQueue.enableAutoSend(5);
-        
+
     }
 
 }

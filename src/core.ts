@@ -27,7 +27,7 @@ export class Core {
                 this.logger = new Logger(new AzureLoggerConfig());
                 return this.logger;
             }
-            else if(this.config.provider == 'Local') {
+            else if(this.config.provider === 'Local') {
                 this.logger = new LocalLogger();
                 return this.logger;
             }
@@ -82,9 +82,9 @@ export class Core {
                 return new AzureStorageClient(AzureStorageConfig.default());
 
             }
-            else if(this.config.provider == 'Local'){
+            else if(this.config.provider === 'Local'){
                 return new LocalStorageClient(); // yet to get things moving.
-            }   
+            }
             else {
                 console.error('Storage not configured for ' + this.config.provider);
                 return null;
@@ -95,7 +95,7 @@ export class Core {
                 if (config instanceof AzureStorageConfig) {
                     return new AzureStorageClient(config);
                 }
-                else if(this.config.provider == 'Local'){
+                else if(this.config.provider === 'Local'){
                     return new LocalStorageClient(); // yet to get things moving.
                 }
                 else {
@@ -128,12 +128,12 @@ export class Core {
         console.log("Configured for \x1b[32m " + this.config.provider + " \x1b[0m \n");
 
 
-        if (this.config.provider == "Azure") {
+        if (this.config.provider === "Azure") {
             // check for the following process variables
             const loggerQueueName = process.env.LOGGERQUEUE;
             const queueConnection = process.env.QUEUECONNECTION;
             const storageConnection = process.env.STORAGECONNECTION;
-            //\\x1b[30m $1 \\x1b[0m
+            // \\x1b[30m $1 \\x1b[0m
             console.log("\x1b[31m > Checking Queue Connections\x1b[0m",);
             if (!queueConnection) {
                 console.log(`\x1b[33m Queue connection not available by default \x1b[0m`);

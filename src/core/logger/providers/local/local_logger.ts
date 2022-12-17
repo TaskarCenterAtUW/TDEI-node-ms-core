@@ -18,7 +18,7 @@ export class LocalLogger implements ILoggable, IAuditor {
             }
         );
         this.sendLog(JSON.stringify(message.toJSON()));
-        
+
         return message;
     }
 
@@ -31,7 +31,7 @@ export class LocalLogger implements ILoggable, IAuditor {
             }
          );
          this.sendLog(JSON.stringify(message.toJSON()));
-        
+
          return message;
     }
 
@@ -51,29 +51,29 @@ export class LocalLogger implements ILoggable, IAuditor {
 
 
     recordMetric(name: string, value: number): void {
-        
+
         this.sendLog(JSON.stringify({'name':name,'value':value,'type':'metric'}));
-        
+
     }
     sendAll(): void {
        console.log('Ignoring sendAll for Local implementation');
     }
     recordRequest(req: any, res: any): void {
-         
+
         this.sendLog(JSON.stringify({'req':req,'res':res,'type':'request'}));
     }
     info(message?: any, ...optionalParams: any[]): void {
-        
+
         this.sendLog(JSON.stringify({'message':message,'other':optionalParams,'type':'info'}));
     }
     debug(message?: any, ...optionalParams: any[]): void {
-         
+
         this.sendLog(JSON.stringify({'message':message,'other':optionalParams,'type':'debug'}));
     }
     recordMessage(message: QueueMessage): void {
 
         this.sendLog(JSON.stringify({'message':message.toJSON,'type':'queueMessage'}));
-         
+
     }
     getAuditor(): IAuditor | null {
         return this;
@@ -87,7 +87,7 @@ export class LocalLogger implements ILoggable, IAuditor {
         //     method:'post',
         //     body:message
         // });
-        
+
         console.log(message);
         axios.post('http://localhost:8080/log',JSON.parse(message)).then((response)=>{
             console.log(response.data);

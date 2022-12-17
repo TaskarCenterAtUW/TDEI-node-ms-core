@@ -11,9 +11,4 @@ describe('Core Configuration',() => {
         const config = CoreConfig.default();
         expect(config.provider).toEqual("Local");
     });
-    it('Should load the provider based on constructor',()=>{
-        const config = new CoreConfig("Docker");
-        expect(config.provider).toEqual("Docker");
-    });
-    
 });

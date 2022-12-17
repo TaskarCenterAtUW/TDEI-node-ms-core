@@ -28,7 +28,7 @@ export class AuditEvent extends AbstractDomainEntity {
 
     @Prop()
     startDate: Date = new Date();
-    
+
     @Prop()
     endDate?: Date;
 }

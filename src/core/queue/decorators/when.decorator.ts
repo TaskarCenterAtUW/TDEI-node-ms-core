@@ -5,7 +5,7 @@ import 'reflect-metadata';
 // This way, the conversion of the event to respective class can
 // be easily handled
 export function When(eventName:string) {
-    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
     const eventHandlerMap = Reflect.getMetadata('eventHandlers', target) || new Map();
     const eventHandlers = eventHandlerMap.get(eventName) || [];
     eventHandlers.unshift({ handler: target[propertyKey] });

@@ -10,4 +10,3 @@ export interface AbstractDomainEntityConstructor {
       ...args: any[]
     ): T;
   }
-  

@@ -32,7 +32,7 @@ export class Topic extends MessageTopic implements IMessageTopic {
 
     protected initializeProvider(config: IQueueConfig, topicName: string): void {
 
-        if (config.provider == "Azure") {
+        if (config.provider === "Azure") {
             try {
                 this.client = new AzureServiceBusTopic(config, topicName);
 

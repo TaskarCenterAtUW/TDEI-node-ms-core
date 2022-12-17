@@ -43,7 +43,7 @@ export class Queue extends MessageQueue implements IMessageQueue {
     }
 
     protected initializeProvider(config: IQueueConfig,queueName:string): void {
-        if(config.provider == "Azure"){
+        if(config.provider === "Azure"){
             try {
             this.client = new AzureServiceBusQueue(config,queueName,this);
             } catch(e) {
@@ -51,7 +51,7 @@ export class Queue extends MessageQueue implements IMessageQueue {
                 // console.log(e);
             }
         }
-        if(config.provider == 'Local'){
+        if(config.provider === 'Local'){
             this.client = new LocalQueue(queueName,this);
         }
     }
