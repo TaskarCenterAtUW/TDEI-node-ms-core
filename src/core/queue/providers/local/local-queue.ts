@@ -19,7 +19,7 @@ export class LocalQueue implements IMessageQueue {
     private parent: Queue;
 
     constructor(queueName:string, parent: Queue, config: LocalQueueConfig = LocalQueueConfig.default()) {
-        
+
          client.connect(config.connectionString).then((con)=>{
             this.connection = con;
             this.connection?.createChannel().then((chan)=>{
@@ -43,7 +43,7 @@ export class LocalQueue implements IMessageQueue {
 
     async send(): Promise<any> {
 
-        if(this.currentMessages.length == 0){
+        if(this.currentMessages.length === 0){
             return;
         }
         const messagesToSend: LocalQueueMessage[] = []
@@ -75,13 +75,13 @@ export class LocalQueue implements IMessageQueue {
         const eventMap = Reflect.getMetadata('eventHandlers', this.parent.constructor.prototype) as Map<
             string,
             // eslint-disable-next-line 
-            //@typescript-eslint/ban-types
+            // @typescript-eslint/ban-types
             { handler: Function }[]
         >;
         const eventHandlers = eventMap.get(messageType);
-        if (eventHandlers != undefined) {
+        if (eventHandlers !== undefined) {
             // Generate Queuemessage
-            const queueMessage = QueueMessage.from(body); //TODO: Parse based on the message type
+            const queueMessage = QueueMessage.from(body); // TODO: Parse based on the message type
             console.log('Received Message raw body', { body: body });
             // this.logger?.recordMessage(queueMessage,false);
             console.debug('Help me');

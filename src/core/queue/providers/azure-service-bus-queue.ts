@@ -23,8 +23,8 @@ export class AzureServiceBusQueue implements IMessageQueue {
         let azureQueueConfig = AzureQueueConfig.default();
         if(config instanceof AzureQueueConfig){
             azureQueueConfig = config;
-        } 
-        
+        }
+
         this.sbClient = new ServiceBusClient(azureQueueConfig.connectionString);
         this.listener = this.sbClient.createReceiver(queueName);
         this.sender = this.sbClient.createSender(queueName);
@@ -32,14 +32,14 @@ export class AzureServiceBusQueue implements IMessageQueue {
     }
 
     /**
-    * start listening to the queue
-    */
+     * start listening to the queue
+     */
      async listen(): Promise<void> {
         return this.listenQueue();
     }
 
     async send(): Promise<any> {
-        if(this.currentMessages.length == 0){
+        if(this.currentMessages.length === 0){
             return;
         }
         const messagesToSend: ServiceBusMessage[] = []
@@ -75,14 +75,14 @@ export class AzureServiceBusQueue implements IMessageQueue {
         // Check if there is any method listening to it.
         const eventMap = Reflect.getMetadata('eventHandlers', this.parent.constructor.prototype) as Map<
             string,
-            // eslint-disable-next-line 
-            //@typescript-eslint/ban-types
+            // eslint-disable-next-line
+            // @typescript-eslint/ban-types
             { handler: Function }[]
         >;
         const eventHandlers = eventMap.get(messageType);
-        if (eventHandlers != undefined) {
+        if (eventHandlers !== undefined) {
             // Generate Queuemessage
-            const queueMessage = QueueMessage.from(body); //TODO: Parse based on the message type
+            const queueMessage = QueueMessage.from(body); // TODO: Parse based on the message type
             console.log('Received Message raw body', { body: body });
             // this.logger?.recordMessage(queueMessage,false);
             console.debug('Help me');

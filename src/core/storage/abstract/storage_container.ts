@@ -16,15 +16,15 @@ export abstract class StorageContainer {
     }
 
     /**
-     * Method to list the 
-     * 
+     * Method to list the
+     *
      * @returns list of FileEntity objects
      */
     abstract listFiles(): Promise<FileEntity[]>;
 
     /**
      * Creates a file entity object within the container.
-     * 
+     *
      * @param name name of the file
      * @param mimeType mime-type of the file
      */

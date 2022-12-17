@@ -10,4 +10,4 @@ export type DeepPartial<T> = {
   : T[P] extends any[]
   ? (DeepPartial<T[P][number]> | null | undefined)[]
   : DeepPartial<T[P]>;
-};  
+};

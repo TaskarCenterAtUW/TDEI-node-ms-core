@@ -10,7 +10,7 @@ declare global {
       }
     }
   }
-  
+
 
 
 export class CoreConfig implements IConfig {
@@ -43,7 +43,7 @@ export class CoreConfig implements IConfig {
 //     connectionString!: ConnectionString;
 
 //     queueNames: string[] = [];
-    
+
 //     logQueue: string = 'tdei-ev-logger';
 // }
 

@@ -4,7 +4,7 @@ import { StorageContainer } from "../../abstract/storage_container";
 import { LocalStorageContainer } from "./local_storage_container";
 
 export class LocalStorageClient implements StorageClient {
-    
+
     getContainer(name: string): Promise<StorageContainer> {
         return new Promise((resolve, reject) => {
             resolve(new LocalStorageContainer(name));

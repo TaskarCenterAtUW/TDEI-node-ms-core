@@ -3,7 +3,7 @@ import { Provider } from "../../../../types/provider";
 
 // This is not used yet.
 export class LocalQueueConfig implements IQueueConfig{
-    
+
     provider: Provider = "Local";
     connectionString: string = process.env.QUEUECONNECTION || "";
 

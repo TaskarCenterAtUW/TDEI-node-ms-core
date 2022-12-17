@@ -22,7 +22,7 @@ export class AzureStorageClient implements StorageClient {
             config.connectionString
         );
     }
-    
+
 
     /**
      * Fetches the Storage container of certain name
@@ -48,20 +48,17 @@ export class AzureStorageClient implements StorageClient {
                 console.log(
                     `requestId - ${error.request.requestId}, statusCode - ${error.statusCode}, errorCode - ${error.details.errorCode}\n`
                   );
-                if(error.statusCode == 404 ){
+                if(error.statusCode === 404 ){
                     // reject(new NotFoundResourceError());
                     const nfe = new NotFoundResourceError(error.details.errorCode);
                     nfe.body.code = error.details.errorCode;
-                    
                     reject(nfe);
 
                 }
                 else {
                     reject(new UnprocessableResourceError());
                 }
-                
             });
-            
         });
     }
 
@@ -72,7 +69,6 @@ export class AzureStorageClient implements StorageClient {
         const fileComponents = filePath.split('/');
         const containerName = fileComponents[1];
         const fileRelativePath = fileComponents.slice(2).join('/');
-        
         return this.getFile(containerName,fileRelativePath);
     }
 

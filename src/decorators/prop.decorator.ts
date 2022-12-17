@@ -27,7 +27,7 @@ import 'reflect-metadata';
  *   ```
  */
 export const Prop = function (propName?: string): (...args: any) => void {
-  return function (target: any, name: string) {
+  return  (target: any, name: string) => {
     const modelProps = Reflect.getMetadata('modelProps', target) || [];
     const propAliases = Reflect.getMetadata('propAliases', target) || {};
     propAliases[name] = typeof propName === 'undefined' ? name : propName;
