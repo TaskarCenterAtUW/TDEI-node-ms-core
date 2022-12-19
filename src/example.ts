@@ -2,6 +2,7 @@
 
 import { ServiceBusClient, ServiceBusError } from "@azure/service-bus";
 import client, { Channel, Connection } from "amqplib";
+import { last } from "lodash";
 import { Core } from "./core";
 import { AuditEvent } from "./core/logger/model/audit_event";
 import { AuditRequest } from "./core/logger/model/audit_request";
@@ -127,12 +128,22 @@ topicObject.publish(QueueMessage.from(
 // coreLogger.info('One Information','another information');
 // coreLogger.getAuditor()?.addRequest(auditRequest);
 
-//  storageClient?.getContainer('gtfspathways').then((container)=>{
-//     container.listFiles().then((files)=>{
-//         console.log(files);
-//     });
+ storageClient?.getContainer('gtfspathways').then((container)=>{
+    container.listFiles().then((files)=>{
+        console.log(files);
+        const lastFile = files[files.length -1];
+        lastFile.getStream().then(async (stream)=>{
+            stream.setEncoding('utf8');
+            let data = '';
+            for await (const chunk of stream) {
+                data += chunk;
+            }
+            console.log(data);
 
-// });
+        });
+    });
+
+});
 
 
 class CustomQueue extends Queue{
