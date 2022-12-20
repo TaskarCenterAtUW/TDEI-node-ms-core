@@ -9,8 +9,8 @@ import { AuditRequest } from "./core/logger/model/audit_request";
 import { Queue, QueueMessage, When } from "./core/queue";
 import { AzureQueueConfig } from "./core/queue/providers/azure-queue-config";
 import { CoreConfig } from "./models/config";
-
-
+import * as fs from 'fs';
+import * as path from 'path';
 // Get the dotenv things
 require('dotenv').config()
 
@@ -53,6 +53,17 @@ let auditRequest = AuditRequest.from({
 // logger.sendAll();
 // https://tdeisamplestorage.blob.core.windows.net/gtfspathways/2022/NOVEMBER/102/
 const storageClient = Core.getStorageClient();
+
+async function testUpload(){
+    const container = await storageClient?.getContainer('gone');
+    const filetoUpload = container?.createFile('sample.txt','text/plain');
+    const readStream = fs.createReadStream(path.join(__dirname,'core.js'));
+    // Get the local stream and upload
+    filetoUpload?.upload(readStream);
+}
+
+testUpload();
+
 
 //  storageClient?.getFile('gtfspathways','2022/NOVEMBER/102/file_1668600056782_bce3e0a8b6e94ce7a76ac94426c1be04.zip').then((fileEntity)=>{
 //     console.log("Received file entity");
@@ -208,7 +219,7 @@ let customQueueObject = Core.getCustomQueue<CustomQueue>('tdei-sample',CustomQue
 
 
 }
-testMessages();
+// testMessages();
 
 
 
