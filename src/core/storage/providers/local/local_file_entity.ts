@@ -1,5 +1,6 @@
 import axios from "axios";
 import { FileEntity } from "../../abstract/file_entity";
+const FormData = require('form-data');
 
 export class LocalFileEntity implements FileEntity{
 
@@ -27,8 +28,15 @@ export class LocalFileEntity implements FileEntity{
         return Promise.resolve(this.streamToText(stream));
     }
 
-    upload(body: NodeJS.ReadableStream): Promise<FileEntity> {
-        throw new Error("Method not implemented.");
+    async upload(body: NodeJS.ReadableStream): Promise<FileEntity> {
+        
+        // Get the directory from file path
+        const fullUploadPath = this.rootUploadPath+this.filePath;
+        const directoryPath = fullUploadPath.substring(0,fullUploadPath.indexOf(this.fileName)-1);
+        var formData = new FormData();
+        formData.append('uploadFile',body);
+        const response = await axios.post(directoryPath,formData);
+        return Promise.resolve(this);
     }
 
      /**

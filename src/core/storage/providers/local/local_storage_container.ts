@@ -39,7 +39,7 @@ export class LocalStorageContainer implements StorageContainer {
         });
     }
     createFile(name: string, mimeType: string): FileEntity {
-        throw new Error("Method not implemented.");
+        return new LocalFileEntity(this.name+'/'+name,mimeType);
     }
 
     constructor(name: string) {
