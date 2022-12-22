@@ -4,6 +4,7 @@ import { IMessageTopic, ITopicSubscription } from "./abstracts/IMessage-topic";
 import { MessageTopic } from "./abstracts/message-topic";
 import { QueueMessage } from "./models/queue-message";
 import { AzureServiceBusTopic } from "./providers/azure-service-bus-topic";
+import { LocalTopic } from "./providers/local/local-topic";
 
 export class Topic extends MessageTopic implements IMessageTopic {
 
@@ -37,9 +38,16 @@ export class Topic extends MessageTopic implements IMessageTopic {
                 this.client = new AzureServiceBusTopic(config, topicName);
 
             } catch (e) {
-                console.log('Faield to initialize queue');
+                console.log('Faield to initialize topic');
                 // console.log(e);
             }
+        } if(config.provider === "Local") {
+            try{
+                this.client = new LocalTopic(topicName,config);
+            } catch(e){
+                console.log('Failed to initialize topic')
+            }
+
         }
     }
 
