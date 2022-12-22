@@ -11,9 +11,12 @@ import { AzureQueueConfig } from "./core/queue/providers/azure-queue-config";
 import { CoreConfig } from "./models/config";
 import * as fs from 'fs';
 import * as path from 'path';
+import { LocalQueueConfig } from "./core/queue/providers/local/local-queue-config";
 // Get the dotenv things
 require('dotenv').config()
 
+
+const delay = ms => new Promise(res=>setTimeout(res,ms));
 let coreConfig = new CoreConfig("Local");
 Core.initialize(coreConfig); // Pre-configures all the services required for the project.
 console.log("Hello");
@@ -62,7 +65,7 @@ async function testUpload(){
     filetoUpload?.upload(readStream);
 }
 
-testUpload();
+// testUpload();
 
 
 //  storageClient?.getFile('gtfspathways','2022/NOVEMBER/102/file_1668600056782_bce3e0a8b6e94ce7a76ac94426c1be04.zip').then((fileEntity)=>{
@@ -91,6 +94,39 @@ testUpload();
 //     console.log(err);
 // });
 
+
+async function testTopic(){
+    const topic = 'gtfs-flex-upload';
+    const subscription = 'uploadprocessor';
+    const topicConfig =  LocalQueueConfig.default();
+    const topicObject = Core.getTopic(topic,topicConfig);
+    await delay(1000);
+    
+    topicObject.subscribe(subscription,{
+        onReceive: processMessage,
+        onError:processError
+    });
+    await delay(1000);
+    topicObject.publish(QueueMessage.from(
+        {
+            message:"Hello there from local"
+        }
+    ));
+
+}
+
+function processMessage(message:QueueMessage) {
+    console.log("Received Message");
+    console.log(message.toJSON());
+    // return Promise.resolve();
+}
+
+function processError(error: any){
+    console.log("Received error");
+    // return Promise.reject();
+}
+
+testTopic();
 
 /**
  * Testing for topics
@@ -139,22 +175,22 @@ topicObject.publish(QueueMessage.from(
 // coreLogger.info('One Information','another information');
 // coreLogger.getAuditor()?.addRequest(auditRequest);
 
- storageClient?.getContainer('gtfspathways').then((container)=>{
-    container.listFiles().then((files)=>{
-        console.log(files);
-        const lastFile = files[files.length -1];
-        lastFile.getStream().then(async (stream)=>{
-            stream.setEncoding('utf8');
-            let data = '';
-            for await (const chunk of stream) {
-                data += chunk;
-            }
-            console.log(data);
+//  storageClient?.getContainer('gtfspathways').then((container)=>{
+//     container.listFiles().then((files)=>{
+//         console.log(files);
+//         const lastFile = files[files.length -1];
+//         lastFile.getStream().then(async (stream)=>{
+//             stream.setEncoding('utf8');
+//             let data = '';
+//             for await (const chunk of stream) {
+//                 data += chunk;
+//             }
+//             console.log(data);
 
-        });
-    });
+//         });
+//     });
 
-});
+// });
 
 
 class CustomQueue extends Queue{
@@ -193,7 +229,7 @@ class CustomQueue extends Queue{
 //     console.log(e);
 // });
 
-const delay = ms => new Promise(res=>setTimeout(res,ms));
+
 
 async function testMessages(){
 

@@ -24,6 +24,10 @@ export class LocalQueue implements IMessageQueue {
             this.connection = con;
             this.connection?.createChannel().then((chan)=>{
                 this.channel = chan;
+                this.channel?.assertQueue(queueName,{
+                    durable:false,
+                    autoDelete:false,
+                });
                 console.log('Channel created');
             })
          });
