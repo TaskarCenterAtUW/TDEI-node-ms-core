@@ -38,17 +38,25 @@ export class AzureServiceBusQueue implements IMessageQueue {
         return this.listenQueue();
     }
 
-    async send(): Promise<any> {
+    async send(): Promise<boolean> {
         if(this.currentMessages.length === 0){
-            return;
+            return Promise.resolve(true);
         }
         const messagesToSend: ServiceBusMessage[] = []
         this.currentMessages.forEach((singleMessage) => {
             messagesToSend.push({ body: singleMessage });
         });
-        await this.sender.sendMessages(messagesToSend);
-         // Clean the queueu
-         this.currentMessages = [];
+        try {
+            await this.sender.sendMessages(messagesToSend);
+            return Promise.resolve(true);
+        }
+        catch(e){
+            return Promise.reject(e);
+        } finally {
+            // Clean the queueu
+            this.currentMessages = [];
+        }
+         
     }
 
 
@@ -98,6 +106,10 @@ export class AzureServiceBusQueue implements IMessageQueue {
             this.listener.completeMessage(message); // To be called later.
         }
 
+    }
+
+    setup(): Promise<this> {
+        return Promise.resolve(this);
     }
 
 }

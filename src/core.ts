@@ -55,11 +55,12 @@ export class Core {
         return this.checkHealth();
     }
 
-    static getCustomQueue<T extends Queue>(name: string, qInstance: new (config: IQueueConfig, queueName: string) => T): T {
-        return new qInstance(this.config, name);
+    static getCustomQueue<T extends Queue>(name: string, qInstance: new (config: IQueueConfig, queueName: string) => T): Promise<T> {
+          const instance = new qInstance(this.config, name);
+        return instance.setup();
     }
 
-    static getQueue(name: string): Queue {
+    static getQueue(name: string): Promise<Queue> {
         return this.getCustomQueue<Queue>(name, Queue);
     }
 

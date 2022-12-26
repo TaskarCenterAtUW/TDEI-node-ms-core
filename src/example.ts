@@ -126,7 +126,7 @@ function processError(error: any){
     // return Promise.reject();
 }
 
-testTopic();
+// testTopic();
 
 /**
  * Testing for topics
@@ -198,7 +198,7 @@ class CustomQueue extends Queue{
     // Add listener function to the event type `sampleevent`
     @When('sampletype')
     public onSampleEvent(message: QueueMessage){
-        console.log('Received message');
+        console.log('Received message<><>');
         console.debug(message.messageId);
     }
 
@@ -233,7 +233,7 @@ class CustomQueue extends Queue{
 
 async function testMessages(){
 
-    let queue = Core.getQueue('tdei-sample');
+    let queue = await Core.getQueue('tdei-sample');
     const message = QueueMessage.from({
         messageId:'28282',
         message:'Sample message',
@@ -247,7 +247,7 @@ async function testMessages(){
 
     // Accessing or creating queueInstance
 
-let customQueueObject = Core.getCustomQueue<CustomQueue>('tdei-sample',CustomQueue);
+let customQueueObject = await Core.getCustomQueue<CustomQueue>('tdei-sample',CustomQueue);
     await delay(1000); // Have to do without delay.
     customQueueObject.listen();
     queue.add(message);
@@ -255,7 +255,7 @@ let customQueueObject = Core.getCustomQueue<CustomQueue>('tdei-sample',CustomQue
 
 
 }
-// testMessages();
+testMessages();
 
 
 

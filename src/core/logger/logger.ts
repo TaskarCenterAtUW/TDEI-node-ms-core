@@ -43,8 +43,12 @@ export class Logger extends LoggerAbstract implements ILoggable {
     if(config.provider === "Azure"){
 
       const azureConfig = config as AzureLoggerConfig;
-      this.logQueue = Core.getQueue(azureConfig.loggerQueueName);
-      this.logQueue.enableAutoSend(2);
+      Core.getQueue(azureConfig.loggerQueueName).then((logQueue)=>{
+        this.logQueue = logQueue;
+        this.logQueue.enableAutoSend(2);
+      })
+      // this.logQueue =  Core.getQueue(azureConfig.loggerQueueName);
+      // this.logQueue.enableAutoSend(2);
       console.log("Logger queue name "+azureConfig.loggerQueueName);
       this.auditor = new AzureAuditor(azureConfig.loggerQueueName); // TO be done.
       this.analytic = new AzureAnalytic(azureConfig.loggerQueueName);

@@ -22,16 +22,9 @@ export class LocalTopic implements IMessageTopic {
                console.log('Channel created');
                
                this.channel?.assertExchange(topic,'fanout',{durable:false});
-            //    this.channel?.checkExchange(topic).then((result)=>{
-            //     console.log('exchange exists')
-            //    }).catch((e)=>{
-            //     console.log('error with exchange');
-            //    });
+            
            })
         });
-        // Check for the name of exchange
-        // this.parent = parent;
-        // this.queueName = queueName;
    }
 
     async subscribe(subscription: string, handler: ITopicSubscription): Promise<void> {

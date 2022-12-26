@@ -16,21 +16,11 @@ export class LocalQueue implements IMessageQueue {
     private channel?: Channel;
     private queueName: string;
     private currentMessages: QueueMessage[] = [];
-    private parent: Queue;
+    private parent: any;
+    private config: LocalQueueConfig;
 
-    constructor(queueName:string, parent: Queue, config: LocalQueueConfig = LocalQueueConfig.default()) {
-
-         client.connect(config.connectionString).then((con)=>{
-            this.connection = con;
-            this.connection?.createChannel().then((chan)=>{
-                this.channel = chan;
-                this.channel?.assertQueue(queueName,{
-                    durable:false,
-                    autoDelete:false,
-                });
-                console.log('Channel created');
-            })
-         });
+    constructor(queueName:string, parent: any, config: LocalQueueConfig = LocalQueueConfig.default()) {
+        this.config = config;
          this.parent = parent;
          this.queueName = queueName;
     }
@@ -45,18 +35,31 @@ export class LocalQueue implements IMessageQueue {
         return Promise.resolve();
     }
 
-    async send(): Promise<any> {
+    async send(): Promise<boolean> {
 
         if(this.currentMessages.length === 0){
-            return;
+            return Promise.resolve(true);
         }
         const messagesToSend: LocalQueueMessage[] = []
+        var sent = true;
+        try {
         this.currentMessages.forEach(async (singleMessage) => {
             messagesToSend.push({ body: singleMessage });
-            await this.channel?.sendToQueue(this.queueName, Buffer.from(JSON.stringify(singleMessage.toJSON())));
+            const result = await this.channel?.sendToQueue(this.queueName, Buffer.from(JSON.stringify(singleMessage.toJSON())));
+            if(result) {
+                sent = sent && result;
+            }
         });
-         // Clean the queue
-         this.currentMessages = [];
+        return Promise.resolve(sent);
+    }
+    catch(e){
+        return Promise.reject(e);
+    }finally{         
+        // Clean the queue
+        this.currentMessages = [];
+
+    }
+
     }
 
 
@@ -82,6 +85,10 @@ export class LocalQueue implements IMessageQueue {
             // @typescript-eslint/ban-types
             { handler: Function }[]
         >;
+        if(eventMap == undefined){
+            console.log('undefined event map');
+            return;
+        }
         const eventHandlers = eventMap.get(messageType);
         if (eventHandlers !== undefined) {
             // Generate Queuemessage
@@ -97,10 +104,43 @@ export class LocalQueue implements IMessageQueue {
         else {
             // console.log("Event handlers for "+messageType+" undefined");
         }
-        // if (this.shouldComplete) {
-        //     this.listener.completeMessage(message); // To be called later.
-        // }
 
+    }
+
+    async setup(): Promise<this> {
+        
+        return new Promise((resolve,reject)=>{
+            client.connect(this.config.connectionString).then((con)=>{
+                this.connection = con;
+                this.connection?.createChannel().then((chan)=>{
+                    this.channel = chan;
+                    this.channel?.assertQueue(this.queueName,{
+                        durable:false,
+                        autoDelete:false,
+                    }).then((result)=>{
+                        // this.parent = this;
+                        resolve(this);
+                    })
+                    console.log('Channel created');
+                    
+                })
+             }).catch((e)=>{
+                reject(e);
+             });
+
+        })
+    }
+
+    async closeConnection() : Promise<void> {
+         
+        await this.channel?.close();
+        await this.connection?.close();
+        return Promise.resolve();
+    }
+
+    // convenience method for testing.
+    setParent(parent:any){
+        this.parent = parent;
     }
 
 }

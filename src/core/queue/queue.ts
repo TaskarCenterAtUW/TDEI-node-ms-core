@@ -56,6 +56,11 @@ export class Queue extends MessageQueue implements IMessageQueue {
         }
     }
 
+    async setup(): Promise<this> {
+        await this.client?.setup() ;//Promise.resolve(this);
+        return Promise.resolve(this);
+    }
+
     // Enable auto send
     enableAutoSend(time:number){
         this.startAutoSend(time);

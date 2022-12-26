@@ -5,7 +5,7 @@ export interface IMessageQueue {
     /**
      * Sends all the pending local messages to the cloud
      */
-    send(): Promise<any>;
+    send(): Promise<boolean>;
 
     /**
      * Adds the message to the local queue and waits
@@ -14,4 +14,6 @@ export interface IMessageQueue {
      * @param message Message to be added to internal queue
      */
     add(message: QueueMessage): Promise<any>;
+
+    setup():Promise<this>;
 }
