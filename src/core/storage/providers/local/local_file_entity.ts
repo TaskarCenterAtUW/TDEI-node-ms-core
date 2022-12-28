@@ -7,18 +7,20 @@ export class LocalFileEntity implements FileEntity{
     fileName: string;
     mimeType: string;
     filePath: string;
-    rootDownloadPath : string = "http://localhost:8080/files/download/";
-    rootUploadPath: string = "http://localhost:8080/files/upload/";
+    rootDownloadPath : string = "/files/download/";
+    rootUploadPath: string = "/files/upload/";
+    serverRoot:string;
 
-    constructor(name: string ,mimeType: string = 'text/plain') {
+    constructor(name: string ,serverRoot:string,mimeType: string = 'text/plain') {
         this.filePath = name;
         this.fileName = name.replace(/^.*[\\\/]/, ''); // Get the last name;
         this.mimeType = mimeType;
+        this.serverRoot = serverRoot;
     }
 
    async getStream(): Promise<NodeJS.ReadableStream> {
 
-        const response = await axios.get(this.rootDownloadPath+this.filePath,{
+        const response = await axios.get(this.serverRoot+this.rootDownloadPath+this.filePath,{
             responseType:'stream'
         });
         return Promise.resolve(response.data);
@@ -31,7 +33,7 @@ export class LocalFileEntity implements FileEntity{
     async upload(body: NodeJS.ReadableStream): Promise<FileEntity> {
         
         // Get the directory from file path
-        const fullUploadPath = this.rootUploadPath+this.filePath;
+        const fullUploadPath = this.serverRoot+this.rootUploadPath+this.filePath;
         const directoryPath = fullUploadPath.substring(0,fullUploadPath.indexOf(this.fileName)-1);
         var formData = new FormData();
         formData.append('uploadFile',body);

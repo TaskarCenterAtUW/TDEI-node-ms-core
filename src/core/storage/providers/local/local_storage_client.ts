@@ -5,9 +5,14 @@ import { LocalStorageContainer } from "./local_storage_container";
 
 export class LocalStorageClient implements StorageClient {
 
+    private serverRoot: string;
+
+    constructor(serverRoot: string){
+        this.serverRoot = serverRoot;
+    }
     getContainer(name: string): Promise<StorageContainer> {
         return new Promise((resolve, reject) => {
-            resolve(new LocalStorageContainer(name));
+            resolve(new LocalStorageContainer(name, this.serverRoot));
         });
     }
     getFile(containerName: string, fileName: string): Promise<FileEntity> {

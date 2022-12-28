@@ -12,6 +12,7 @@ import { AzureLoggerConfig } from "./core/logger/providers/azure_logger_config";
 import { Topic } from "./core/queue/topic";
 import { LocalStorageClient } from "./core/storage/providers/local/local_storage_client";
 import { LocalLogger } from "./core/logger/providers/local/local_logger";
+import { LocalStorageConfig } from "./core/storage/providers/local/local_storage_config";
 // import { LocalLogger } from "./core/logger/providers/local/local_logger";
 // import { LocalStorageClient } from "./core/storage/providers/local/local_storage_client";
 
@@ -83,7 +84,7 @@ export class Core {
 
             }
             else if(this.config.provider === 'Local'){
-                return new LocalStorageClient(); // yet to get things moving.
+                return new LocalStorageClient(LocalStorageConfig.default().serverRoot); // yet to get things moving.
             }
             else {
                 console.error('Storage not configured for ' + this.config.provider);
@@ -96,7 +97,7 @@ export class Core {
                     return new AzureStorageClient(config);
                 }
                 else if(this.config.provider === 'Local'){
-                    return new LocalStorageClient(); // yet to get things moving.
+                    return new LocalStorageClient(LocalStorageConfig.default().serverRoot); // yet to get things moving.
                 }
                 else {
                     console.debug("Provided configuration is mismatched");
