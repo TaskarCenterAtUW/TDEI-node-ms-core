@@ -19,7 +19,7 @@ export class LocalStorageContainer implements StorageContainer {
 
     listFiles(): Promise<FileEntity[]> {
         return new Promise(async (resolve, reject) => {
-            const url = 'http://localhost:8080/files/list/' + this.name + '/';
+            const url = this.serverRoot+'/files/list/' + this.name + '/';
             axios.get<FileResponse[]>(url).then((response) => {
                 // console.log(response.data);
                 // var firstResponse = response.data[0];
@@ -41,9 +41,10 @@ export class LocalStorageContainer implements StorageContainer {
     createFile(name: string, mimeType: string): FileEntity {
         return new LocalFileEntity(this.name+'/'+name,mimeType);
     }
-
-    constructor(name: string) {
+    private serverRoot:string;
+    constructor(name: string,serverRoot:string) {
         this.name = name;
+        this.serverRoot = serverRoot;
     }
 
 }
