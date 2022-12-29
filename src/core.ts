@@ -84,7 +84,7 @@ export class Core {
 
             }
             else if(this.config.provider === 'Local'){
-                return new LocalStorageClient(LocalStorageConfig.default().serverRoot); // yet to get things moving.
+                return new LocalStorageClient(LocalStorageConfig.default().serverRoot);
             }
             else {
                 console.error('Storage not configured for ' + this.config.provider);
@@ -97,7 +97,7 @@ export class Core {
                     return new AzureStorageClient(config);
                 }
                 else if(this.config.provider === 'Local'){
-                    return new LocalStorageClient(LocalStorageConfig.default().serverRoot); // yet to get things moving.
+                    return new LocalStorageClient(LocalStorageConfig.default().serverRoot);
                 }
                 else {
                     console.debug("Provided configuration is mismatched");
