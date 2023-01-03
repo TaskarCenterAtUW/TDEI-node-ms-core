@@ -65,9 +65,27 @@ async function testUpload(){
     filetoUpload?.upload(readStream);
 }
 
+async function testStorage(){
+    const container = await storageClient?.getContainer('gone');
+    let files = await container?.listFiles();
+    files?.forEach((entity)=>{
+        console.log(entity.filePath);
+    });
+    //gone/abc/adr-log-flow-1.jpg
+}
+// testStorage();
+
+async function testStorageFile(){
+    let theFile = await storageClient?.getFile('gone','abc/adr-log-flow-1.jpg');
+    console.log(theFile?.filePath);
+    let theOtherFile = await storageClient?.getFileFromUrl('http://localhost:8801/gone/abc/adr-log-flow-1.jpg');
+    console.log(theOtherFile?.filePath);
+}
+
+// testStorageFile()
 // testUpload();
 
-
+// Gets the file in the path
 //  storageClient?.getFile('gtfspathways','2022/NOVEMBER/102/file_1668600056782_bce3e0a8b6e94ce7a76ac94426c1be04.zip').then((fileEntity)=>{
 //     console.log("Received file entity");
 //     console.log(fileEntity.fileName);
@@ -126,7 +144,7 @@ function processError(error: any){
     // return Promise.reject();
 }
 
-testTopic();
+// testTopic();
 
 /**
  * Testing for topics
@@ -256,6 +274,8 @@ let customQueueObject = Core.getCustomQueue<CustomQueue>('tdei-sample',CustomQue
 
 }
 // testMessages();
+
+
 
 
 
