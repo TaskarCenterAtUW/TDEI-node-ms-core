@@ -278,21 +278,19 @@ let customQueueObject = Core.getCustomQueue<CustomQueue>('tdei-sample',CustomQue
 
 // Testing for authorization.
 async function testAuthorization() {
-    let coreConfig = new CoreConfig("Azure");
-    Core.initialize(coreConfig);
-    
-    var permission_request = new PermissionRequest({
-        userId:"c59d29b6-a063-4249-943f-d320d15ac9ab",
-        orgId:"0b41ebc5-350c-42d3-90af-3af4ad3628fb",
+
+    var permissionRequest = new PermissionRequest({
+        userId:"7961d767-a352-464f-95b6-cd1c5189a93c",
+        orgId:"5e339544-3b12-40a5-8acd-78c66d1fa981",
         permssions:["poc"],
         shouldSatisfyAll:false
      });
     // Alternative way of getting authorizer with url and provider
-    // const provider2 = Core.getAuthorizer({provider:"Azure",apiUrl:"<authorization url here>"});
-    // Remote/Local/Hosted.. 
-    const provider = Core.getAuthorizer({provider:"Simulated",apiUrl:process.env.AUTHURL?.toString()!});
+    // const aProvider = Core.getAuthorizer({provider:"Hosted"});// Picks from env
+   
+    const authProvider = Core.getAuthorizer({provider:"Hosted",apiUrl:process.env.AUTHURL?.toString()!});
     
-    const response = await provider?.hasPermission(permission_request);
+    const response = await authProvider?.hasPermission(permissionRequest);
     
     console.log(response);
 }

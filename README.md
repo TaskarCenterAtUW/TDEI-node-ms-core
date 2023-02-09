@@ -288,3 +288,69 @@ const storageContainer: StorageContainer = await storageClient.getContainer(cont
     testFile.upload(readStream);
 ```
 
+### Authorization
+
+Core offers a simple way of verifying the authorization of a user and their role. 
+
+Checking the permission involves three steps
+1. Preparing a permission request object
+2. Getting an authorizer object from core
+3. Requesting if the permission is valid/true
+
+#### Preparing the permission request
+Core exposes class `PermissionRequest` that can be initialized as below
+```ts
+var permissionRequest = new PermissionRequest({
+        userId:"<userID>",
+        orgId:"<orgID>",
+        permssions:["permission1","permission2"],
+        shouldSatisfyAll:false 
+     });
+```
+In the above example, `shouldSatisfyAll` helps in figuring out if all of the permissions are needed or any one of the permission is sufficient.
+
+#### Getting the authorizer from core
+
+Core exposes `getAuthorizer` method with `IAuthConfig` parameter.
+There are two types of `Authorizer` objects in core. 
+1. HostedAuthorizer : checks the permissions against a hosted API
+2. SimulatedAuthorizer: makes a simulated authorizer used for local/non-hosted environment.
+
+The following code demostrates getting the simulated and hosted authorizer
+```ts
+    const hostedAuthProvider = Core.getAuthorizer({provider:"Hosted",apiUrl:"<auth api url>"}); // Fetches hosted provider
+
+    const simulatedAuthProvider = Core.getAuthorizer({provider:"Simulated"}); // Fetches simulated provider
+
+```
+In case `apiUrl` is not provided for `Hosted` auth provider, the core will pick it up from environment variable `AUTHURL`
+
+
+#### Requesting if certain permission is valid:
+
+From the `IAuthorizer` object received from the above, use the method `hasPermission(request)` to know if the permission request is valid/not.
+
+```ts
+
+/// Complete code example
+ var permissionRequest = new PermissionRequest({
+        userId:"<userID>",
+        orgId:"<orgId>",
+        permssions:["permission1"],
+        shouldSatisfyAll:false
+     });
+  // With hosted provider 
+    const authProvider = Core.getAuthorizer({provider:"Hosted",apiUrl:"<auth api URL>"});
+    
+    const response = await authProvider?.hasPermission(permissionRequest);
+    // response will be boolean
+
+// With simulated provider
+    const simulatedProvider = Core.getAuthorizer({provider:"Simulated"});
+    const response2 = await simulatedProvider?.hasPermission(permissionRequest);
+
+```
+
+#### How does simualted authentication work?
+With simulated authentication, the method `hasPermission` simply returns the value given in `shouldSatisfyAll` property in the permission request.
+
