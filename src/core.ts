@@ -13,6 +13,11 @@ import { Topic } from "./core/queue/topic";
 import { LocalStorageClient } from "./core/storage/providers/local/local_storage_client";
 import { LocalLogger } from "./core/logger/providers/local/local_logger";
 import { LocalStorageConfig } from "./core/storage/providers/local/local_storage_config";
+import { IAuthorizer } from "./core/auth/abstracts/IAuthorizer";
+import { AzureAuthorizer } from "./core/auth/provider/azure/azure_authorizer";
+import { IAuthConfig } from "./core/auth/abstracts/IAuthConfig";
+import { AuthConfig } from "./core/auth/model/auth_config";
+import { LocalAuthorizer } from "./core/auth/provider/local/local_authorizer";
 // import { LocalLogger } from "./core/logger/providers/local/local_logger";
 // import { LocalStorageClient } from "./core/storage/providers/local/local_storage_client";
 
@@ -112,6 +117,29 @@ export class Core {
         }
     }
 
+    static getAuthorizer(config: Partial<IAuthConfig> ): IAuthorizer | null {
+
+        if(config.provider == null){
+            // Pick the hosted one with env
+            return new AzureAuthorizer(AuthConfig.default());
+        }
+        
+            // Get based on the authconfig
+            if(config.provider === "Hosted"){
+                if(!config.apiUrl){
+                return new AzureAuthorizer(AuthConfig.default());
+                }
+                else {
+                    return new AzureAuthorizer({provider:config.provider,apiUrl:config.apiUrl!});
+                }
+            }
+            else if(config.provider === "Simulated"){
+                return new LocalAuthorizer(config);
+            }
+            return null;
+        
+         
+    }
 
 
     protected static checkHealth(): boolean {

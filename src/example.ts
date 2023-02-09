@@ -12,6 +12,7 @@ import { CoreConfig } from "./models/config";
 import * as fs from 'fs';
 import * as path from 'path';
 import { LocalQueueConfig } from "./core/queue/providers/local/local-queue-config";
+import { PermissionRequest } from "./core/auth/model/permission_request";
 // Get the dotenv things
 require('dotenv').config()
 
@@ -275,7 +276,26 @@ let customQueueObject = Core.getCustomQueue<CustomQueue>('tdei-sample',CustomQue
 }
 // testMessages();
 
-
-
+// Testing for authorization.
+async function testAuthorization() {
+    let coreConfig = new CoreConfig("Azure");
+    Core.initialize(coreConfig);
+    
+    var permission_request = new PermissionRequest({
+        userId:"c59d29b6-a063-4249-943f-d320d15ac9ab",
+        orgId:"0b41ebc5-350c-42d3-90af-3af4ad3628fb",
+        permssions:["poc"],
+        shouldSatisfyAll:false
+     });
+    // Alternative way of getting authorizer with url and provider
+    // const provider2 = Core.getAuthorizer({provider:"Azure",apiUrl:"<authorization url here>"});
+    // Remote/Local/Hosted.. 
+    const provider = Core.getAuthorizer({provider:"Simulated",apiUrl:process.env.AUTHURL?.toString()!});
+    
+    const response = await provider?.hasPermission(permission_request);
+    
+    console.log(response);
+}
+testAuthorization();
 
 
