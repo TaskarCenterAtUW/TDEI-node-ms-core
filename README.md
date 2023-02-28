@@ -348,6 +348,9 @@ From the `IAuthorizer` object received from the above, use the method `hasPermis
 // With simulated provider
     const simulatedProvider = Core.getAuthorizer({provider:"Simulated"});
     const response2 = await simulatedProvider?.hasPermission(permissionRequest);
+// User id with "000000-0000-0000-0000-000000" will simulate result to false else true otherwise.
+    permissionRequest.userId = "000000-0000-0000-0000-000000";
+    const response3 = await simulatedProvider?.hasPermission(permissionRequest);
 
 ```
 
