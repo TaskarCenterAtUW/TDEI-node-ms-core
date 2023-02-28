@@ -1,6 +1,6 @@
 {
   "name": "nodets-ms-core",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "NodeJS Typescript Boilerplate with cloud interaction",
   "main": "lib/index.js",
   "scripts": {
