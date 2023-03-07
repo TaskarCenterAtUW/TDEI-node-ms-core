@@ -47,6 +47,10 @@ export class AzureFileEntity implements FileEntity {
         return Promise.resolve(this.streamToText(stream));
     }
 
+    getRemoteUrl(): string {
+        return this._blobClient.url;
+    }
+
     /**
      * Uploads the content of the file
      * @param body Readable stream for the file

@@ -65,13 +65,14 @@ async function testUpload(){
     // Get the local stream and upload
     filetoUpload?.upload(readStream);
 }
-testUpload();
+// testUpload();
 
 async function testStorage(){
     const container = await storageClient?.getContainer('gone');
     let files = await container?.listFiles();
     files?.forEach((entity)=>{
-        console.log(entity.filePath);
+        // console.log(entity.filePath);
+        console.log(entity.getRemoteUrl());
     });
     //gone/abc/adr-log-flow-1.jpg
 }

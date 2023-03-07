@@ -31,6 +31,11 @@ export class LocalFileEntity implements FileEntity{
         return Promise.resolve(this.streamToText(stream));
     }
 
+    getRemoteUrl(): string {
+        const filePath = path.join(this.rootDownloadPath,this.filePath);
+        return this.serverRoot+filePath;
+    }
+
     async upload(body: NodeJS.ReadableStream): Promise<FileEntity> {
         
         // Get the directory from file path

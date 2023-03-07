@@ -29,4 +29,6 @@ export abstract class FileEntity {
      */
     abstract upload(body: NodeJS.ReadableStream): Promise<FileEntity>;
 
+    abstract getRemoteUrl(): string;
+
 }
