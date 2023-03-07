@@ -65,6 +65,7 @@ async function testUpload(){
     // Get the local stream and upload
     filetoUpload?.upload(readStream);
 }
+testUpload();
 
 async function testStorage(){
     const container = await storageClient?.getContainer('gone');
