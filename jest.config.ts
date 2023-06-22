@@ -8,7 +8,7 @@ export default async (): Promise<Config> => {
     collectCoverage:true,
     // testMatch: ['**/+(*.)+(unit|test).+(ts|js)?(x)'],
     // collectCoverageFrom: ['./src/**/*.{ts,js}','./lib/**/*.{ts,js}'],
-    testMatch: ["**/test/*.ts", "**/?(*.)+(spec|test).[tj]s?(x)"],
+    testMatch: ["**/test/?(*.)+(unit|int).[tj]s?(x)", "**/?(*.)+(spec|test).[tj]s?(x)"],
     transform: {
       '^.+\\.(ts|tsx)?$': 'ts-jest'
     }
