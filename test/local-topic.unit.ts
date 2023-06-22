@@ -1,5 +1,7 @@
+import { Connection, Options } from "amqplib";
 import { LocalQueueConfig } from "../src/core/queue/providers/local/local-queue-config";
 import { LocalTopic } from "../src/core/queue/providers/local/local-topic";
+import { MockConnection } from "./rabbitmq.mock";
 
 /**
  * Unit testing for local-topic.ts file
@@ -14,22 +16,12 @@ import { LocalTopic } from "../src/core/queue/providers/local/local-topic";
  * 
  */
 jest.mock('amqplib', ()=>{
-    return {
-        client: jest.fn().mockImplementation(()=>{
             return {
-                connect: jest.fn().mockImplementation(()=>{
-                    return {
-                        createChannel: {},
-                        assertExchange: {},
-                        assertQueue: {},
-                        bindQueue: {},
-                        consume: {}
-                    }
-
-                })
+                connect:  (url: string | Options.Connect, socketOptions?: any): Promise<Connection> =>{
+                    return Promise.resolve(new MockConnection())
+                }
             }
-        })
-    }
+    
 })
 
 
