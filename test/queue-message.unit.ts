@@ -2,7 +2,7 @@
 // import { QueueMessage } from "../core/queue";
 // Create a queuemessage and print its value
 
-import { QueueMessage } from "../core/queue";
+import { QueueMessage } from "../src/core/queue";
 
 
 // console.log('Published date is ');

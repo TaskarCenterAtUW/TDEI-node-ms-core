@@ -1,4 +1,4 @@
-import {AzureLoggerConfig} from "../core/logger/providers/azure_logger_config";
+import {AzureLoggerConfig} from "../src/core/logger/providers/azure_logger_config";
 
 describe('Azure logger Config',()=>{
 

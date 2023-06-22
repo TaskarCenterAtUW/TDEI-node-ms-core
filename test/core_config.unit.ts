@@ -1,4 +1,4 @@
-import { CoreConfig } from "../models/config";
+import { CoreConfig } from "../src/models/config";
 
 describe('Core Configuration',() => {
 
