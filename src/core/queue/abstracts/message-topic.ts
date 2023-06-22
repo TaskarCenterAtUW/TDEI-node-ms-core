@@ -2,6 +2,6 @@ import { IQueueConfig } from "../../../models/abstracts/iqueueconfig";
 import { IMessageTopic } from "./IMessage-topic";
 
 export abstract class MessageTopic {
-    protected client?: IMessageTopic;
+    public client?: IMessageTopic; // For testability
     protected abstract initializeProvider(config: IQueueConfig, topicName: string): void;
 }
