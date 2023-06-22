@@ -1,4 +1,4 @@
-import {Core} from "../core";
+import {Core} from "../src/core";
 
 describe('Core unit tests',()=>{
 

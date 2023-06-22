@@ -1,7 +1,7 @@
-import { Core } from "../core";
-import { PermissionRequest } from "../core/auth/model/permission_request";
-import { HostedAuthorizer } from "../core/auth/provider/hosted/hosted_authorizer";
-import { SimulatedAuthorizer } from "../core/auth/provider/simulated/simulated_authorizer";
+import { Core } from "../src/core";
+import { PermissionRequest } from "../src/core/auth/model/permission_request";
+import { HostedAuthorizer } from "../src/core/auth/provider/hosted/hosted_authorizer";
+import { SimulatedAuthorizer } from "../src/core/auth/provider/simulated/simulated_authorizer";
 
 require('dotenv').config()
 
@@ -20,9 +20,10 @@ describe('Authorizer (Hosted and Simulated)', ()=> {
     });
 
     it('Should pick up host url from env if not given',()=>{
+        const envUrl = "sample-env-url";
+        process.env.AUTHURL = envUrl;
         const authorizer = Core.getAuthorizer({provider:"Hosted"}) as HostedAuthorizer;
         // url from env
-        const envUrl = process.env.AUTHURL as string;
         expect(authorizer.baseUrl).toEqual(envUrl);
 
     });
@@ -46,7 +47,7 @@ describe('Authorizer (Hosted and Simulated)', ()=> {
     it('Should give simulated result as expected (false) ',async ()=>{
         const authorizer = Core.getAuthorizer({provider:"Simulated"});
         const permission = new PermissionRequest({
-            userId:"abc",
+            userId:"000000-0000-0000-0000-000000",
             orgId:"sdfs",
             permssions:[],
             shouldSatisfyAll:false
@@ -91,6 +92,19 @@ describe('Authorizer (Hosted and Simulated)', ()=> {
 
          await expect(authorizer?.hasPermission(permissionRequest)).resolves.toEqual(false);
     });
+
+    it('Should respond true if user has all the permissions required', async ()=>{
+        const authorizer = Core.getAuthorizer({provider:"Hosted", apiUrl:"https://tdei-auth-n-z-dev.azurewebsites.net/api/v1/hasPermission"});
+        var permissionRequest = new PermissionRequest({
+            userId:"sample user id",
+            orgId:"5e339544-3b12-40a5-8acd-78c66d1fa981",
+            permssions:["poc"],
+            shouldSatisfyAll:true
+         });
+
+         await expect(authorizer?.hasPermission(permissionRequest)).resolves.toEqual(false);
+
+    })
 
     it('Should reject if the URL is malformed', async ()=>{
         const authorizer = Core.getAuthorizer({provider:"Hosted", apiUrl:"<sample URL>"});
