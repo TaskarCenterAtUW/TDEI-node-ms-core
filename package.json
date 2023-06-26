@@ -9,7 +9,7 @@
     "start:dev": "nodemon",
     "start:test": "npm run build && node lib/index.js",
     "start:exp": "npm run build && npm run copy:assets && node lib/example.js",
-    "test": "jest",
+    "test": "jest --silent",
     "test:coverage":"jest --coverage",
     "lint": "tslint 'src/**/*.ts?(x)'"
   },
