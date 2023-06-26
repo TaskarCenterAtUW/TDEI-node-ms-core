@@ -43,7 +43,7 @@ jest.spyOn(channel,'consume').mockImplementation(()=>{
 
 jest.mock('amqplib', ()=>{
     return {
-        connect:  (url: string | Options.Connect, socketOptions?: any): Promise<Connection> =>{
+        connect:  (url: string | Options.Connect, socketOptions?: any): Promise<any> =>{
             fakeConnect();
             return Promise.resolve(connection)
         }
