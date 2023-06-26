@@ -50,7 +50,7 @@ describe('Azure file entity', ()=>{
         mockDownload.mockClear();
         const file = new AzureFileEntity('snfds',new BlockBlobClient(''))
         const body = await file.getBodyText();
-        console.log('Body is '+body);
+        // console.log('Body is '+body);
         expect(body).toBe('random-data');
         expect(mockDownload).toHaveBeenCalledTimes(1);
 
