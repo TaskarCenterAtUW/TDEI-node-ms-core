@@ -47,6 +47,7 @@ export class Core {
 
 
     static initialize(config: IConfig = CoreConfig.default()): boolean {
+        this.logger = undefined;
         switch (config.provider) {
             case 'Azure':
                 this.config = config;
@@ -108,6 +109,12 @@ export class Core {
                     console.debug("Provided configuration is mismatched");
                     console.debug(config);
                     return null;
+                }
+            } else if(config.provider == 'Local'){
+                if(config instanceof LocalStorageConfig){
+                    return new LocalStorageClient(config.serverRoot);
+                } else {
+                return new LocalStorageClient(LocalStorageConfig.default().serverRoot);
                 }
             }
             else {
