@@ -16,13 +16,13 @@ import { QueueMessage } from "../src/core/queue";
 
 describe('QueueMessage', () => {
 
-    it('Should create Queue appropriately',()=>{
+    it('Should create Queue appropriately', () => {
 
-        const publishedDate = new Date(2022,5,18);
+        const publishedDate = new Date(2022, 5, 18);
         const queuemessage = QueueMessage.from({
-            message:'Sample message',
-            messageId:'123',
-            messageType:'sample-event',
+            message: 'Sample message',
+            messageId: '123',
+            messageType: 'sample-event',
             publishedDate: ('{publishedDate}')
         });
         expect(queuemessage.message).toBe("Sample message");

@@ -29,14 +29,14 @@ describe('Local storage container', () => {
         const localContainer = new LocalStorageContainer('sample', 'http://localhost:3000');
         const files = await localContainer.listFiles();
         expect(files.length).toBe(3);
-        files.forEach((element)=>{
+        files.forEach((element) => {
             expect(element).toBeInstanceOf(LocalFileEntity);
         })
 
     })
-    it('Should create a new file based on path', ()=>{
+    it('Should create a new file based on path', () => {
         const localContainer = new LocalStorageContainer('sample', 'http://localhost:3000');
-        const newFile = localContainer.createFile('abc.zip','application/zip');
+        const newFile = localContainer.createFile('abc.zip', 'application/zip');
         expect(newFile).toBeTruthy()
         expect(newFile.fileName).toBe('abc.zip');
     })
