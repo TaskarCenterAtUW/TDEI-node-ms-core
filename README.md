@@ -12,6 +12,273 @@
 - Add `nodets-ms-core` package as dependency in your `package.json`
 - Start using the core packages in your code.
 
+
+# Testing
+
+The project is configured with `babel` to figure out the coverage of the unit tests. All the tests are in `test` folder. 
+- To execute the tests, please follow the commands:
+
+`npm install`
+
+`npm run test`
+
+
+
+- After the commands are run, you can check the coverage report in `coverage/lcov-report/index.html`. Open the file in any browser and it shows complete coverage details
+- The terminal will show the output of coverage like this
+```shell
+> nodets-ms-core@0.0.8 test
+> jest --silent
+
+ PASS  test/local_logger.unit.ts
+  Local logger
+    ✓ Should initialize without parameters (2 ms)
+    ✓ Should send add request (1 ms)
+    ✓ Should be able to  update request (1 ms)
+    ✓ Should be able to  add event (1 ms)
+    ✓ Should be able to record metric
+    ✓ Should record HTTP call
+    ✓ Should send info (1 ms)
+    ✓ Should send debug
+    ✓ Should record message
+    ✓ Should get Auditor
+
+ PASS  test/queue-message.unit.ts
+  QueueMessage
+    ✓ Should create Queue appropriately (3 ms)
+    ✓ Should Instantiate
+
+ PASS  test/queue.unit.ts
+  Queue 
+    ✓ Should get the Azure Queue (4 ms)
+    ✓ Should be able to add messages (1 ms)
+    ✓ Should be able to send messages
+    ✓ Should call listen messages
+
+ PASS  test/azure_analytic.unit.ts
+  Azure analytic
+    ✓ Should initialize with queue name (1 ms)
+    ✓ Should be able to send message (1 ms)
+
+ PASS  test/topic.unit.ts
+  Azure service bus topic
+    ✓ Should have provider as azure (1 ms)
+    ✓ Should get the service topic (1 ms)
+    ✓ Should send message via ServiceBus when message is sent (2 ms)
+    ✓ Should listen to the said subscription appropriately
+    ✓ Should throw error when the client is not available (10 ms)
+  Local topic
+    ✓ Should have provider as Local
+    ✓ Should get the service topic
+    ✓ Should send message via ServiceBus when message is sent
+    ✓ Should listen to the said subscription appropriately
+    ✓ Should throw error when the client is not available
+
+ PASS  test/azure_auditor.unit.ts
+  Azure auditor
+    ✓ Should initialize with queue name (8 ms)
+    ✓ Should add event appropriately (1 ms)
+    ✓ Should add request appropriately
+    ✓ Should update request appropriately
+    ✓ Should return object with empty queue also (1 ms)
+
+ PASS  test/azure-service-bus-topic.unit.ts
+  Azure service bus topic unit
+    ✓ Should initialize with Azure default config if not provided (1 ms)
+    ✓ Should have called and created topic and sender on init
+    ✓ Should listen to a subscription using subscribe method
+    ✓ Should be able to call publish on sender when message is sent (1 ms)
+
+ PASS  test/azure_storage_container.unit.ts
+  Azure Storage container
+    ✓ Should be able to initialize from ContainerClient (1 ms)
+    ✓ Should be able to list files based on response from azure (1 ms)
+    ✓ Should be able to create a file with given name
+
+ PASS  test/azure_storage_client.unit.ts
+  Azure Storage Client
+    ✓ Should initialize Client (1 ms)
+    ✓ Should get Container with name
+    ✓ Should get file from the container name and entity (1 ms)
+    ✓ Should get file from URL
+
+ PASS  test/local_file_entity.unit.ts
+  Local file entity
+    ✓ Should get the file appropriately
+    ✓ Should get the file from axios (1 ms)
+    ✓ Should get the data text (3 ms)
+    ✓ Should upload from data (7 ms)
+
+ PASS  test/local_storage_client.unit.ts
+  Local storage client
+    ✓ Should initialize Client appropriately
+    ✓ Should return the container
+    ✓ Should get file from container
+    ✓ Should get the file from the URL (1 ms)
+    ✓ Should throw a Not found error when not found (3 ms)
+
+ PASS  test/logger.unit.ts
+  Logger
+    ✓ Should initialize with default configuration (4 ms)
+    ✓ Should send info
+    ✓ Should send debug (1 ms)
+    ✓ Should send metric
+    ✓ Should record HTTP call (1 ms)
+    ✓ Should get auditor (1 ms)
+    ✓ Should get analytic
+    ✓ Should call send when sendAll called
+
+ PASS  test/local_storage_container.unit.ts
+  Local storage container
+    ✓ Should be able to create with server root and name (1 ms)
+    ✓ Should get list of files as given by server (1 ms)
+    ✓ Should create a new file based on path
+
+ PASS  test/azure_storage_config.unit.ts
+  Azure storage config
+    ✓ Should initialize with given parameters (2 ms)
+    ✓ Should get the value of connection string from process (1 ms)
+    ✓ Default should pick up from env
+
+ PASS  test/local_storage_config.unit.ts
+  Local Storage config
+    ✓ Should initialize with no configuration given (2 ms)
+    ✓ Should take the env connection
+    ✓ Should take values from default when default is called (1 ms)
+
+ PASS  test/azure_logger_config.unit.ts
+  Azure logger Config
+    ✓ Should have provider as azure (1 ms)
+    ✓ Should pickup queuename from local configuration (1 ms)
+    ✓ Should pickup queuename from parameter
+
+ PASS  test/azure_file_entity.unit.ts
+  Azure file entity
+    ✓ Should be able to initialize (1 ms)
+    ✓ Should be able to download when the file stream is needed (1 ms)
+    ✓ Should be able to get the text (1 ms)
+    ✓ Should be able to upload the content from readable stream (1 ms)
+
+ PASS  test/core_config.unit.ts
+  Core Configuration
+    ✓ Should initialize Core default with Azure (1 ms)
+    ✓ Should initialize Core default based on env variable (2 ms)
+
+ PASS  test/core.unit.ts
+  Core unit tests
+    ✓ Should initialize with default configuration (11 ms)
+    ✓ Should initialize with Local Configuration
+    ✓ Should get default storage client by default (1 ms)
+    ✓ Should get Local storage client for local configuration
+    ✓ Should get Local storage client for local Configuration
+    ✓ Should get Azure storage client for azure config (1 ms)
+    ✓ Should return Local storage client if core initialized by local and default storage requested
+    ✓ Should get Azure logger by default
+    ✓ Should return local logger for local
+    ✓ Should return Hosted Authorizer if provider not given (1 ms)
+
+ PASS  test/local-topic.unit.ts
+  Local topic unit test
+    ✓ Should initialize with any config (1 ms)
+    ✓ Should initialize without any config
+    ✓ Should publish message to channel with publish (302 ms)
+    ✓ Should consume from the channel with consume (308 ms)
+
+ PASS  test/authorizer.int.ts (6.682 s)
+  Authorizer (Hosted and Simulated)
+    ✓ Should give HostedAuthorizer for configuration (1 ms)
+    ✓ Should give SimulatedAuthorizer for configuration
+    ✓ Should pick up host url from env if not given (4 ms)
+    ✓ Should configure based on the url provided (1 ms)
+    ✓ Should give error for no permissions (2 ms)
+    ✓ Should give simulated result as expected (false) 
+    ✓ Should give simulated result as expected (true)
+    ✓ Should respond true when user has permission (1418 ms)
+    ✓ Should respond false if user does not have permission (1195 ms)
+    ✓ Should respond true if user has all the permissions required (1243 ms)
+    ✓ Should reject if the URL is malformed (47 ms)
+
+----------------------------------|---------|----------|---------|---------|-----------------------------------------------------------
+File                              | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s                                         
+----------------------------------|---------|----------|---------|---------|-----------------------------------------------------------
+All files                         |   74.52 |    61.59 |   72.86 |   74.44 |                                                           
+ src                              |   77.77 |    68.18 |     100 |   77.77 |                                                           
+  core.ts                         |   77.77 |    68.18 |     100 |   77.77 | 30,41,60,76,96-97,105-111,121-122,152,163-168,186,197,204 
+ src/core/auth/model              |     100 |      100 |     100 |     100 |                                                           
+  auth_config.ts                  |     100 |      100 |     100 |     100 |                                                           
+  permission_request.ts           |     100 |      100 |     100 |     100 |                                                           
+ src/core/auth/provider/hosted    |     100 |      100 |     100 |     100 |                                                           
+  hosted_authorizer.ts            |     100 |      100 |     100 |     100 |                                                           
+ src/core/auth/provider/simulated |     100 |      100 |     100 |     100 |                                                           
+  simulated_authorizer.ts         |     100 |      100 |     100 |     100 |                                                           
+ src/core/logger                  |     100 |    76.19 |    90.9 |     100 |                                                           
+  index.ts                        |     100 |      100 |     100 |     100 |                                                           
+  logger.ts                       |     100 |    76.19 |      90 |     100 | 23-28,57-82                                               
+ src/core/logger/abstracts        |     100 |      100 |     100 |     100 |                                                           
+  logger-abstract.ts              |     100 |      100 |     100 |     100 |                                                           
+ src/core/logger/model            |     100 |      100 |     100 |     100 |                                                           
+  audit_event.ts                  |     100 |      100 |     100 |     100 |                                                           
+  audit_request.ts                |     100 |      100 |     100 |     100 |                                                           
+ src/core/logger/providers        |     100 |    81.25 |     100 |     100 |                                                           
+  azure_analytic.ts               |     100 |      100 |     100 |     100 |                                                           
+  azure_auditor.ts                |     100 |    76.92 |     100 |     100 | 18-41                                                     
+  azure_logger_config.ts          |     100 |      100 |     100 |     100 |                                                           
+ src/core/logger/providers/local  |   85.18 |      100 |      80 |   85.18 |                                                           
+  local_logger.ts                 |   85.18 |      100 |      80 |   85.18 | 59,82,96-97                                               
+ src/core/queue                   |   77.77 |    58.82 |   73.33 |   76.47 |                                                           
+  index.ts                        |     100 |      100 |   66.66 |     100 |                                                           
+  queue.ts                        |   62.96 |    36.36 |    62.5 |   62.96 | 24,32,40-41,50,55-67                                      
+  topic.ts                        |   90.47 |      100 |     100 |   90.47 | 41,48                                                     
+ src/core/queue/abstracts         |     100 |      100 |     100 |     100 |                                                           
+  message-queue.ts                |     100 |      100 |     100 |     100 |                                                           
+  message-topic.ts                |     100 |      100 |     100 |     100 |                                                           
+ src/core/queue/decorators        |      25 |        0 |       0 |      25 |                                                           
+  when.decorator.ts               |      25 |        0 |       0 |      25 | 8-13                                                      
+ src/core/queue/models            |     100 |      100 |     100 |     100 |                                                           
+  queue-message.ts                |     100 |      100 |     100 |     100 |                                                           
+ src/core/queue/providers         |   35.38 |       50 |   29.41 |   35.93 |                                                           
+  azure-queue-config.ts           |     100 |      100 |     100 |     100 |                                                           
+  azure-service-bus-queue.ts      |   10.25 |        0 |       0 |   10.52 | 12-98                                                     
+  azure-service-bus-topic.ts      |   68.18 |       80 |      60 |   68.18 | 33-40,46                                                  
+ src/core/queue/providers/local   |   40.57 |    44.89 |   38.88 |   41.17 |                                                           
+  local-queue-config.ts           |     100 |      100 |     100 |     100 |                                                           
+  local-queue.ts                  |      10 |        0 |       0 |   10.25 | 18-94                                                     
+  local-topic.ts                  |      80 |    74.07 |   83.33 |      80 | 42-48                                                     
+ src/core/storage/providers/azure |   88.88 |    66.66 |   95.23 |   89.85 |                                                           
+  azure_file_entity.ts            |   91.66 |      100 |     100 |   95.45 | 70                                                        
+  azure_storage_client.ts         |   78.57 |        0 |    87.5 |   78.57 | 48-59                                                     
+  azure_storage_config.ts         |     100 |      100 |     100 |     100 |                                                           
+  azure_storage_container.ts      |     100 |      100 |     100 |     100 |                                                           
+ src/core/storage/providers/local |   97.22 |      100 |   91.66 |   97.14 |                                                           
+  local_file_entity.ts            |     100 |      100 |     100 |     100 |                                                           
+  local_storage_client.ts         |   95.83 |      100 |   88.88 |   95.83 | 37                                                        
+  local_storage_config.ts         |     100 |      100 |     100 |     100 |                                                           
+  local_storage_container.ts      |   94.11 |      100 |    87.5 |   93.75 | 36                                                        
+ src/decorators                   |   59.09 |    31.25 |      25 |      55 |                                                           
+  nested-model.decorator.ts       |   30.76 |        0 |       0 |      25 | 17-33,45-48                                               
+  prop.decorator.ts               |     100 |    83.33 |     100 |     100 | 33                                                        
+ src/models                       |     100 |      100 |      80 |     100 |                                                           
+  config.ts                       |     100 |      100 |     100 |     100 |                                                           
+  index.ts                        |     100 |      100 |   66.66 |     100 |                                                           
+ src/models/base                  |   53.42 |     61.9 |   56.25 |   54.16 |                                                           
+  abstract-domain-entity.ts       |   53.42 |     61.9 |   56.25 |   54.16 | 56,71-85,137,140,157-226                                  
+ src/utils/resource-errors        |      84 |       70 |      75 |      84 |                                                           
+  abstract-resource-error.ts      |   81.25 |       70 |     100 |   81.25 | 47,52,56                                                  
+  bad-request-resource-error.ts   |     100 |      100 |     100 |     100 |                                                           
+  not-found-resource-error.ts     |     100 |      100 |     100 |     100 |                                                           
+  unprocessable-resource-error.ts |   66.66 |      100 |       0 |   66.66 | 5                                                         
+ test                             |   84.21 |      100 |   72.72 |   84.21 |                                                           
+  azure.mock.ts                   |     100 |      100 |     100 |     100 |                                                           
+  rabbitmq.mock.ts                |   66.66 |      100 |   57.14 |   66.66 | 7,72-78                                                   
+----------------------------------|---------|----------|---------|---------|-----------------------------------------------------------
+Test Suites: 21 passed, 21 total
+Tests:       104 passed, 104 total
+Snapshots:   0 total
+Time:        7.001 s
+
+```
+
+
 # Structure and components
 
 
