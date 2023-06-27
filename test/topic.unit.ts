@@ -53,33 +53,37 @@ describe('Azure service bus topic', () => {
     })
 
     it('Should get the service topic', () => {
+        // Arrange and Act
         const topic = Core.getTopic('sampletopic', configuration);
-
+        // Assert
         expect(topic).toBeInstanceOf(Topic);
         expect(AzureServiceBusTopic).toHaveBeenCalledTimes(1);
     })
 
     it('Should send message via ServiceBus when message is sent', () => {
-
+        // Arrange
         const topic = Core.getTopic('sampletopic', configuration);
-
+        // Act
         topic.publish(queuemessage);
+        // Assert
         expect(fakePublish).toHaveBeenCalledTimes(1);
 
     })
 
     it('Should listen to the said subscription appropriately', () => {
+        // Arrange
         const topic = Core.getTopic('sampletopic', configuration);
-
+        // Act
         topic.subscribe('sample-subscription', {
             onReceive(message: QueueMessage) { },
             onError(error: Error) { }
         });
+        // Assert
         expect(fakeSubscribe).toHaveBeenCalledTimes(1);
     })
 
     it('Should throw error when the client is not available', async () => {
-
+        // Arrange
         const topic = Core.getTopic('sampletopic', configuration);
         // force assigning null for client
         topic.client = undefined;
@@ -87,7 +91,9 @@ describe('Azure service bus topic', () => {
             onReceive(message: QueueMessage) { },
             onError(error: Error) { }
         })
+        // Act
         const publishResult = topic.publish(queuemessage);
+        // Assert
         await expect(result).rejects.toThrow(BadRequestResourceError);
         await expect(publishResult).rejects.toThrow(BadRequestResourceError);
 

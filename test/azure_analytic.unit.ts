@@ -22,14 +22,22 @@ describe('Azure analytic', () => {
     beforeAll(() => {
         Core.getQueue = mockGetQueue;
     })
+
     it('Should initialize with queue name', () => {
+        // Arrange
         const analytic = new AzureAnalytic('sample');
+        // Assert
         expect(analytic).toBeTruthy();
     })
+
     it('Should be able to send message', () => {
+        // Arrange
         const analytic = new AzureAnalytic('sample');
         const messageToDeliver = { type: 'sample' };
-        analytic.record(messageToDeliver)
+
+        // Act
+        analytic.record(messageToDeliver);
+        // Assert
         expect(mockSend).toHaveBeenCalledTimes(1);
         expect(mockAdd).toHaveBeenCalledTimes(1);
     })

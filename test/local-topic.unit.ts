@@ -59,31 +59,41 @@ describe('Local topic unit test', () => {
         messageType: 'sample-event',
         publishedDate: ('{publishedDate}')
     });
-
+    const topicName = 'sample';
 
     it('Should initialize with any config', () => {
+        // Arrange
         const localConfig = LocalQueueConfig.default();
-        const localTopic = new LocalTopic('sample', localConfig);
+        // Act
+        const localTopic = new LocalTopic(topicName, localConfig);
+        // Assert
         expect(localTopic).toBeTruthy();
         expect(fakeConnect).toHaveBeenCalledTimes(1);
     })
     it('Should initialize without any config', () => {
-        const localTopic = new LocalTopic('sample');
+        // Act
+        const localTopic = new LocalTopic(topicName);
+        // Assert
         expect(localTopic).toBeTruthy();
         expect(fakeConnect).toHaveBeenCalledTimes(2);
 
     })
     it('Should publish message to channel with publish', async () => {
+        // Arrange
         const localConfig = LocalQueueConfig.default();
-        const localTopic = new LocalTopic('sample', localConfig);
+        const localTopic = new LocalTopic(topicName, localConfig);
         await delay(300)
+        // Act
         await localTopic.publish(queuemessage);
+        // Assert
         expect(fakePublish).toHaveBeenCalledTimes(1);
 
     })
     it('Should consume from the channel with consume', async () => {
-        const localTopic = new LocalTopic('sample', LocalQueueConfig.default());
+        // Arrange
+        const localTopic = new LocalTopic(topicName, LocalQueueConfig.default());
         await delay(300);
+        // Act
         await localTopic.subscribe('sample', {
             onError(error) {
 
@@ -92,6 +102,7 @@ describe('Local topic unit test', () => {
 
             },
         })
+        // Assert
         expect(fakeSubscribe).toHaveBeenCalledTimes(1);
 
     })

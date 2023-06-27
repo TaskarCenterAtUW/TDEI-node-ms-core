@@ -17,7 +17,7 @@ import { QueueMessage } from "../src/core/queue";
 describe('QueueMessage', () => {
 
     it('Should create Queue appropriately', () => {
-
+        // Arrange
         const publishedDate = new Date(2022, 5, 18);
         const queuemessage = QueueMessage.from({
             message: 'Sample message',
@@ -25,13 +25,16 @@ describe('QueueMessage', () => {
             messageType: 'sample-event',
             publishedDate: ('{publishedDate}')
         });
+        // Assert
         expect(queuemessage.message).toBe("Sample message");
         expect(queuemessage.messageId).toBe("123");
         expect(queuemessage.messageType).toBe("sample-event");
         // expect(queuemessage.publishedDate).toBe(publishedDate);
     });
     it('Should Instantiate', () => {
+        // Arrange
         const queueMessage = QueueMessage.from();
+        // Assert
         expect(queueMessage).toBeInstanceOf(QueueMessage);
     })
 

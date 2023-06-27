@@ -20,14 +20,22 @@ jest.mock('axios', () => {
     }
 })
 describe('Local storage container', () => {
+    
+    const host = 'http://localhost:3000';
+    const containerName = 'sample';
+
     it('Should be able to create with server root and name', () => {
-        const localContainer = new LocalStorageContainer('sample', 'http://localhost:3000');
+        // Act
+        const localContainer = new LocalStorageContainer(containerName, host);
+        // Assert
         expect(localContainer).toBeTruthy();
     })
     it('Should get list of files as given by server', async () => {
-
-        const localContainer = new LocalStorageContainer('sample', 'http://localhost:3000');
+        // Arrange
+        const localContainer = new LocalStorageContainer(containerName, host);
+        // Act
         const files = await localContainer.listFiles();
+        // Assert
         expect(files.length).toBe(3);
         files.forEach((element) => {
             expect(element).toBeInstanceOf(LocalFileEntity);
@@ -35,8 +43,11 @@ describe('Local storage container', () => {
 
     })
     it('Should create a new file based on path', () => {
-        const localContainer = new LocalStorageContainer('sample', 'http://localhost:3000');
+        // Arrange
+        const localContainer = new LocalStorageContainer(containerName, host);
+        // Act
         const newFile = localContainer.createFile('abc.zip', 'application/zip');
+        // Assert
         expect(newFile).toBeTruthy()
         expect(newFile.fileName).toBe('abc.zip');
     })

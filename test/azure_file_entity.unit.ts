@@ -33,39 +33,39 @@ jest.mock('@azure/storage-blob', () => {
 
 describe('Azure file entity', () => {
     it('Should be able to initialize', () => {
-        
+        // Arrange
         const file = new AzureFileEntity('snfds', new BlockBlobClient(''));
-
+        // Assert
         expect(file).toBeTruthy();
     })
     it('Should be able to download when the file stream is needed', async () => {
-
+        // Arrange
         const file = new AzureFileEntity('snfds', new BlockBlobClient(''));
-
+        // Act
         const stream = await file.getStream();
-        
+        // Assert
         expect(mockDownload).toHaveBeenCalledTimes(1);
 
     })
 
     it('Should be able to get the text', async () => {
-        
+        // Arrange
         mockDownload.mockClear();
         const file = new AzureFileEntity('snfds', new BlockBlobClient(''))
-        
+        // Act
         const body = await file.getBodyText();
-
+        // Assert
         expect(body).toBe('random-data');
         expect(mockDownload).toHaveBeenCalledTimes(1);
 
     })
     it('Should be able to upload the content from readable stream', async () => {
-
+        // Arrange
         const dummyStream = Readable.from([], { encoding: 'binary' }); // Blank stream
         const file = new AzureFileEntity('snfds', new BlockBlobClient(''))
-        
+        // Assert
         const uploadedEntity = await file.upload(dummyStream);
-
+        // Act
         expect(mockUpload).toHaveBeenCalledTimes(1);
         expect(uploadedEntity).toBe(file);
 

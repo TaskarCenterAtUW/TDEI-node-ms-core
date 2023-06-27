@@ -36,27 +36,37 @@ describe('Queue ', () => {
     })
 
     it('Should get the Azure Queue', () => {
-
-        const queue = Core.getQueue('sampletopic');
+        // Arrange and Act
+        const queue = Core.getQueue('samplequeue');
+        // Assert
         expect(queue).toBeInstanceOf(Queue);
         expect(AzureServiceBusQueue).toHaveBeenCalledTimes(1);
     })
 
     it('Should be able to add messages', async () => {
+        // Arrange
         const queue = Core.getQueue('sampletopic');
+        // Act
         await queue.add(queuemessage)
+        // Assert
         expect(fakeAdd).toHaveBeenCalledTimes(1);
     })
     it('Should be able to send messages', async () => {
+        // Arrange
         const queue = Core.getQueue('sampletopic');
         await queue.add(queuemessage)
+        // Act
         await queue.send()
+        // Assert
         expect(fakeSend).toHaveBeenCalledTimes(1);
 
     })
     it('Should call listen messages', async () => {
+        // Arrange
         const queue = Core.getQueue('sampletopic');
+        // Act
         await queue.listen();
+        // Assert
         expect(fakeListen).toHaveBeenCalledTimes(1);
     })
 

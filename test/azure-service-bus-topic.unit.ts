@@ -45,21 +45,29 @@ describe('Azure service bus topic unit', () => {
     });
 
     it('Should initialize with Azure default config if not provided', () => {
+        // Arrange
         const configuration = LocalQueueConfig.default();
+        // Act
         const azureTopic = new AzureServiceBusTopic(configuration, 'sample');
+        // Assert
         expect(azureTopic).toBeTruthy();
 
     })
 
     it('Should have called and created topic and sender on init', () => {
+        // Arrange
         const azureConfiguration = AzureQueueConfig.default();
+        // Act
         const azureTopic = new AzureServiceBusTopic(azureConfiguration, 'sample');
+        // Assert
         expect(azureTopic).toBeTruthy();
     })
 
     it('Should listen to a subscription using subscribe method', async () => {
+        // Arrange
         const azureConfiguration = AzureQueueConfig.default();
         const azureTopic = new AzureServiceBusTopic(azureConfiguration, 'sample');
+        // Act
         await azureTopic.subscribe('sample', {
             onReceive(message) {
 
@@ -68,14 +76,17 @@ describe('Azure service bus topic unit', () => {
 
             },
         });
+        // Assert
         expect(fakeSubscribe).toBeCalledTimes(1);
 
     })
     it('Should be able to call publish on sender when message is sent', async () => {
+        // Arrange
         const azureConfiguration = AzureQueueConfig.default();
         const azureTopic = new AzureServiceBusTopic(azureConfiguration, 'sample');
-
+        // Act
         await azureTopic.publish(queuemessage)
+        // Assert
         expect(fakeSendMessage).toBeCalledTimes(1);
 
     })
