@@ -53,7 +53,7 @@ describe('Authorizer (Hosted and Simulated)', () => {
         await expect(authorizer?.hasPermission(permission)).rejects.toEqual("No roles provided");
     });
 
-    it('Should give simulated result as expected (false) ', async () => {
+    it('Should give simulated result as false when userId is as per predefined', async () => {
         // Arrange
         const authorizer = Core.getAuthorizer({ provider: "Simulated" });
         const permission = new PermissionRequest({

@@ -43,7 +43,7 @@ describe('Azure auditor', () => {
         expect(mockAdd).toHaveBeenCalledWith(message);
     })
 
-    it('Should add request appropriately', () => {
+    it('Should add request ', () => {
         // Arrange
         const auditor = new AzureAuditor('auditor');
         const request = AuditRequest.from({ requestId: 'abc' });
@@ -54,7 +54,7 @@ describe('Azure auditor', () => {
         expect(mockAdd).toHaveBeenCalledWith(message);
     })
 
-    it('Should update request appropriately', () => {
+    it('Should update request ', () => {
         // Arrange
         const auditor = new AzureAuditor('auditor');
         const request = AuditRequest.from({ requestId: 'abc' });
