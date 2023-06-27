@@ -34,8 +34,8 @@ export class AzureServiceBusQueue implements IMessageQueue {
     /**
      * start listening to the queue
      */
-     async listen(): Promise<void> {
-        return this.listenQueue();
+     async listen(always:boolean=true): Promise<void> {
+        return this.listenQueue(always);
     }
 
     async send(): Promise<any> {
@@ -56,13 +56,17 @@ export class AzureServiceBusQueue implements IMessageQueue {
         this.currentMessages.push(message);
     }
 
-    private async listenQueue() {
+    private async listenQueue(always:boolean = true) {
         this.listener.receiveMessages(1).then((messages) => {
             messages.forEach(async (singleMessage) => {
+                console.log('Received message');
+                console.log(singleMessage);
                 await this.on(singleMessage);
             });
             // Listen to it again.
-            this.listen();
+            if(always) {
+                this.listen(always);
+            }
         });
     }
 
@@ -79,6 +83,7 @@ export class AzureServiceBusQueue implements IMessageQueue {
             // @typescript-eslint/ban-types
             { handler: Function }[]
         >;
+        if(eventMap !== undefined){
         const eventHandlers = eventMap.get(messageType);
         if (eventHandlers !== undefined) {
             // Generate Queuemessage
@@ -94,6 +99,7 @@ export class AzureServiceBusQueue implements IMessageQueue {
         else {
             // console.log("Event handlers for "+messageType+" undefined");
         }
+    }
         if (this.shouldComplete) {
             this.listener.completeMessage(message); // To be called later.
         }
