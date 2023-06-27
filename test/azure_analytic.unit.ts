@@ -9,20 +9,6 @@ import { Core } from "../src/core";
 import { AzureAnalytic } from "../src/core/logger/providers/azure_analytic";
 import { QueueMessage } from "../src/core/queue";
 
-// jest.mock('../src/core', ()=>{
-//     return {
-//     Core: jest.fn().mockImplementation(()=>{
-//     return {
-//         getQueue:jest.fn().mockImplementation(()=>{
-//             return {
-//                 add:(message:QueueMessage)=>{},
-//                 send:()=>{}
-//             }
-//         })
-//     }
-// })
-//     }
-// })
 const mockSend = jest.fn();
 const mockAdd = jest.fn();
 const mockGetQueue = jest.fn().mockImplementation(()=>{
