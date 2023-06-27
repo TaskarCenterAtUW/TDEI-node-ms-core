@@ -29,20 +29,27 @@ jest.mock('@azure/storage-blob', () => {
 describe('Azure Storage container', () => {
 
     it('Should be able to initialize from ContainerClient', () => {
+        // Arrange and Act
         const azureContainer = new AzureStorageContainer('', new ContainerClient(''))
+        // Assert
         expect(azureContainer).toBeTruthy();
 
     })
     it('Should be able to list files based on response from azure', async () => {
-
+        // Arrange
         const azureContainer = new AzureStorageContainer('', new ContainerClient(''))
+        // Act
         const files = await azureContainer.listFiles();
+        // Assert
         expect(files.length).toBe(2)
 
     })
     it('Should be able to create a file with given name', () => {
+        // Arrange
         const azureContainer = new AzureStorageContainer('', new ContainerClient(''))
+        // Act
         const newFile = azureContainer.createFile('sample');
+        // Assert
         expect(newFile).toBeTruthy();
         expect(newFile).toBeInstanceOf(AzureFileEntity);
         expect(newFile.fileName).toBe('sample');

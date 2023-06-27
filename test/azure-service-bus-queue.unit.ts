@@ -59,20 +59,27 @@ describe('Azure service bus', () => {
     });
 
     it('should intialize with proper queue', () => {
+        // Arrange and Act
         let azureQueue = new AzureServiceBusQueue(AzureQueueConfig.default(), 'sample', new Queue(AzureQueueConfig.default(), 'sample'));
+        // Assert
         expect(azureQueue).toBeTruthy();
     })
     it('Should be able to send messages', () => {
+        // Arrange
         let azureQueue = new AzureServiceBusQueue(AzureQueueConfig.default(), 'sample', new Queue(AzureQueueConfig.default(), 'sample'));
         azureQueue.add(queuemessage);
+        // Act
         azureQueue.send();
+        // Assert
         expect(fakeSendMessage).toHaveBeenCalledTimes(1);
 
     })
     it('Should be able to receive messages', async () => {
-
+        // Arrange
         let azureQueue = new AzureServiceBusQueue(AzureQueueConfig.default(), 'sample', new Queue(AzureQueueConfig.default(), 'sample'));
+        // Act
         await azureQueue.listen(false);
+        // Assert
         expect(fakeReceive).toHaveBeenCalledTimes(1);
 
     })

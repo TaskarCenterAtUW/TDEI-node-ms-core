@@ -49,30 +49,42 @@ describe('Azure Storage Client', () => {
     })
 
     it('Should initialize Client', () => {
+        // Arrange 
         let azureConfig = AzureStorageConfig.default();
+        // Act
         const azureClient = new AzureStorageClient(azureConfig);
+        // Assert
         expect(azureClient).toBeTruthy();
 
     })
     it('Should get Container with name', async () => {
+        // Arrange
         let azureConfig = AzureStorageConfig.default();
         const azureClient = new AzureStorageClient(azureConfig);
+        // Act
         const container = await azureClient.getContainer('sample');
+        // Assert
         expect(container).toBeInstanceOf(AzureStorageContainer);
 
     })
     it('Should get file from the container name and entity', async () => {
+        // Arrange
         let azureConfig = AzureStorageConfig.default();
         const azureClient = new AzureStorageClient(azureConfig);
+        // Act
         const file = await azureClient.getFile('sample', 'sample.zip');
+        // Assert
         expect(file).toBeInstanceOf(AzureFileEntity);
 
     })
     it('Should get file from URL', async () => {
+        // Arrange
         let fileUrl = 'http://sample.com/storage/abc.zip';
         let azureConfig = AzureStorageConfig.default();
         const azureClient = new AzureStorageClient(azureConfig);
+        // Act
         const file = await azureClient.getFileFromUrl(fileUrl);
+        // Assert
         expect(file).toBeInstanceOf(AzureFileEntity);
     })
 })
