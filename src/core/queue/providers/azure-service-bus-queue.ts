@@ -59,8 +59,6 @@ export class AzureServiceBusQueue implements IMessageQueue {
     private async listenQueue(always:boolean = true) {
         this.listener.receiveMessages(1).then((messages) => {
             messages.forEach(async (singleMessage) => {
-                console.log('Received message');
-                console.log(singleMessage);
                 await this.on(singleMessage);
             });
             // Listen to it again.

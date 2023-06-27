@@ -18,22 +18,27 @@ import { HostedAuthorizer } from "./core/auth/provider/hosted/hosted_authorizer"
 import { IAuthConfig } from "./core/auth/abstracts/IAuthConfig";
 import { AuthConfig } from "./core/auth/model/auth_config";
 import { SimulatedAuthorizer } from "./core/auth/provider/simulated/simulated_authorizer";
+import { Provider, ServiceProvider } from "./types/provider";
 // import { LocalLogger } from "./core/logger/providers/local/local_logger";
 // import { LocalStorageClient } from "./core/storage/providers/local/local_storage_client";
 
 export class Core {
     private static logger: ILoggable | undefined;
     private static config: IConfig;
+    private static LOCAL_PROVIDER: Provider = 'Local';
+    private static AZURE_PROVIDER: Provider = 'Azure';
+    private static HOSTED_AUTH_PROVIDER: ServiceProvider = 'Hosted';
+    private static SIMULATED_AUTH_PROVIDER: ServiceProvider = 'Simulated';
 
     static getLogger(): ILoggable {
         if (this.logger !== undefined)
             return this.logger;
         else {
-            if (this.config.provider === "Azure") {
+            if (this.config.provider === this.AZURE_PROVIDER) {
                 this.logger = new Logger(new AzureLoggerConfig());
                 return this.logger;
             }
-            else if(this.config.provider === 'Local') {
+            else if(this.config.provider === this.LOCAL_PROVIDER) {
                 this.logger = new LocalLogger();
                 return this.logger;
             }
@@ -84,12 +89,12 @@ export class Core {
         if (config == null) {
             // figure out the configuration based on
             // Default configuration
-            if (this.config.provider === "Azure") {
+            if (this.config.provider === this.AZURE_PROVIDER) {
                 // Figure out and send the azure storage client
                 return new AzureStorageClient(AzureStorageConfig.default());
 
             }
-            else if(this.config.provider === 'Local'){
+            else if(this.config.provider === this.LOCAL_PROVIDER){
                 return new LocalStorageClient(LocalStorageConfig.default().serverRoot);
             }
             else {
@@ -98,11 +103,11 @@ export class Core {
             }
         }
         else {
-            if (config.provider === "Azure") {
+            if (config.provider === this.AZURE_PROVIDER) {
                 if (config instanceof AzureStorageConfig) {
                     return new AzureStorageClient(config);
                 }
-                else if(this.config.provider === 'Local'){
+                else if(this.config.provider === this.LOCAL_PROVIDER){
                     return new LocalStorageClient(LocalStorageConfig.default().serverRoot);
                 }
                 else {
@@ -110,7 +115,7 @@ export class Core {
                     console.debug(config);
                     return null;
                 }
-            } else if(config.provider == 'Local'){
+            } else if(config.provider == this.LOCAL_PROVIDER){
                 if(config instanceof LocalStorageConfig){
                     return new LocalStorageClient(config.serverRoot);
                 } else {
@@ -138,7 +143,7 @@ export class Core {
         }
         
             // Get based on the authconfig
-            if(config.provider === "Hosted"){
+            if(config.provider === this.HOSTED_AUTH_PROVIDER){
                 if(!config.apiUrl){
                 return new HostedAuthorizer(AuthConfig.default());
                 }
@@ -146,7 +151,7 @@ export class Core {
                     return new HostedAuthorizer({provider:config.provider,apiUrl:config.apiUrl!});
                 }
             }
-            else if(config.provider === "Simulated"){
+            else if(config.provider === this.SIMULATED_AUTH_PROVIDER){
                 return new SimulatedAuthorizer(config);
             }
             return null;
@@ -170,7 +175,7 @@ export class Core {
         console.log("Configured for \x1b[32m " + this.config.provider + " \x1b[0m \n");
 
 
-        if (this.config.provider === "Azure") {
+        if (this.config.provider === this.AZURE_PROVIDER) {
             // check for the following process variables
             const loggerQueueName = process.env.LOGGERQUEUE;
             const queueConnection = process.env.QUEUECONNECTION;
