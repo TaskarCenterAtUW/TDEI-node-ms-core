@@ -51,7 +51,8 @@
     "dotenv": "^16.0.3",
     "reflect-metadata": "^0.1.13",
     "axios": "1.2.1",
-    "amqplib": "0.10.3"
+    "amqplib": "0.10.3",
+    "jest-html-reporter": "3.7.1"
   },
   "files": [
     "lib/**/*.js",
