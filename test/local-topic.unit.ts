@@ -27,23 +27,23 @@ const fakeCreateChannel = jest.fn();
 const fakePublish = jest.fn();
 const fakeSubscribe = jest.fn();
 
-jest.spyOn(connection,'createChannel').mockImplementation(()=>{
+jest.spyOn(connection, 'createChannel').mockImplementation(() => {
     fakeCreateChannel();
     return Promise.resolve(channel)
 })
 
-jest.spyOn(channel,'publish').mockImplementation(()=>{
+jest.spyOn(channel, 'publish').mockImplementation(() => {
     fakePublish();
     return true;
 })
-jest.spyOn(channel,'consume').mockImplementation(()=>{
+jest.spyOn(channel, 'consume').mockImplementation(() => {
     fakeSubscribe();
-    return Promise.resolve({consumerTag:''});
+    return Promise.resolve({ consumerTag: '' });
 })
 
-jest.mock('amqplib', ()=>{
+jest.mock('amqplib', () => {
     return {
-        connect:  (url: string | Options.Connect, socketOptions?: any): Promise<any> =>{
+        connect: (url: string | Options.Connect, socketOptions?: any): Promise<any> => {
             fakeConnect();
             return Promise.resolve(connection)
         }
@@ -52,44 +52,44 @@ jest.mock('amqplib', ()=>{
 })
 
 
-describe('Local topic unit test', ()=>{
+describe('Local topic unit test', () => {
     const queuemessage = QueueMessage.from({
-        message:'Sample message',
-        messageId:'123',
-        messageType:'sample-event',
+        message: 'Sample message',
+        messageId: '123',
+        messageType: 'sample-event',
         publishedDate: ('{publishedDate}')
     });
-    
 
-    it('Should initialize with any config', ()=>{
+
+    it('Should initialize with any config', () => {
         const localConfig = LocalQueueConfig.default();
-        const localTopic = new LocalTopic('sample',localConfig);
+        const localTopic = new LocalTopic('sample', localConfig);
         expect(localTopic).toBeTruthy();
         expect(fakeConnect).toHaveBeenCalledTimes(1);
     })
-    it('Should initialize without any config', ()=>{
+    it('Should initialize without any config', () => {
         const localTopic = new LocalTopic('sample');
         expect(localTopic).toBeTruthy();
         expect(fakeConnect).toHaveBeenCalledTimes(2);
 
     })
-    it('Should publish message to channel with publish', async ()=>{
+    it('Should publish message to channel with publish', async () => {
         const localConfig = LocalQueueConfig.default();
-        const localTopic = new LocalTopic('sample',localConfig);
-         await delay(300)
-         await localTopic.publish(queuemessage);
+        const localTopic = new LocalTopic('sample', localConfig);
+        await delay(300)
+        await localTopic.publish(queuemessage);
         expect(fakePublish).toHaveBeenCalledTimes(1);
 
     })
-    it('Should consume from the channel with consume', async ()=>{
-        const localTopic = new LocalTopic('sample',LocalQueueConfig.default());
+    it('Should consume from the channel with consume', async () => {
+        const localTopic = new LocalTopic('sample', LocalQueueConfig.default());
         await delay(300);
-        await localTopic.subscribe('sample',{
+        await localTopic.subscribe('sample', {
             onError(error) {
-                
+
             },
             onReceive(message) {
-                
+
             },
         })
         expect(fakeSubscribe).toHaveBeenCalledTimes(1);

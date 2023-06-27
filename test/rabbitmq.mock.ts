@@ -1,28 +1,28 @@
 import { Channel, ConfirmChannel, Connection, ConsumeMessage, GetMessage, Message, Options, Replies, ServerProperties } from "amqplib";
 
 export class MockConnection {
-    
+
     connection: { serverProperties: ServerProperties; };
-    createChannel():Promise<any>{
+    createChannel(): Promise<any> {
         return Promise.resolve(new MockChannel());
     }
-    constructor(){
+    constructor() {
         this.connection = {
-            serverProperties:{
-                host:'',
-                product:'',
-                version:'',
-                platform:'',
-                information:''
+            serverProperties: {
+                host: '',
+                product: '',
+                version: '',
+                platform: '',
+                information: ''
             }
         }
     }
-    
+
 
 }
 
 export class MockChannel {
-     
+
     assertQueue(queue: string, options?: Options.AssertQueue | undefined): Promise<Replies.AssertQueue> {
         return Promise.resolve({
             queue: queue,
@@ -54,7 +54,7 @@ export class MockChannel {
     //     return Promise.resolve({});
     // }
     assertExchange(exchange: string, type: string, options?: Options.AssertExchange | undefined): Promise<Replies.AssertExchange> {
-        return Promise.resolve({exchange:exchange})
+        return Promise.resolve({ exchange: exchange })
     }
     // checkExchange(exchange: string): Promise<Replies.Empty> {
     //     return Promise.resolve({});
@@ -75,7 +75,7 @@ export class MockChannel {
     //     return true;
     // }
     consume(queue: string, onMessage: (msg: ConsumeMessage | null) => void, options?: Options.Consume | undefined): Promise<Replies.Consume> {
-        return Promise.resolve({consumerTag:''});
+        return Promise.resolve({ consumerTag: '' });
     }
     // cancel(consumerTag: string): Promise<Replies.Empty> {
     //     return Promise.resolve({});
@@ -84,19 +84,19 @@ export class MockChannel {
     //     return Promise.resolve(false);
     // }
     // ack(message: Message, allUpTo?: boolean | undefined): void {
-        
+
     // }
     // ackAll(): void {
-        
+
     // }
     // nack(message: Message, allUpTo?: boolean | undefined, requeue?: boolean | undefined): void {
-        
+
     // }
     // nackAll(requeue?: boolean | undefined): void {
-        
+
     // }
     // reject(message: Message, requeue?: boolean | undefined): void {
-        
+
     // }
     // prefetch(count: number, global?: boolean | undefined): Promise<Replies.Empty> {
     //     return Promise.resolve({});

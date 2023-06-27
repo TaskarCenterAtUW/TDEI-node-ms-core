@@ -9,71 +9,71 @@ import { QueueMessage } from "../src/core/queue";
 import { AzureQueueConfig } from "../src/core/queue/providers/azure-queue-config";
 import { AzureServiceBusTopic } from "../src/core/queue/providers/azure-service-bus-topic";
 import { LocalQueueConfig } from "../src/core/queue/providers/local/local-queue-config";
-import { MessageHandlers, ServiceBusMessage, SubscribeOptions,ServiceBusSender } from "@azure/service-bus";
+import { MessageHandlers, ServiceBusMessage, SubscribeOptions, ServiceBusSender } from "@azure/service-bus";
 
 const fakeSendMessage = jest.fn();
 const fakeSubscribe = jest.fn();
 
-jest.mock('@azure/service-bus', ()=>{
+jest.mock('@azure/service-bus', () => {
     return {
-        ServiceBusClient: jest.fn().mockImplementation(()=>{
+        ServiceBusClient: jest.fn().mockImplementation(() => {
             return {
-            createSender: jest.fn().mockImplementation(()=>{
-                return {
-                    sendMessages: (messages: ServiceBusMessage[]):Promise<void> => {  fakeSendMessage(); return Promise.resolve()}
-                }
-            }),
-            createReceiver: jest.fn().mockImplementation(()=>{
-                return {
-                subscribe:(handlers: MessageHandlers, options?: SubscribeOptions) =>{
-                    fakeSubscribe();
-                }
-                }
-            })
+                createSender: jest.fn().mockImplementation(() => {
+                    return {
+                        sendMessages: (messages: ServiceBusMessage[]): Promise<void> => { fakeSendMessage(); return Promise.resolve() }
+                    }
+                }),
+                createReceiver: jest.fn().mockImplementation(() => {
+                    return {
+                        subscribe: (handlers: MessageHandlers, options?: SubscribeOptions) => {
+                            fakeSubscribe();
+                        }
+                    }
+                })
             }
         }),
     }
 })
 
-describe('Azure service bus topic unit',()=>{
+describe('Azure service bus topic unit', () => {
 
     const queuemessage = QueueMessage.from({
-        message:'Sample message',
-        messageId:'123',
-        messageType:'sample-event',
+        message: 'Sample message',
+        messageId: '123',
+        messageType: 'sample-event',
         publishedDate: ('{publishedDate}')
     });
 
-    it('Should initialize with Azure default config if not provided', ()=>{
+    it('Should initialize with Azure default config if not provided', () => {
         const configuration = LocalQueueConfig.default();
-        const azureTopic = new AzureServiceBusTopic(configuration,'sample');
+        const azureTopic = new AzureServiceBusTopic(configuration, 'sample');
         expect(azureTopic).toBeTruthy();
 
     })
 
-    it('Should have called and created topic and sender on init', ()=>{
+    it('Should have called and created topic and sender on init', () => {
         const azureConfiguration = AzureQueueConfig.default();
-        const azureTopic = new AzureServiceBusTopic(azureConfiguration,'sample');
+        const azureTopic = new AzureServiceBusTopic(azureConfiguration, 'sample');
         expect(azureTopic).toBeTruthy();
     })
 
-    it('Should listen to a subscription using subscribe method', async () =>{
+    it('Should listen to a subscription using subscribe method', async () => {
         const azureConfiguration = AzureQueueConfig.default();
-        const azureTopic = new AzureServiceBusTopic(azureConfiguration,'sample');
-        await azureTopic.subscribe('sample',{
+        const azureTopic = new AzureServiceBusTopic(azureConfiguration, 'sample');
+        await azureTopic.subscribe('sample', {
             onReceive(message) {
-                
+
             },
             onError(error) {
-                
+
             },
         });
         expect(fakeSubscribe).toBeCalledTimes(1);
 
     })
-    it('Should be able to call publish on sender when message is sent', async ()=>{
+    it('Should be able to call publish on sender when message is sent', async () => {
         const azureConfiguration = AzureQueueConfig.default();
-        const azureTopic = new AzureServiceBusTopic(azureConfiguration,'sample');
+        const azureTopic = new AzureServiceBusTopic(azureConfiguration, 'sample');
 
         await azureTopic.publish(queuemessage)
         expect(fakeSendMessage).toBeCalledTimes(1);

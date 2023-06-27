@@ -8,78 +8,78 @@ import { LocalLogger } from "../src/core/logger/providers/local/local_logger";
 import { QueueMessage } from "../src/core/queue";
 
 const mockPost = jest.fn();
-jest.mock('axios', ()=>{
+jest.mock('axios', () => {
     return {
-        post:jest.fn().mockImplementation(()=>{
+        post: jest.fn().mockImplementation(() => {
             mockPost();
             return Promise.resolve({})
         })
     }
 })
 
-describe('Local logger', ()=>{
+describe('Local logger', () => {
 
-    beforeEach(()=>{
+    beforeEach(() => {
         mockPost.mockClear();
     })
-    it('Should initialize without parameters', ()=>{
+    it('Should initialize without parameters', () => {
         const localLogger = new LocalLogger();
         expect(localLogger).toBeTruthy();
     })
 
-    it('Should send add request', ()=>{
-        const request = AuditRequest.from({requestId:'abc'});
+    it('Should send add request', () => {
+        const request = AuditRequest.from({ requestId: 'abc' });
         const localLogger = new LocalLogger();
         const message = localLogger.addRequest(request);
         expect(mockPost).toHaveBeenCalledTimes(1);
     })
-    it('Should be able to  update request', ()=>{
-        const request = AuditRequest.from({requestId:'abc'});
+    it('Should be able to  update request', () => {
+        const request = AuditRequest.from({ requestId: 'abc' });
         const localLogger = new LocalLogger();
         const message = localLogger.updateRequest(request);
         expect(mockPost).toHaveBeenCalledTimes(1);
     })
-    it('Should be able to  add event', ()=>{
-        const request = AuditEvent.from({requestId:'abc'});
+    it('Should be able to  add event', () => {
+        const request = AuditEvent.from({ requestId: 'abc' });
         const localLogger = new LocalLogger();
         const message = localLogger.addEvent(request);
         expect(mockPost).toHaveBeenCalledTimes(1);
     })
 
-    it('Should be able to record metric', ()=>{
+    it('Should be able to record metric', () => {
         const localLogger = new LocalLogger();
-        localLogger.recordMetric('sample-metric',1);
+        localLogger.recordMetric('sample-metric', 1);
         expect(mockPost).toHaveBeenCalledTimes(1);
     })
-    it('Should record HTTP call', ()=>{
-        const req  = 'httprequest';
+    it('Should record HTTP call', () => {
+        const req = 'httprequest';
         const resp = 'httpresponse';
         const localLogger = new LocalLogger();
-        localLogger.recordRequest(req,resp);
+        localLogger.recordRequest(req, resp);
         expect(mockPost).toHaveBeenCalledTimes(1);
 
     })
 
-    it('Should send info', ()=>{
+    it('Should send info', () => {
         const info = 'info message';
-       
+
         const localLogger = new LocalLogger();
         localLogger.info(info);
         expect(mockPost).toHaveBeenCalledTimes(1);
     })
-    it('Should send debug', ()=>{
+    it('Should send debug', () => {
         const message = 'debug message';
         const localLogger = new LocalLogger();
         localLogger.debug(message);
         expect(mockPost).toHaveBeenCalledTimes(1);
     })
-    it('Should record message', ()=>{
-        const queueMessage = QueueMessage.from({messageType:'testtype'});
+    it('Should record message', () => {
+        const queueMessage = QueueMessage.from({ messageType: 'testtype' });
         const localLogger = new LocalLogger();
         localLogger.recordMessage(queueMessage);
         expect(mockPost).toHaveBeenCalledTimes(1);
     })
-    it('Should get Auditor', ()=>{
+    it('Should get Auditor', () => {
         const localLogger = new LocalLogger();
         const auditor = localLogger.getAuditor();
         expect(auditor).toBe(localLogger);

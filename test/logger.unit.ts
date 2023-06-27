@@ -12,61 +12,61 @@ import { QueueMessage } from "../src/core/queue";
 const mockAutoSend = jest.fn();
 const mockAdd = jest.fn();
 const mockSend = jest.fn();
-const mockGetQueue = jest.fn().mockImplementation(()=>{
+const mockGetQueue = jest.fn().mockImplementation(() => {
     return {
-        add:(message:QueueMessage)=>{mockAdd(message);},
-        enableAutoSend:()=>{mockAutoSend();},
-        send:()=>{mockSend();}
+        add: (message: QueueMessage) => { mockAdd(message); },
+        enableAutoSend: () => { mockAutoSend(); },
+        send: () => { mockSend(); }
     }
 });
 const mockAuditor = jest.mock('../src/core/logger/providers/azure_auditor');
 jest.mock('../src/core/logger/providers/azure_analytic')
-describe('Logger', ()=>{
+describe('Logger', () => {
 
-    beforeAll(()=>{
+    beforeAll(() => {
         Core.getQueue = mockGetQueue;
     })
-    beforeEach(()=>{
+    beforeEach(() => {
         mockAdd.mockClear();
         mockSend.mockClear();
     })
-    it('Should initialize with default configuration', ()=>{
+    it('Should initialize with default configuration', () => {
         const azureLoggerConfig = AzureLoggerConfig.default();
         const logger = new Logger(azureLoggerConfig);
         expect(mockGetQueue).toHaveBeenCalled();
     })
-    it('Should send info', ()=>{
+    it('Should send info', () => {
         const info = 'info message';
         const azureLoggerConfig = AzureLoggerConfig.default();
         const logger = new Logger(azureLoggerConfig);
         logger.info(info);
         expect(mockAdd).toHaveBeenCalledTimes(1);
     })
-    it('Should send debug', ()=>{
+    it('Should send debug', () => {
         const message = 'debug message';
         const azureLoggerConfig = AzureLoggerConfig.default();
         const logger = new Logger(azureLoggerConfig);
         logger.debug(message);
         expect(mockAdd).toHaveBeenCalledTimes(1);
     })
-    it('Should send metric', ()=>{
+    it('Should send metric', () => {
         const name = 'metric-name';
         const value = 123;
         const azureLoggerConfig = AzureLoggerConfig.default();
         const logger = new Logger(azureLoggerConfig);
-        logger.recordMetric(name,value);
+        logger.recordMetric(name, value);
         expect(mockAdd).toHaveBeenCalledTimes(1);
     })
-    it('Should record HTTP call', ()=>{
-        const req  = 'httprequest';
+    it('Should record HTTP call', () => {
+        const req = 'httprequest';
         const resp = 'httpresponse';
         const azureLoggerConfig = AzureLoggerConfig.default();
         const logger = new Logger(azureLoggerConfig);
-        logger.recordRequest(req,resp);
+        logger.recordRequest(req, resp);
         expect(mockAdd).toHaveBeenCalledTimes(1);
 
     })
-    it('Should get auditor', ()=>{
+    it('Should get auditor', () => {
         const azureLoggerConfig = AzureLoggerConfig.default();
         const logger = new Logger(azureLoggerConfig);
         const auditor = logger.getAuditor()
@@ -74,14 +74,14 @@ describe('Logger', ()=>{
         expect(auditor).toBeTruthy();
 
     })
-    it('Should get analytic', ()=>{
+    it('Should get analytic', () => {
         const azureLoggerConfig = AzureLoggerConfig.default();
         const logger = new Logger(azureLoggerConfig);
-        
+
         const analytic = logger.getAnalytic();
         expect(analytic).toBeTruthy();
     })
-    it('Should call send when sendAll called', ()=>{
+    it('Should call send when sendAll called', () => {
         const azureLoggerConfig = AzureLoggerConfig.default();
         const logger = new Logger(azureLoggerConfig);
 
