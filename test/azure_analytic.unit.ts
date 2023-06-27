@@ -11,24 +11,24 @@ import { QueueMessage } from "../src/core/queue";
 
 const mockSend = jest.fn();
 const mockAdd = jest.fn();
-const mockGetQueue = jest.fn().mockImplementation(()=>{
+const mockGetQueue = jest.fn().mockImplementation(() => {
     return {
-        add:(message:QueueMessage)=>{mockAdd();},
-        send:()=>{mockSend();}
+        add: (message: QueueMessage) => { mockAdd(); },
+        send: () => { mockSend(); }
     }
 });
 
-describe('Azure analytic', ()=>{
-    beforeAll(()=>{
+describe('Azure analytic', () => {
+    beforeAll(() => {
         Core.getQueue = mockGetQueue;
     })
-    it('Should initialize with queue name', ()=>{
+    it('Should initialize with queue name', () => {
         const analytic = new AzureAnalytic('sample');
         expect(analytic).toBeTruthy();
     })
-    it('Should be able to send message', ()=>{
+    it('Should be able to send message', () => {
         const analytic = new AzureAnalytic('sample');
-        const messageToDeliver = {type:'sample'};
+        const messageToDeliver = { type: 'sample' };
         analytic.record(messageToDeliver)
         expect(mockSend).toHaveBeenCalledTimes(1);
         expect(mockAdd).toHaveBeenCalledTimes(1);
