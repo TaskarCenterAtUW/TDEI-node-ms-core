@@ -11,7 +11,14 @@ export default async (): Promise<Config> => {
     testMatch: ["**/test/?(*.)+(unit|int).[tj]s?(x)", "**/?(*.)+(spec|test).[tj]s?(x)"],
     transform: {
       '^.+\\.(ts|tsx)?$': 'ts-jest'
-    }
+    },
+    reporters: [
+      "default",
+      ["./node_modules/jest-html-reporter", {
+        "pageTitle": "Test Report",
+        "includeFailureMsg": true
+      }]
+    ]
 
   };
 };
