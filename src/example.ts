@@ -18,7 +18,7 @@ require('dotenv').config()
 
 
 const delay = ms => new Promise(res=>setTimeout(res,ms));
-let coreConfig = new CoreConfig("Local");
+let coreConfig = new CoreConfig("Azure");
 Core.initialize(coreConfig); // Pre-configures all the services required for the project.
 console.log("Hello");
 // Test the logs one by one
@@ -59,8 +59,8 @@ let auditRequest = AuditRequest.from({
 const storageClient = Core.getStorageClient();
 
 async function testUpload(){
-    const container = await storageClient?.getContainer('gone');
-    const filetoUpload = container?.createFile('sample.txt','text/plain');
+    const container = await storageClient?.getContainer('gtfsflex');
+    const filetoUpload = container?.createFile('tests/success_1_all_attrs.zip','application/zip');
     const readStream = fs.createReadStream(path.join(__dirname,'core.js'));
     // Get the local stream and upload
     filetoUpload?.upload(readStream);
@@ -84,7 +84,7 @@ async function testStorageFile(){
 }
 
 // testStorageFile()
-// testUpload();
+testUpload();
 
 // Gets the file in the path
 //  storageClient?.getFile('gtfspathways','2022/NOVEMBER/102/file_1668600056782_bce3e0a8b6e94ce7a76ac94426c1be04.zip').then((fileEntity)=>{
@@ -294,6 +294,6 @@ async function testAuthorization() {
     
     console.log(response);
 }
-testAuthorization();
+// testAuthorization();
 
 

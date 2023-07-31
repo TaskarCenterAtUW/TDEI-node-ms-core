@@ -23,11 +23,14 @@ export class AzureFileEntity implements FileEntity {
 
     _blobClient: BlockBlobClient;
 
+    remoteUrl:string;
+
     constructor(name: string, blobClient: BlockBlobClient, mimeType: string = 'text/plain') {
         this.filePath = name;
         this.fileName = name.replace(/^.*[\\\/]/, ''); // Get the last name;
         this.mimeType = mimeType;
         this._blobClient = blobClient;
+        this.remoteUrl = this._blobClient.url;
     }
     /**
      * Fetches the readable stream of the file for reading the content
@@ -53,10 +56,15 @@ export class AzureFileEntity implements FileEntity {
      * @returns the same object
      */
     async upload(body: NodeJS.ReadableStream): Promise<FileEntity> {
-        const streamData = await this.streamToData(body);
-        const uploadOptions = { blobHTTPHeaders: { blobContentType: this.mimeType } };
-        const uploadResponse = await this._blobClient.uploadData(streamData, uploadOptions);
-        return Promise.resolve(this);
+        try {
+            const streamData = await this.streamToData(body);
+            const uploadOptions = { blobHTTPHeaders: { blobContentType: this.mimeType } };
+            const uploadResponse = await this._blobClient.uploadData(streamData, uploadOptions);
+            return Promise.resolve(this);
+        }
+        catch (error) {
+            return Promise.reject(error);
+        }
     }
 
     /**

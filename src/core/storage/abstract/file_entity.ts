@@ -6,11 +6,13 @@ export abstract class FileEntity {
     fileName: string;
     mimeType: string;
     filePath: string;
+    remoteUrl:string;
 
     constructor(name: string, mimeType: string = "text/plain") {
         this.fileName = name;
         this.mimeType = mimeType;
         this.filePath = name;
+        this.remoteUrl = '';
     }
 
     /**

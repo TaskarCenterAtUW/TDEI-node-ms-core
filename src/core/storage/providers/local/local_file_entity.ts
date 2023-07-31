@@ -11,12 +11,15 @@ export class LocalFileEntity implements FileEntity{
     rootDownloadPath : string = "/files/download/";
     rootUploadPath: string = "/files/upload/";
     serverRoot:string;
+    remoteUrl: string;
 
     constructor(name: string ,serverRoot:string,mimeType: string = 'text/plain') {
         this.filePath = name;
         this.fileName = name.replace(/^.*[\\\/]/, ''); // Get the last name;
         this.mimeType = mimeType;
         this.serverRoot = serverRoot;
+        this.remoteUrl = path.join(serverRoot,this.filePath);
+        
     }
 
    async getStream(): Promise<NodeJS.ReadableStream> {
