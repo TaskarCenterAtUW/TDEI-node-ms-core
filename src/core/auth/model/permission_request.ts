@@ -23,7 +23,7 @@ export class PermissionRequest {
      * @returns URLSearchParams
      */
     getSearchParams():URLSearchParams {
-        let params = new URLSearchParams();
+        const params = new URLSearchParams();
             params.append("userId", this.userId);
             params.append("agencyId", this.orgId);
             params.append("affirmative", this.shouldSatisfyAll ? "true":"false");

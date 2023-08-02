@@ -19,7 +19,7 @@ export class LocalFileEntity implements FileEntity{
         this.mimeType = mimeType;
         this.serverRoot = serverRoot;
         this.remoteUrl = path.join(serverRoot,this.filePath);
-        
+
     }
 
    async getStream(): Promise<NodeJS.ReadableStream> {
@@ -35,21 +35,21 @@ export class LocalFileEntity implements FileEntity{
     }
 
     async upload(body: NodeJS.ReadableStream): Promise<FileEntity> {
-        
+
         // Get the directory from file path
         const relativePath = path.join(this.rootUploadPath, this.filePath);
         const directoryPath = this.serverRoot + path.dirname(relativePath);//fullUploadPath.substring(0,fullUploadPath.indexOf(this.fileName)-1);
-        var formData = new FormData();
+        const formData = new FormData();
         formData.append('uploadFile',body);
         const response = await axios.post(directoryPath,formData);
         return Promise.resolve(this);
     }
 
      /**
-     * Converts ReadableStream into text
-     * @param stream ReadableStream to fetch the text from
-     * @returns string
-     */
+      * Converts ReadableStream into text
+      * @param stream ReadableStream to fetch the text from
+      * @returns string
+      */
      private async streamToText(stream: NodeJS.ReadableStream): Promise<string> {
         stream.setEncoding('utf8');
         let data = '';

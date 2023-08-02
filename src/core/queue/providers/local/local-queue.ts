@@ -71,14 +71,14 @@ export class LocalQueue implements IMessageQueue {
         const body = JSON.parse(message.content.toString());
         console.log('2');
         console.log(body);
-        
+
         // console.log(body['type']);
         const messageType = body['messageType'];
         console.log(messageType);
         // Check if there is any method listening to it.
         const eventMap = Reflect.getMetadata('eventHandlers', this.parent.constructor.prototype) as Map<
             string,
-            // eslint-disable-next-line 
+            // eslint-disable-next-line
             // @typescript-eslint/ban-types
             { handler: Function }[]
         >;

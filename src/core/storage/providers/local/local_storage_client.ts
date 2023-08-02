@@ -19,14 +19,14 @@ export class LocalStorageClient implements StorageClient {
         });
     }
     getFile(containerName: string, fileName: string): Promise<FileEntity> {
-        let fullPath = path.join(containerName,fileName);
+        const fullPath = path.join(containerName,fileName);
         return new Promise((resolve,reject)=>{
-            let container = new LocalStorageContainer(containerName,this.serverRoot);
+            const container = new LocalStorageContainer(containerName,this.serverRoot);
             container.listFiles().then((allFiles)=>{
               const theFile =   allFiles.find((obj)=>{
-                    return obj.filePath  == fullPath;
+                    return obj.filePath  === fullPath;
                 });
-                if(theFile != undefined){
+                if(theFile !== undefined){
                     resolve(theFile);
                 }
                 else {
