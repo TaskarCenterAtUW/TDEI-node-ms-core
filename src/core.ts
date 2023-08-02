@@ -115,7 +115,7 @@ export class Core {
                     console.debug(config);
                     return null;
                 }
-            } else if(config.provider == this.LOCAL_PROVIDER){
+            } else if(config.provider === this.LOCAL_PROVIDER){
                 if(config instanceof LocalStorageConfig){
                     return new LocalStorageClient(config.serverRoot);
                 } else {
@@ -129,9 +129,9 @@ export class Core {
         }
     }
     /**
-     * 
+     *
      * @param config instance of `IAuthConfig` or partial. If provider is "Hosted", should have apiUrl
-     *             Eg. `getAuthorizer({provider:"Hosted",apiUrl:"<apiURL>"})` 
+     *             Eg. `getAuthorizer({provider:"Hosted",apiUrl:"<apiURL>"})`
      *                  `getAuthorizer({provider:"Simulated"})`
      * @returns Instance of `IAuthorizer` that has `hasPermission()` method
      */
@@ -141,7 +141,7 @@ export class Core {
             // Pick the hosted one with env
             return new HostedAuthorizer(AuthConfig.default());
         }
-        
+
             // Get based on the authconfig
             if(config.provider === this.HOSTED_AUTH_PROVIDER){
                 if(!config.apiUrl){
@@ -155,8 +155,7 @@ export class Core {
                 return new SimulatedAuthorizer(config);
             }
             return null;
-        
-         
+
     }
 
 

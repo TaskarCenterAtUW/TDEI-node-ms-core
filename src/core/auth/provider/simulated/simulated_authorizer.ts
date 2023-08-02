@@ -18,7 +18,7 @@ export class SimulatedAuthorizer implements IAuthorizer {
         // Do nothing
     }
     /**
-     * 
+     *
      * @param permissionRequest Permission request instance
      * User id with "000000-0000-0000-0000-000000" will simulate result to false else true otherwise.
      * @returns Promise<boolean> or an exception

@@ -12,7 +12,7 @@ export class HostedAuthorizer implements IAuthorizer {
     baseUrl: string;
 
     /**
-     * 
+     *
      * @param config IAuthConfig element. Should have `apiUrl`
      */
     constructor(config:IAuthConfig) {
@@ -21,15 +21,15 @@ export class HostedAuthorizer implements IAuthorizer {
     }
 
     /**
-     * 
+     *
      * @param permissionRequest PermissionRequest . PermissionRequest should have atleast one permssion
      * @returns Promise<boolean> or exception
-     * 
+     *
      */
     hasPermission(permissionRequest: PermissionRequest): Promise<boolean> {
-        
+
         return new Promise((resolve,reject)=>{
-            if(permissionRequest.permssions.length == 0){
+            if(permissionRequest.permssions.length === 0){
                 reject("No roles provided");
             }
             const permissionSearch = permissionRequest.getSearchParams();
@@ -38,7 +38,7 @@ export class HostedAuthorizer implements IAuthorizer {
             }).catch((e)=>{
                 reject(e);
             });
-        });        
+        });
     }
 
 }

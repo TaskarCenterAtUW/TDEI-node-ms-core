@@ -20,7 +20,7 @@ export class LocalTopic implements IMessageTopic {
            this.connection?.createChannel().then((chan)=>{
                this.channel = chan;
                console.log('Channel created');
-               
+
                this.channel?.assertExchange(topic,'fanout',{durable:false});
             //    this.channel?.checkExchange(topic).then((result)=>{
             //     console.log('exchange exists')
@@ -55,5 +55,4 @@ export class LocalTopic implements IMessageTopic {
         this.channel?.publish(this.exchangeName,'',Buffer.from(JSON.stringify(message.toJSON())));
         return Promise.resolve();
     }
-    
 }
