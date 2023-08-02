@@ -19,7 +19,11 @@ jest.mock('@azure/storage-blob', () => {
                 listBlobsFlat: (): any => {
                     return new MockedIterator(getMockFiles())
                 },
-                getBlockBlobClient: jest.fn()
+                getBlockBlobClient: jest.fn().mockImplementation(()=>{
+                    return {
+                        url:'http://www.example.com'
+                    }
+                })
             }
         })
     }

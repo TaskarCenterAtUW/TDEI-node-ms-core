@@ -27,7 +27,7 @@ export class LocalStorageContainer implements StorageContainer {
                 const files: FileEntity[] = [];
                 response.data.forEach((singleResponse) => {
                     if (this.excludedFiles.indexOf(singleResponse.name) === -1) { // Not in any of the excluded files
-                        files.push(new LocalFileEntity(singleResponse.path, singleResponse.mimeType));
+                        files.push(new LocalFileEntity(singleResponse.path, this.serverRoot, singleResponse.mimeType));
                     }
                 });
                 resolve(files);
