@@ -18,6 +18,7 @@
 The project is configured with `babel` to figure out the coverage of the unit tests. All the tests are in `test` folder. 
 - To execute the tests, please follow the commands:
 
+
 `npm install`
 
 `npm run test`
