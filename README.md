@@ -569,7 +569,7 @@ Core exposes class `PermissionRequest` that can be initialized as below
 ```ts
 var permissionRequest = new PermissionRequest({
         userId:"<userID>",
-        orgId:"<orgID>",
+        projectGroupId:"<projectGroupId>",
         permssions:["permission1","permission2"],
         shouldSatisfyAll:false 
      });
@@ -602,7 +602,7 @@ From the `IAuthorizer` object received from the above, use the method `hasPermis
 /// Complete code example
  var permissionRequest = new PermissionRequest({
         userId:"<userID>",
-        orgId:"<orgId>",
+        projectGroupId:"<projectGroupId>",
         permssions:["permission1"],
         shouldSatisfyAll:false
      });

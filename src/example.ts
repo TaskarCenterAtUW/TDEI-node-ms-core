@@ -1,13 +1,8 @@
 // Testing code
 
-import { ServiceBusClient, ServiceBusError } from "@azure/service-bus";
-import client, { Channel, Connection } from "amqplib";
-import { last } from "lodash";
 import { Core } from "./core";
-import { AuditEvent } from "./core/logger/model/audit_event";
 import { AuditRequest } from "./core/logger/model/audit_request";
 import { Queue, QueueMessage, When } from "./core/queue";
-import { AzureQueueConfig } from "./core/queue/providers/azure-queue-config";
 import { CoreConfig } from "./models/config";
 import * as fs from 'fs';
 import * as path from 'path';
@@ -17,7 +12,7 @@ import { PermissionRequest } from "./core/auth/model/permission_request";
 require('dotenv').config()
 
 
-const delay = ms => new Promise(res=>setTimeout(res,ms));
+const delay = ms => new Promise(res => setTimeout(res, ms));
 let coreConfig = new CoreConfig("Azure");
 Core.initialize(coreConfig); // Pre-configures all the services required for the project.
 console.log("Hello");
@@ -27,16 +22,16 @@ console.log("Hello");
 // logger.debug("This is a test debug message");
 // logger.info("This is an info message");
 // logger.getAnalytic()?.record({
-//     orgId:'abc',
+//     projectGroupId:'abc',
 //     apiKeysIssued:2
 // });
 
 let auditRequest = AuditRequest.from({
-    agencyId:'8383',
-    requestId:'83832',
-    resourceUrl:'/gtfs-flex/',
-    responseStatus:'200',
-    responseResult:'succeeded'
+    projectGroupId: '8383',
+    requestId: '83832',
+    resourceUrl: '/gtfs-flex/',
+    responseStatus: '200',
+    responseResult: 'succeeded'
 });
 //  logger.getAuditor()?.addRequest(auditRequest);
 // auditRequest.responseStatus = '201';
@@ -58,26 +53,26 @@ let auditRequest = AuditRequest.from({
 // https://tdeisamplestorage.blob.core.windows.net/gtfspathways/2022/NOVEMBER/102/
 const storageClient = Core.getStorageClient();
 
-async function testUpload(){
+async function testUpload() {
     const container = await storageClient?.getContainer('gtfsflex');
-    const filetoUpload = container?.createFile('tests/success_1_all_attrs.zip','application/zip');
-    const readStream = fs.createReadStream(path.join(__dirname,'core.js'));
+    const filetoUpload = container?.createFile('tests/success_1_all_attrs.zip', 'application/zip');
+    const readStream = fs.createReadStream(path.join(__dirname, 'core.js'));
     // Get the local stream and upload
     filetoUpload?.upload(readStream);
 }
 
-async function testStorage(){
+async function testStorage() {
     const container = await storageClient?.getContainer('gone');
     let files = await container?.listFiles();
-    files?.forEach((entity)=>{
+    files?.forEach((entity) => {
         console.log(entity.filePath);
     });
     //gone/abc/adr-log-flow-1.jpg
 }
 // testStorage();
 
-async function testStorageFile(){
-    let theFile = await storageClient?.getFile('gone','abc/adr-log-flow-1.jpg');
+async function testStorageFile() {
+    let theFile = await storageClient?.getFile('gone', 'abc/adr-log-flow-1.jpg');
     console.log(theFile?.filePath);
     let theOtherFile = await storageClient?.getFileFromUrl('http://localhost:8801/gone/abc/adr-log-flow-1.jpg');
     console.log(theOtherFile?.filePath);
@@ -114,33 +109,33 @@ testUpload();
 // });
 
 
-async function testTopic(){
+async function testTopic() {
     const topic = 'gtfs-flex-upload';
     const subscription = 'uploadprocessor';
-    const topicConfig =  LocalQueueConfig.default();
-    const topicObject = Core.getTopic(topic,topicConfig);
+    const topicConfig = LocalQueueConfig.default();
+    const topicObject = Core.getTopic(topic, topicConfig);
     await delay(1000);
-    
-    topicObject.subscribe(subscription,{
+
+    topicObject.subscribe(subscription, {
         onReceive: processMessage,
-        onError:processError
+        onError: processError
     });
     await delay(1000);
     topicObject.publish(QueueMessage.from(
         {
-            message:"Hello there from local"
+            message: "Hello there from local"
         }
     ));
 
 }
 
-function processMessage(message:QueueMessage) {
+function processMessage(message: QueueMessage) {
     console.log("Received Message");
     console.log(message.toJSON());
     // return Promise.resolve();
 }
 
-function processError(error: any){
+function processError(error: any) {
     console.log("Received error");
     // return Promise.reject();
 }
@@ -212,11 +207,11 @@ topicObject.publish(QueueMessage.from(
 // });
 
 
-class CustomQueue extends Queue{
+class CustomQueue extends Queue {
 
     // Add listener function to the event type `sampleevent`
     @When('sampletype')
-    public onSampleEvent(message: QueueMessage){
+    public onSampleEvent(message: QueueMessage) {
         console.log('Received message');
         console.debug(message.messageId);
     }
@@ -250,23 +245,23 @@ class CustomQueue extends Queue{
 
 
 
-async function testMessages(){
+async function testMessages() {
 
     let queue = Core.getQueue('tdei-sample');
     const message = QueueMessage.from({
-        messageId:'28282',
-        message:'Sample message',
-        messageType:'sampletype',
-        data:{
-            flexPath:'sdfs/sdfs/sds',
-            isValid:true
+        messageId: '28282',
+        message: 'Sample message',
+        messageType: 'sampletype',
+        data: {
+            flexPath: 'sdfs/sdfs/sds',
+            isValid: true
         }
     });
 
 
     // Accessing or creating queueInstance
 
-let customQueueObject = Core.getCustomQueue<CustomQueue>('tdei-sample',CustomQueue);
+    let customQueueObject = Core.getCustomQueue<CustomQueue>('tdei-sample', CustomQueue);
     await delay(1000); // Have to do without delay.
     customQueueObject.listen();
     queue.add(message);
@@ -280,18 +275,18 @@ let customQueueObject = Core.getCustomQueue<CustomQueue>('tdei-sample',CustomQue
 async function testAuthorization() {
 
     var permissionRequest = new PermissionRequest({
-        userId:"7961d767-a352-464f-95b6-cd1c5189a93c",
-        orgId:"5e339544-3b12-40a5-8acd-78c66d1fa981",
-        permssions:["poc"],
-        shouldSatisfyAll:false
-     });
+        userId: "7961d767-a352-464f-95b6-cd1c5189a93c",
+        projectGroupId: "5e339544-3b12-40a5-8acd-78c66d1fa981",
+        permssions: ["poc"],
+        shouldSatisfyAll: false
+    });
     // Alternative way of getting authorizer with url and provider
     // const aProvider = Core.getAuthorizer({provider:"Hosted"});// Picks from env
-   
-    const authProvider = Core.getAuthorizer({provider:"Hosted",apiUrl:process.env.AUTHURL?.toString()!});
-    
+
+    const authProvider = Core.getAuthorizer({ provider: "Hosted", apiUrl: process.env.AUTHURL?.toString()! });
+
     const response = await authProvider?.hasPermission(permissionRequest);
-    
+
     console.log(response);
 }
 // testAuthorization();

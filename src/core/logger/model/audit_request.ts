@@ -9,7 +9,7 @@ export class AuditRequest extends AbstractDomainEntity {
     userId!: string;
 
     @Prop()
-    agencyId!: string;
+    projectGroupId!: string;
 
     @Prop()
     resourceUrl?: string;

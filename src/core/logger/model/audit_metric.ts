@@ -1,14 +1,14 @@
 import { AbstractDomainEntity, Prop } from "../../../models";
 
-export class AuditMetric extends AbstractDomainEntity{
+export class AuditMetric extends AbstractDomainEntity {
     @Prop()
-    metricId?:string;
+    metricId?: string;
     @Prop()
-    metricType:string = 'cumulative';
+    metricType: string = 'cumulative';
     @Prop()
-    orgId!: string;
+    projectGroupId!: string;
     @Prop()
-    userId?:string;
+    userId?: string;
     @Prop()
     value: number = 0;
 }

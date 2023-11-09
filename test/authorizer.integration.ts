@@ -45,7 +45,7 @@ describe('Authorizer (Hosted and Simulated)', () => {
         const authorizer = Core.getAuthorizer({ provider: "Hosted" });
         const permission = new PermissionRequest({
             userId: "abc",
-            orgId: "sdfs",
+            projectGroupId: "sdfs",
             permssions: [],
             shouldSatisfyAll: false
         });
@@ -58,7 +58,7 @@ describe('Authorizer (Hosted and Simulated)', () => {
         const authorizer = Core.getAuthorizer({ provider: "Simulated" });
         const permission = new PermissionRequest({
             userId: "000000-0000-0000-0000-000000",
-            orgId: "sdfs",
+            projectGroupId: "sdfs",
             permssions: [],
             shouldSatisfyAll: false
         });
@@ -72,7 +72,7 @@ describe('Authorizer (Hosted and Simulated)', () => {
         const authorizer = Core.getAuthorizer({ provider: "Simulated" });
         const permission = new PermissionRequest({
             userId: "abc",
-            orgId: "sdfs",
+            projectGroupId: "sdfs",
             permssions: [],
             shouldSatisfyAll: true
         });
@@ -85,7 +85,7 @@ describe('Authorizer (Hosted and Simulated)', () => {
         const authorizer = Core.getAuthorizer({ provider: "Hosted", apiUrl: "https://tdei-auth-n-z-dev.azurewebsites.net/api/v1/hasPermission" });
         const permissionRequest = new PermissionRequest({
             userId: "7961d767-a352-464f-95b6-cd1c5189a93c",
-            orgId: "5e339544-3b12-40a5-8acd-78c66d1fa981",
+            projectGroupId: "5e339544-3b12-40a5-8acd-78c66d1fa981",
             permssions: ["poc"],
             shouldSatisfyAll: false
         });
@@ -99,7 +99,7 @@ describe('Authorizer (Hosted and Simulated)', () => {
         const authorizer = Core.getAuthorizer({ provider: "Hosted", apiUrl: "https://tdei-auth-n-z-dev.azurewebsites.net/api/v1/hasPermission" });
         var permissionRequest = new PermissionRequest({
             userId: "sample user id",
-            orgId: "5e339544-3b12-40a5-8acd-78c66d1fa981",
+            projectGroupId: "5e339544-3b12-40a5-8acd-78c66d1fa981",
             permssions: ["poc"],
             shouldSatisfyAll: false
         });
@@ -112,7 +112,7 @@ describe('Authorizer (Hosted and Simulated)', () => {
         const authorizer = Core.getAuthorizer({ provider: "Hosted", apiUrl: "https://tdei-auth-n-z-dev.azurewebsites.net/api/v1/hasPermission" });
         var permissionRequest = new PermissionRequest({
             userId: "sample user id",
-            orgId: "5e339544-3b12-40a5-8acd-78c66d1fa981",
+            projectGroupId: "5e339544-3b12-40a5-8acd-78c66d1fa981",
             permssions: ["poc"],
             shouldSatisfyAll: true
         });
@@ -126,7 +126,7 @@ describe('Authorizer (Hosted and Simulated)', () => {
         const authorizer = Core.getAuthorizer({ provider: "Hosted", apiUrl: "<sample URL>" });
         var permissionRequest = new PermissionRequest({
             userId: "7961d767-a352-464f-95b6-cd1c5189a93c",
-            orgId: "5e339544-3b12-40a5-8acd-78c66d1fa981",
+            projectGroupId: "5e339544-3b12-40a5-8acd-78c66d1fa981",
             permssions: ["poc"],
             shouldSatisfyAll: false
         });

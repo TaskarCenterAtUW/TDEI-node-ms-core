@@ -5,8 +5,7 @@ export class PermissionRequest {
     /// userID of the user
     userId!: string;
 
-    /// OrganizationID or agencyID
-    orgId!: string;
+    projectGroupId!: string;
 
     /// list of permissions
     permssions: string[] = [];
@@ -14,20 +13,20 @@ export class PermissionRequest {
     /// Whether all should be present or anyone of the permissions to be present
     shouldSatisfyAll: boolean = false;
 
-    constructor(init?:Partial<PermissionRequest>){
-        Object.assign(this,init);
+    constructor(init?: Partial<PermissionRequest>) {
+        Object.assign(this, init);
     }
 
     /**
      * Internal method for getting the search parameters.
      * @returns URLSearchParams
      */
-    getSearchParams():URLSearchParams {
+    getSearchParams(): URLSearchParams {
         const params = new URLSearchParams();
-            params.append("userId", this.userId);
-            params.append("agencyId", this.orgId);
-            params.append("affirmative", this.shouldSatisfyAll ? "true":"false");
-            this.permssions.forEach(x => params.append("roles", x));
+        params.append("userId", this.userId);
+        params.append("projectGroupId", this.projectGroupId);
+        params.append("affirmative", this.shouldSatisfyAll ? "true" : "false");
+        this.permssions.forEach(x => params.append("roles", x));
         return params;
     }
 }
