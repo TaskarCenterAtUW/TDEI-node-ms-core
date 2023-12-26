@@ -553,7 +553,26 @@ const storageContainer: StorageContainer = await storageClient.getContainer(cont
     const readStream = fs.createReadStream(path.join(__dirname,"assets/sample_upload_file.txt"));
     // Call the upload method with the readstream.
     testFile.upload(readStream);
+    // to get the remoteUrl
+    testFile.remoteUrl
 ```
+
+#### Getting downloadable URL and remoteURL
+
+- For an already existing file in the system, the `remoteUrl` property will give the uploaded URL
+- For a newly uploaded file, `remoteUrl` property is assigned after the upload is done
+
+These remoteUrl properties may not be available for public download. Hence another method in `StorageClient` class called `getDownloadableUrl` has to be used to get the publicly downloadable URL.
+```typescript
+
+  const storageClient: StorageClient =  Core.getStorageClient();
+
+  const full_url = '<remoteUrl of the file>'; // May not be available for public download
+  const downloadable_url = await storageClient.getDownloadableUrl(full_url); // Publicly available
+```
+Note:
+
+The default expiration of the link is 24 hours from the time of issuance. 
 
 ### Authorization
 

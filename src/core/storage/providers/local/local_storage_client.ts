@@ -10,7 +10,7 @@ export class LocalStorageClient implements StorageClient {
 
     private serverRoot: string;
 
-    constructor(serverRoot: string){
+    constructor(serverRoot: string) {
         this.serverRoot = serverRoot;
     }
     getContainer(name: string): Promise<StorageContainer> {
@@ -19,33 +19,46 @@ export class LocalStorageClient implements StorageClient {
         });
     }
     getFile(containerName: string, fileName: string): Promise<FileEntity> {
-        const fullPath = path.join(containerName,fileName);
-        return new Promise((resolve,reject)=>{
-            const container = new LocalStorageContainer(containerName,this.serverRoot);
-            container.listFiles().then((allFiles)=>{
-              const theFile =   allFiles.find((obj)=>{
-                    return obj.filePath  === fullPath;
+        const fullPath = path.join(containerName, fileName);
+        return new Promise((resolve, reject) => {
+            const container = new LocalStorageContainer(containerName, this.serverRoot);
+            container.listFiles().then((allFiles) => {
+                const theFile = allFiles.find((obj) => {
+                    return obj.filePath === fullPath;
                 });
-                if(theFile !== undefined){
+                if (theFile !== undefined) {
                     resolve(theFile);
                 }
                 else {
                     const nfe = new NotFoundResourceError('404');
                     reject(nfe);
                 }
-            }).catch((e)=>{
+            }).catch((e) => {
                 reject(e);
             })
             // resolve(new LocalFileEntity(path.join(containerName,fileName),this.serverRoot));
         });
     }
     getFileFromUrl(fullUrl: string): Promise<FileEntity> {
-        const url = new  URL(fullUrl);
+        const url = new URL(fullUrl);
         const filePath = url.pathname;
         const fileComponents = filePath.split('/');
         const containerName = fileComponents[1];
         const fileRelativePath = fileComponents.slice(2).join('/');
-        return this.getFile(containerName,fileRelativePath);
+        return this.getFile(containerName, fileRelativePath);
+    }
+
+    getDownloadableUrl(fullUrl: string): Promise<string> {
+        return new Promise((resolve, reject) => {
+            const fileEntity = this.getFileFromUrl(fullUrl);
+
+            fileEntity.then((entity) => {
+                resolve(entity.remoteUrl);
+            }).catch((e) => {
+                reject(e);
+            })
+
+        })
     }
 
 }

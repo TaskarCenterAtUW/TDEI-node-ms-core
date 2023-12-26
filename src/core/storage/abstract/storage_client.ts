@@ -17,5 +17,7 @@ export abstract class StorageClient {
 
     abstract getFileFromUrl(fullUrl:string): Promise<FileEntity>;
 
+    abstract getDownloadableUrl(fullUrl:string): Promise<string>;
+
 
  }
