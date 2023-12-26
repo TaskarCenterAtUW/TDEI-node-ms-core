@@ -1,4 +1,4 @@
-import { BlobSASPermissions, BlobServiceClient, RestError, StorageSharedKeyCredential, generateBlobSASQueryParameters } from "@azure/storage-blob";
+import { BlobSASPermissions, BlobServiceClient, StorageSharedKeyCredential, generateBlobSASQueryParameters } from "@azure/storage-blob";
 import { IStorageConfig } from "../../../../models/abstracts/istorageconfig";
 import { NotFoundResourceError } from "../../../../utils/resource-errors/not-found-resource-error";
 import { UnprocessableResourceError } from "../../../../utils/resource-errors/unprocessable-resource-error";
@@ -95,6 +95,7 @@ export class AzureStorageClient implements StorageClient {
 
         // Get the permissions object
         const permissions = BlobSASPermissions.from({ read: true })
+        
         // Get the storage credentials
         const storageCredential: StorageSharedKeyCredential = this._blobServiceClient.credential as StorageSharedKeyCredential
         // Get the token
