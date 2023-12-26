@@ -54,11 +54,13 @@ let auditRequest = AuditRequest.from({
 const storageClient = Core.getStorageClient();
 
 async function testUpload() {
-    const container = await storageClient?.getContainer('gtfsflex');
-    const filetoUpload = container?.createFile('tests/success_1_all_attrs.zip', 'application/zip');
+    const container = await storageClient?.getContainer('osw');
+    const filetoUpload = container?.createFile('test_upload/success_1_all_attrs.zip', 'application/zip');
     const readStream = fs.createReadStream(path.join(__dirname, 'core.js'));
     // Get the local stream and upload
     filetoUpload?.upload(readStream);
+    console.log('Uploaded file')
+    console.log(filetoUpload?.remoteUrl)
 }
 
 async function testStorage() {
@@ -79,7 +81,7 @@ async function testStorageFile() {
 }
 
 // testStorageFile()
-testUpload();
+// testUpload();
 
 // Gets the file in the path
 //  storageClient?.getFile('gtfspathways','2022/NOVEMBER/102/file_1668600056782_bce3e0a8b6e94ce7a76ac94426c1be04.zip').then((fileEntity)=>{
@@ -94,7 +96,7 @@ testUpload();
 //     console.log('Error while getting the file information');
 //     console.log(err);
 // });
-//https://tdeisamplestorage.blob.core.windows.net/gtfspathways/2022/NOVEMBER/102/file_1668600056782_bce3e0a8b6e94ce7a76ac94426c1be04.zip
+// https://tdeisamplestorage.blob.core.windows.net/gtfspathways/2022/NOVEMBER/102/file_1668600056782_bce3e0a8b6e94ce7a76ac94426c1be04.zip
 // storageClient?.getFileFromUrl("https://tdeisamplestorage.blob.core.windows.net/gtfspathways/2022/NOVEMBER/102/file_1668600056782_bce3e0a8b6e94ce7a76ac94426c1be04.zip").then((fileEntity)=>{
 //     console.log("Received file entity");
 //     console.log(fileEntity.fileName);
@@ -292,3 +294,13 @@ async function testAuthorization() {
 // testAuthorization();
 
 
+async function testDownloadUrl() {
+    const remote_url = 'https://tdeisamplestorage.blob.core.windows.net/osw/jobs/2023/12/e2408696135d41c085866a27f5420fa5/naresh-som-2.zip'
+    const storage_client = Core.getStorageClient()
+    storage_client?.getDownloadableUrl(remote_url).then((downloadable_url) => {
+        console.log(downloadable_url)
+    })
+}
+
+// testDownloadUrl()
+testUpload()

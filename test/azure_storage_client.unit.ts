@@ -1,9 +1,10 @@
-import { BlobServiceClient, ContainerClient } from "@azure/storage-blob"
+import { BlobServiceClient, ContainerClient, BlobSASPermissions, BlobSASPermissionsLike } from "@azure/storage-blob"
 import { AzureStorageContainer } from "../src/core/storage/providers/azure/azure_storage_container"
 import { MockedIterator, getMockFiles } from "./azure.mock"
 import { AzureStorageClient } from "../src/core/storage/providers/azure/azure_storage_client"
 import { AzureStorageConfig } from "../src/core/storage/providers/azure/azure_storage_config"
 import { AzureFileEntity } from "../src/core/storage/providers/azure/azure_file_entity"
+import { stat } from "fs"
 
 /**
  * Unit test for `azure_storage_client.ts`
@@ -32,9 +33,15 @@ jest.mock('@azure/storage-blob', () => {
                 getContainerClient: (name: string): ContainerClient => {
                     return new ContainerClient('');
                 },
+                credential: jest.fn(),
                 getProperties: jest.fn()
             }
         }),
+        BlobSASPermissions: jest.fn(),
+        generateBlobSASQueryParameters:jest.fn().mockImplementation((url)=>{
+            // console.log(url)
+            return 'se=next-hour'
+        })
 
     }
 
@@ -86,5 +93,25 @@ describe('Azure Storage Client', () => {
         const file = await azureClient.getFileFromUrl(fileUrl);
         // Assert
         expect(file).toBeInstanceOf(AzureFileEntity);
+    })
+
+
+    it('Should get download URL ', async ()=>{
+
+        // Arrange
+        let fileUrl = 'http://sample.com/storage/abc.zip';
+        let azureConfig = AzureStorageConfig.default();
+        const azureClient = new AzureStorageClient(azureConfig);
+        // Mock creation of blobsaspermssions
+        const staticBlobPermission = jest.fn().mockResolvedValue(new BlobSASPermissions())
+        BlobSASPermissions.from = staticBlobPermission
+        // Act
+        const downloadUrl = await azureClient.getDownloadableUrl(fileUrl);
+        // Assert
+        expect(typeof downloadUrl).toBe("string")
+        expect(downloadUrl).toContain('se')
+        expect(downloadUrl).toBe(fileUrl+'?se=next-hour') // exact as required
+        
+
     })
 })

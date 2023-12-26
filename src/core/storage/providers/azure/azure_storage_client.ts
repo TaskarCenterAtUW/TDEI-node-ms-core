@@ -1,4 +1,4 @@
-import { BlobServiceClient, RestError } from "@azure/storage-blob";
+import { BlobSASPermissions, BlobServiceClient, StorageSharedKeyCredential, generateBlobSASQueryParameters } from "@azure/storage-blob";
 import { IStorageConfig } from "../../../../models/abstracts/istorageconfig";
 import { NotFoundResourceError } from "../../../../utils/resource-errors/not-found-resource-error";
 import { UnprocessableResourceError } from "../../../../utils/resource-errors/unprocessable-resource-error";
@@ -16,7 +16,7 @@ export class AzureStorageClient implements StorageClient {
     connectionString: string;
     _blobServiceClient: BlobServiceClient;
 
-    constructor(config:AzureStorageConfig) {
+    constructor(config: AzureStorageConfig) {
         this.connectionString = config.connectionString;
         this._blobServiceClient = BlobServiceClient.fromConnectionString(
             config.connectionString
@@ -41,14 +41,14 @@ export class AzureStorageClient implements StorageClient {
         return new Promise((resolve, reject) => {
             const containerClient = this._blobServiceClient.getContainerClient(containerName);
             const blobClient = containerClient.getBlockBlobClient(fileName);
-            blobClient.getProperties().then((value)=>{
-                resolve(new AzureFileEntity(fileName,blobClient,value.contentType));
-            }).catch((error: any)=>{
+            blobClient.getProperties().then((value) => {
+                resolve(new AzureFileEntity(fileName, blobClient, value.contentType));
+            }).catch((error: any) => {
                 // Have to convert somehow.
                 console.log(
                     `requestId - ${error.request.requestId}, statusCode - ${error.statusCode}, errorCode - ${error.details.errorCode}\n`
-                  );
-                if(error.statusCode === 404 ){
+                );
+                if (error.statusCode === 404) {
                     // reject(new NotFoundResourceError());
                     const nfe = new NotFoundResourceError(error.details.errorCode);
                     nfe.body.code = error.details.errorCode;
@@ -62,14 +62,53 @@ export class AzureStorageClient implements StorageClient {
         });
     }
 
-    getFileFromUrl(fullUrl:string): Promise<FileEntity>{
+    getFileFromUrl(fullUrl: string): Promise<FileEntity> {
         // Check the URL for things we need.
-        const url = new  URL(fullUrl);
+        const url = new URL(fullUrl);
         const filePath = url.pathname;
         const fileComponents = filePath.split('/');
         const containerName = fileComponents[1];
         const fileRelativePath = fileComponents.slice(2).join('/');
-        return this.getFile(containerName,fileRelativePath);
+        return this.getFile(containerName, fileRelativePath);
+    }
+
+
+    getDownloadableUrl(fullUrl: string): Promise<string> {
+
+        return new Promise((resolve, reject) => {
+            // Get the container name
+            const url = new URL(fullUrl);
+            const filePath = url.pathname;
+            const fileComponents = filePath.split('/');
+            const containerName = fileComponents[1];
+            // Get the relative path from container
+            const fileRelativePath = fileComponents.slice(2).join('/');
+            const token = this.getSasToken(containerName, fileRelativePath)
+            resolve(fullUrl + '?' + token)
+
+        })
+    }
+
+    // Internal method for sas token
+
+    getSasToken(containerName: string, blobPath: string): string {
+
+        // Get the permissions object
+        const permissions = BlobSASPermissions.from({ read: true })
+        
+        // Get the storage credentials
+        const storageCredential: StorageSharedKeyCredential = this._blobServiceClient.credential as StorageSharedKeyCredential
+        // Get the token
+        const sasToken = generateBlobSASQueryParameters({
+            containerName,
+            blobName: blobPath,
+            permissions,
+            startsOn: new Date(),
+            expiresOn: new Date(new Date().valueOf() + 86400)
+
+        }, storageCredential).toString()
+
+        return sasToken;
     }
 
 }
