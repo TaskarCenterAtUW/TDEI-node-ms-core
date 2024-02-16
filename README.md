@@ -552,7 +552,9 @@ const storageContainer: StorageContainer = await storageClient.getContainer(cont
     // Get the read stream from the local file
     const readStream = fs.createReadStream(path.join(__dirname,"assets/sample_upload_file.txt"));
     // Call the upload method with the readstream.
-    testFile.upload(readStream);
+    testFile.upload(readStream); 
+    //OR 
+    //testFile.uploadStream(readStream); 
 ```
 
 ### Authorization
