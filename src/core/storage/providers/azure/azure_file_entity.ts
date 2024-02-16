@@ -1,6 +1,6 @@
 // Azure file entity to be written.
 
-import { BlockBlobClient, BlockBlobUploadStreamOptions } from "@azure/storage-blob";
+import { BlockBlobClient } from "@azure/storage-blob";
 import { FileEntity } from "../../abstract/file_entity";
 import { Readable } from "stream";
 
