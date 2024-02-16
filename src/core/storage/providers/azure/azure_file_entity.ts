@@ -1,7 +1,8 @@
 // Azure file entity to be written.
 
-import { BlockBlobClient } from "@azure/storage-blob";
+import { BlockBlobClient, BlockBlobUploadStreamOptions } from "@azure/storage-blob";
 import { FileEntity } from "../../abstract/file_entity";
+import { Readable } from "stream";
 
 /**
  * Azure implementation of FileEntity
@@ -23,7 +24,7 @@ export class AzureFileEntity implements FileEntity {
 
     _blobClient: BlockBlobClient;
 
-    remoteUrl:string;
+    remoteUrl: string;
 
     constructor(name: string, blobClient: BlockBlobClient, mimeType: string = 'text/plain') {
         this.filePath = name;
@@ -61,6 +62,26 @@ export class AzureFileEntity implements FileEntity {
             const uploadOptions = { blobHTTPHeaders: { blobContentType: this.mimeType } };
             const uploadResponse = await this._blobClient.uploadData(streamData, uploadOptions);
             return Promise.resolve(this);
+        }
+        catch (error) {
+            return Promise.reject(error);
+        }
+    }
+
+    // Define constants
+    ONE_MEGABYTE = 1024 * 1024;
+    uploadOptions = { bufferSize: 5 * this.ONE_MEGABYTE, maxBuffers: 100 };
+
+    /**
+     * Uploads the file stream
+     * @param body Readable stream for the file
+     * @returns void promise
+     */
+    async uploadStream(stream: Readable): Promise<void> {
+        try {
+            const uploadOptions = { blobHTTPHeaders: { blobContentType: this.mimeType } };
+            await this._blobClient.uploadStream(stream,
+                this.uploadOptions.bufferSize, this.uploadOptions.maxBuffers, uploadOptions);
         }
         catch (error) {
             return Promise.reject(error);
