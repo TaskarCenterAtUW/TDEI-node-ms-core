@@ -61,6 +61,14 @@ async function testUpload() {
     filetoUpload?.upload(readStream);
 }
 
+async function testUploadStream() {
+    const container = await storageClient?.getContainer('gtfsflex');
+    const filetoUpload = container?.createFile('tests/success_1_all_attrs.zip', 'application/zip');
+    const readStream = fs.createReadStream(path.join(__dirname, 'core.js'));
+    // Get the local stream and upload
+    filetoUpload?.uploadStream(readStream);
+}
+
 async function testStorage() {
     const container = await storageClient?.getContainer('gone');
     let files = await container?.listFiles();
