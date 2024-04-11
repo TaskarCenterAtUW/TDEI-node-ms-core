@@ -23,7 +23,7 @@ export class LocalFileEntity implements FileEntity {
 
     }
 
-    async getStream(): Promise<NodeJS.ReadableStream> {
+    async getStream(): Promise<Readable> {
         const downloadRelativePath = path.join(this.rootDownloadPath, this.filePath);
         const response = await axios.get(this.serverRoot + downloadRelativePath, {
             responseType: 'stream'

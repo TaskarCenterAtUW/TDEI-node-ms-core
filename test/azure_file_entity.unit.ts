@@ -4,7 +4,7 @@
  * That has to be mocked for now.
  */
 
-import { BlobDownloadOptions, BlobDownloadResponseParsed, BlobUploadCommonResponse, BlockBlobClient, BlockBlobParallelUploadOptions } from "@azure/storage-blob"
+import { BlobDownloadOptions, BlobDownloadToBufferOptions, BlobUploadCommonResponse, BlockBlobClient, BlockBlobParallelUploadOptions } from "@azure/storage-blob"
 import { AzureFileEntity } from "../src/core/storage/providers/azure/azure_file_entity"
 import { Readable } from "stream"
 
@@ -17,10 +17,14 @@ jest.mock('@azure/storage-blob', () => {
             return {
                 download: (offset?: number, count?: number, options?: BlobDownloadOptions): Promise<{ readableStreamBody: Readable }> => {
                     const mockedStream = Readable.from('random-data', { encoding: 'utf8' })
-                    mockDownload();
+                    // mockDownload();
                     return Promise.resolve({
                         readableStreamBody: mockedStream
                     })
+                },
+                downloadToBuffer: (offset?: number, count?: number, options?: BlobDownloadToBufferOptions): Promise<Buffer> => {
+                    mockDownload();
+                    return Promise.resolve(Buffer.from('random-data'));
                 },
 
                 uploadData: (data: Buffer | Blob | ArrayBuffer | ArrayBufferView, options?: BlockBlobParallelUploadOptions): Promise<BlobUploadCommonResponse> => {

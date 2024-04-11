@@ -19,7 +19,7 @@ export abstract class FileEntity {
     /**
      * Fetches the Readable stream of the file
      */
-    abstract getStream(): Promise<NodeJS.ReadableStream>;
+    abstract getStream(): Promise<Readable>;
 
     /**
      * Fetches the content of the file as plan text
