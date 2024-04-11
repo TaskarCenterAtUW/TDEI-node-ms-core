@@ -8,6 +8,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { LocalQueueConfig } from "./core/queue/providers/local/local-queue-config";
 import { PermissionRequest } from "./core/auth/model/permission_request";
+import { Readable } from "stream";
 // Get the dotenv things
 require('dotenv').config()
 
@@ -87,35 +88,62 @@ async function testStorageFile() {
 }
 
 // testStorageFile()
-testUpload();
+// testUpload();
 
 // Gets the file in the path
-//  storageClient?.getFile('gtfspathways','2022/NOVEMBER/102/file_1668600056782_bce3e0a8b6e94ce7a76ac94426c1be04.zip').then((fileEntity)=>{
-//     console.log("Received file entity");
-//     console.log(fileEntity.fileName);
-//     console.log(fileEntity.mimeType);
-//     // fileEntity.getStream().then((stream)=>{
-//     //     console.log("Stream received");
-//     // });
+async function testDownload() {
+    storageClient?.getFile('osw', '2024/4/d8271b7d-a07f-4bc9-a0b9-8de864464277/cdfe4f30f8f54d7390fb2fef24da8fe1/wa.seattle.zip').then(async (fileEntity) => {
+        // storageClient?.getFile('osw', '2024/4/9f420393-531c-45d0-8628-d3a8336120df/62528b5733764c0880f405fbf728b74d/d441.zip').then(async (fileEntity) => {
+        console.log("Received file entity");
+        console.log(fileEntity.fileName);
+        console.log(fileEntity.mimeType);
 
-// }).catch((err)=>{
-//     console.log('Error while getting the file information');
-//     console.log(err);
-// });
-//https://tdeisamplestorage.blob.core.windows.net/gtfspathways/2022/NOVEMBER/102/file_1668600056782_bce3e0a8b6e94ce7a76ac94426c1be04.zip
-// storageClient?.getFileFromUrl("https://tdeisamplestorage.blob.core.windows.net/gtfspathways/2022/NOVEMBER/102/file_1668600056782_bce3e0a8b6e94ce7a76ac94426c1be04.zip").then((fileEntity)=>{
-//     console.log("Received file entity");
-//     console.log(fileEntity.fileName);
-//     console.log(fileEntity.mimeType);
-//     // fileEntity.getStream().then((stream)=>{
-//     //     console.log("Stream received");
-//     // });
+        // let readable = Readable.from(await fileEntity.getStream());
+        let readable = await fileEntity.getStream();
 
-// }).catch((err)=>{
-//     console.log('Error while getting the file information');
-//     console.log(err);
-// });
+        // Specify the path where you want to write the file
 
+        const filePath = './downloaded.zip';
+        // fs.rm(filePath);
+
+        // Create a writable stream to the file
+        const writableStream = fs.createWriteStream(filePath);
+
+        // Pipe the data from the Readable stream to the Writable stream
+        readable.pipe(writableStream);
+
+        // Optional: Listen for events to handle errors or completion
+        writableStream.on('error', (error) => {
+            console.error('Error writing to file:', error);
+        });
+
+        writableStream.on('finish', () => {
+            console.log('File write completed');
+        });
+
+        // fileEntity.getStream().then((stream) => {
+        //     console.log("Stream received");
+        // });
+
+    }).catch((err) => {
+        console.log('Error while getting the file information');
+        console.log(err);
+    });
+    //https://tdeisamplestorage.blob.core.windows.net/gtfspathways/2022/NOVEMBER/102/file_1668600056782_bce3e0a8b6e94ce7a76ac94426c1be04.zip
+    // storageClient?.getFileFromUrl("https://tdeisamplestorage.blob.core.windows.net/gtfspathways/2022/NOVEMBER/102/file_1668600056782_bce3e0a8b6e94ce7a76ac94426c1be04.zip").then((fileEntity)=>{
+    //     console.log("Received file entity");
+    //     console.log(fileEntity.fileName);
+    //     console.log(fileEntity.mimeType);
+    //     // fileEntity.getStream().then((stream)=>{
+    //     //     console.log("Stream received");
+    //     // });
+
+    // }).catch((err)=>{
+    //     console.log('Error while getting the file information');
+    //     console.log(err);
+    // });
+}
+testDownload();
 
 async function testTopic() {
     const topic = 'gtfs-flex-upload';
@@ -158,19 +186,19 @@ function processError(error: any) {
 const topic = "gtfs-flex-upload";
 const subscription = "uploadprocessor";
 const someOthersub = "usdufs";
-
+ 
 const topicConfig = new AzureQueueConfig(); // Need to modify this somehow.
-
+ 
 topicConfig.connectionString = process.env.PUBSUBCONNECTION as string;
-
+ 
 const topicObject = Core.getTopic(topic,topicConfig);
-
-
+ 
+ 
 function processMessage(message:QueueMessage) {
     console.log("Received Message");
     // return Promise.resolve();
 }
-
+ 
 function processError(error: any){
     console.log("Received error");
     // return Promise.reject();
@@ -179,9 +207,9 @@ topicObject.subscribe(subscription,{
     onReceive:processMessage,
     onError:processError
 });
-
-
-
+ 
+ 
+ 
 topicObject.publish(QueueMessage.from(
     {
         message:"Hello there"

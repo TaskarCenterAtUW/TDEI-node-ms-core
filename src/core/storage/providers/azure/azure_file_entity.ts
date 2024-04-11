@@ -37,9 +37,10 @@ export class AzureFileEntity implements FileEntity {
      * Fetches the readable stream of the file for reading the content
      * @returns ReadableStream that can be used to get the content
      */
-    async getStream(): Promise<NodeJS.ReadableStream> {
-        const downloadResponse = await this._blobClient.download(0);
-        return Promise.resolve(downloadResponse.readableStreamBody!); // Not sure.
+    async getStream(): Promise<Readable> {
+        const downloadBlockBlobResponse = await this._blobClient.downloadToBuffer(undefined, undefined, { blockSize: 2 * 1024 * 1024 }); // 2MB blocks
+        const stream = Readable.from(downloadBlockBlobResponse);
+        return stream;
     }
 
     /**
