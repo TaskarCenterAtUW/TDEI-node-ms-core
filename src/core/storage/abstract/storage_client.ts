@@ -17,5 +17,5 @@ export abstract class StorageClient {
 
     abstract getFileFromUrl(fullUrl:string): Promise<FileEntity>;
 
-
+    abstract getSASUrl(containerName:string, filePath:string, expiryInHours:number): Promise<string>;
  }

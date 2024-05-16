@@ -1,4 +1,4 @@
-import { BlobServiceClient, ContainerClient } from "@azure/storage-blob"
+import { BlobSASPermissions,BlobServiceClient, ContainerClient } from "@azure/storage-blob"
 import { AzureStorageContainer } from "../src/core/storage/providers/azure/azure_storage_container"
 import { MockedIterator, getMockFiles } from "./azure.mock"
 import { AzureStorageClient } from "../src/core/storage/providers/azure/azure_storage_client"
@@ -22,7 +22,10 @@ jest.mock('@azure/storage-blob', () => {
                             return Promise.resolve({
                                 contentType: ''
                             });
-                        }
+                        },
+                        generateSasUrl: jest.fn().mockImplementation((permissions: BlobSASPermissions,expiry: Date) => {
+                            return 'generated-url';
+                        })
                     }
                 })
             }
@@ -32,9 +35,33 @@ jest.mock('@azure/storage-blob', () => {
                 getContainerClient: (name: string): ContainerClient => {
                     return new ContainerClient('');
                 },
-                getProperties: jest.fn()
+                getProperties: jest.fn(),
             }
         }),
+        // Mock BlobSASPermissions.parse method 
+        
+
+        BlobSASPermissions: jest.fn().mockImplementation(() => {
+            return {
+                
+                parse: (rawString: string): BlobSASPermissions => {
+                    return {
+                        read: true,
+                        write: false,
+                        delete: false,
+                        create: false,
+                        deleteVersion: false,
+                        add: false,
+                        tag: false,
+                        move: false,
+                        execute: false,
+                        setImmutabilityPolicy: false,
+                        permanentDelete: false
+                        // Add the other two properties here
+                    };
+                }
+            }
+        })
 
     }
 
@@ -46,6 +73,8 @@ describe('Azure Storage Client', () => {
     beforeAll(() => {
         const mockedConString = jest.fn().mockReturnValue(new BlobServiceClient(''));
         BlobServiceClient.fromConnectionString = mockedConString;
+        // const mockedBlobSASPermissions = jest.fn().mockReturnValue({new BlobSASPermissions({read:true})});
+        BlobSASPermissions.parse = jest.fn().mockReturnValue({read:true});
     })
 
     it('Should initialize Client', () => {
@@ -86,5 +115,16 @@ describe('Azure Storage Client', () => {
         const file = await azureClient.getFileFromUrl(fileUrl);
         // Assert
         expect(file).toBeInstanceOf(AzureFileEntity);
+    })
+
+    it('Should get SAS URL', async () => {
+        // Arrange
+        let azureConfig = AzureStorageConfig.default();
+        const azureClient = new AzureStorageClient(azureConfig);
+        // Act
+        const sasUrl = await azureClient.getSASUrl('sample', 'sample.zip', 1);
+        // Assert
+        expect(sasUrl).toBeTruthy();
+        expect(sasUrl).toBe('generated-url');
     })
 })

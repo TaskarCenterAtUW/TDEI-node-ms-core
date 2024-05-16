@@ -26,7 +26,7 @@ jest.mock('../src/core/storage/providers/local/local_storage_container', () => {
             return {
                 listFiles: jest.fn().mockImplementation(() => {
                     return Promise.resolve([
-                        { fileName: 'sample1', filePath: 'sample/path1.zip' },
+                        { fileName: 'sample1', filePath: 'sample/path1.zip' , remoteUrl: 'http://localhost:3000/sample/path1.zip'},
                         { fileName: 'sample2', filePath: 'sample/path2.zip' },
                         { fileName: 'sample3', filePath: 'sample/path3.zip' }
                     ])
@@ -76,5 +76,14 @@ describe('Local storage client', () => {
         const localClient = new LocalStorageClient(host);
         // Act and Assert
         await expect(localClient.getFile('sample', 'nofile.zip')).rejects.toThrow(new NotFoundResourceError('404'));
+    })
+
+    it('Should get the SAS URL', async () => {
+        // Arrange
+        const localClient = new LocalStorageClient(host);
+        // Act
+        const sasUrl = await localClient.getSASUrl('sample', 'path1.zip', 2);
+        // Assert
+        expect(sasUrl).toBeTruthy();
     })
 })

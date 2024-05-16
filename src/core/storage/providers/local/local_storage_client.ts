@@ -48,4 +48,14 @@ export class LocalStorageClient implements StorageClient {
         return this.getFile(containerName,fileRelativePath);
     }
 
+    getSASUrl(containerName: string, filePath: string, expiryInHours: number): Promise<string> {
+        return new Promise((resolve,reject)=>{
+            this.getFile(containerName,filePath).then((file)=>{
+                resolve(file.remoteUrl);
+            }).catch((e)=>{
+                reject(e);
+            });
+        });
+    }
+
 }
