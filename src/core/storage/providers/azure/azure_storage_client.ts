@@ -1,4 +1,4 @@
-import { BlobServiceClient, RestError } from "@azure/storage-blob";
+import { BlobSASPermissions, BlobServiceClient, RestError } from "@azure/storage-blob";
 import { IStorageConfig } from "../../../../models/abstracts/istorageconfig";
 import { NotFoundResourceError } from "../../../../utils/resource-errors/not-found-resource-error";
 import { UnprocessableResourceError } from "../../../../utils/resource-errors/unprocessable-resource-error";
@@ -70,6 +70,19 @@ export class AzureStorageClient implements StorageClient {
         const containerName = fileComponents[1];
         const fileRelativePath = fileComponents.slice(2).join('/');
         return this.getFile(containerName,fileRelativePath);
+    }
+
+    getSASUrl(containerName: string, filePath: string, expiryInHours: number): Promise<string> {
+        return new Promise((resolve, reject) => {
+            // const permissions = BlobSASPermissions.from({read:true})
+            const containerClient = this._blobServiceClient.getContainerClient(containerName);
+            const blobClient = containerClient.getBlockBlobClient(filePath);
+            const sasToken = blobClient.generateSasUrl({
+                permissions: BlobSASPermissions.parse("r"),
+                expiresOn: new Date(new Date().valueOf() + 3600 * 1000 * expiryInHours)
+            });
+            resolve(sasToken);
+        });
     }
 
 }
