@@ -18,12 +18,12 @@ export abstract class StorageClient {
     abstract getFileFromUrl(fullUrl: string): Promise<FileEntity>;
 
     abstract getSASUrl(containerName: string, filePath: string, expiryInHours: number): Promise<string>;    /**
+      /**
      * Clones a file from one container to another
-     * @param sourceContainerName Source container name. 
-     * @param sourceFileName Source file name, full path from container root. ex. /path/to/file.txt
+     * @param fileUrl file url. 
      * @param destinationContainerName Destination container name
-     * @param destinationFileName Destination file name, full path from container root. ex. /path/to/file.txt
+     * @param destinationFilePath Destination file path, full path from container root. ex. /path/to/file.txt
      * @returns a promise of the file entity
      */
-    abstract cloneFile(sourceContainerName: string, sourceFileName: string, destinationContainerName: string, destinationFileName: string): Promise<FileEntity>;
+    abstract cloneFile(fileUrl: string, destinationContainerName: string, destinationFilePath: string): Promise<FileEntity>
 }

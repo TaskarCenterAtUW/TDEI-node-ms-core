@@ -147,7 +147,7 @@ async function testDownload() {
 
 
 async function testCloneFile() {
-    await storageClient?.cloneFile("osw", 'backend-jobs/1/9115a5f1-fc8f-4407-ad44-7cd4a9ac78bb/edges.OSW.geojson', "streams", "backend-jobs/1/edges.OSW.geojson").then((fileEntity) => {
+    await storageClient?.cloneFile("https://tdeisamplestorage.blob.core.windows.net/streams/backend-jobs/1/edges.OSW.geojson", "osw", "backend-jobs/1/edges.OSW.geojson").then((fileEntity) => {
         console.log("Received file entity");
         console.log(fileEntity.fileName);
         console.log(fileEntity.mimeType);

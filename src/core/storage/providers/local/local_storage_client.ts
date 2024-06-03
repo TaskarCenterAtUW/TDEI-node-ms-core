@@ -13,7 +13,7 @@ export class LocalStorageClient implements StorageClient {
     constructor(serverRoot: string) {
         this.serverRoot = serverRoot;
     }
-    cloneFile(sourceContainerName: string, sourceFileName: string, destinationContainerName: string, destinationFileName: string): Promise<FileEntity> {
+    cloneFile(fileUrl: string, destinationContainerName: string, destinationFilePath: string): Promise<FileEntity> {
         throw new Error("Method not implemented.");
     }
     getContainer(name: string): Promise<StorageContainer> {
@@ -52,10 +52,10 @@ export class LocalStorageClient implements StorageClient {
     }
 
     getSASUrl(containerName: string, filePath: string, expiryInHours: number): Promise<string> {
-        return new Promise((resolve,reject)=>{
-            this.getFile(containerName,filePath).then((file)=>{
+        return new Promise((resolve, reject) => {
+            this.getFile(containerName, filePath).then((file) => {
                 resolve(file.remoteUrl);
-            }).catch((e)=>{
+            }).catch((e) => {
                 reject(e);
             });
         });

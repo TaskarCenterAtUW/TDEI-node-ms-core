@@ -38,23 +38,40 @@ export class AzureStorageClient implements StorageClient {
     }
 
     /**
+    * Get the container name and file path from the file URL
+    * @param fileUrl URL of the file
+    * @returns object with containerName and fileRelativePath
+    */
+    private getContainerInfo(fileUrl: string) {
+        const url = new URL(fileUrl);
+        const filePath = url.pathname;
+        const fileComponents = filePath.split('/');
+        const containerName = fileComponents[1];
+        const fileRelativePath = fileComponents.slice(2).join('/');
+        return {
+            containerName,
+            fileRelativePath
+        };
+    }
+
+    /**
      * Clones a file from one container to another
-     * @param sourceContainerName Source container name. 
-     * @param sourceFileName Source file name, full path from container root. ex. /path/to/file.txt
+     * @param fileUrl file url. 
      * @param destinationContainerName Destination container name
-     * @param destinationFileName Destination file name, full path from container root. ex. /path/to/file.txt
+     * @param destinationFilePath Destination file path, full path from container root. ex. /path/to/file.txt
      * @returns a promise of the file entity
      */
-    cloneFile(sourceContainerName: string, sourceFileName: string, destinationContainerName: string, destinationFileName: string): Promise<FileEntity> {
+    cloneFile(fileUrl: string, destinationContainerName: string, destinationFilePath: string): Promise<FileEntity> {
+        const { containerName: sourceContainerName, fileRelativePath: sourceFileName } = this.getContainerInfo(fileUrl);
         return new Promise(async (resolve, reject) => {
             const sourceContainerClient = this._blobServiceClient.getContainerClient(sourceContainerName);
             const destinationContainerClient = this._blobServiceClient.getContainerClient(destinationContainerName);
             const blobClient = sourceContainerClient.getBlockBlobClient(sourceFileName);
 
-            const newBlobClient = destinationContainerClient.getBlockBlobClient(destinationFileName);
+            const newBlobClient = destinationContainerClient.getBlockBlobClient(destinationFilePath);
             blobClient.getProperties().then((value) => {
                 newBlobClient.beginCopyFromURL(blobClient.url).then((value: any) => {
-                    resolve(new AzureFileEntity(destinationFileName, newBlobClient, value.contentType));
+                    resolve(new AzureFileEntity(destinationFilePath, newBlobClient, value.contentType));
                 }).catch((error: any) => {
                     console.log(
                         `requestId - ${error.request.requestId}, statusCode - ${error.statusCode}, errorCode - ${error.details.errorCode}\n`
