@@ -3,6 +3,7 @@ import path from "path";
 import { FileEntity } from "../../abstract/file_entity";
 import { Readable } from "stream";
 const FormData = require('form-data');
+import fs from 'fs';
 
 export class LocalFileEntity implements FileEntity {
 
@@ -30,6 +31,7 @@ export class LocalFileEntity implements FileEntity {
         });
         return Promise.resolve(response.data);
     }
+
     async getBodyText(): Promise<string> {
         const stream = await this.getStream();
         return Promise.resolve(this.streamToText(stream));
@@ -68,5 +70,24 @@ export class LocalFileEntity implements FileEntity {
             data += chunk;
         }
         return data;
+    }
+
+
+    /**
+     * Deletes a file from the container
+     * @returns Promise of void
+     */
+    deleteFile(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const fullPath = path.join(this.rootDownloadPath, this.filePath);
+            fs.unlink(path.join(fullPath), (err) => {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve();
+                }
+            });
+        });
     }
 }

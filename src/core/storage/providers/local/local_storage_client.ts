@@ -5,6 +5,7 @@ import { StorageClient } from "../../abstract/storage_client";
 import { StorageContainer } from "../../abstract/storage_container";
 import { LocalFileEntity } from "./local_file_entity";
 import { LocalStorageContainer } from "./local_storage_container";
+import fs from 'fs';
 
 export class LocalStorageClient implements StorageClient {
 
@@ -13,9 +14,25 @@ export class LocalStorageClient implements StorageClient {
     constructor(serverRoot: string) {
         this.serverRoot = serverRoot;
     }
+
     cloneFile(fileUrl: string, destinationContainerName: string, destinationFilePath: string): Promise<FileEntity> {
-        throw new Error("Method not implemented.");
+        return new Promise((resolve, reject) => {
+            this.getFileFromUrl(fileUrl).then((file) => {
+                const destinationPath = path.join(destinationContainerName, destinationFilePath);
+                fs.copyFile(file.filePath, path.join(this.serverRoot, destinationPath), (err) => {
+                    if (err) {
+                        reject(err);
+                    }
+                    else {
+                        resolve(new LocalFileEntity(destinationPath, this.serverRoot, file.mimeType));
+                    }
+                });
+            }).catch((e) => {
+                reject(e);
+            });
+        });
     }
+
     getContainer(name: string): Promise<StorageContainer> {
         return new Promise((resolve, reject) => {
             resolve(new LocalStorageContainer(name, this.serverRoot));
