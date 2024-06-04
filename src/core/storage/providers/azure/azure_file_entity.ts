@@ -115,4 +115,19 @@ export class AzureFileEntity implements FileEntity {
         return data;
     }
 
+    /**
+     * Deletes a file from the container
+     * @returns Promise of void
+     */
+    deleteFile(): Promise<void> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await this._blobClient.delete();
+                resolve();
+            } catch (error) {
+                console.error("Delete file failed : ", error);
+                reject("Error deleting the file");
+            }
+        });
+    }
 }

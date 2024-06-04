@@ -37,6 +37,11 @@ export abstract class FileEntity {
      * @param body Readable stream for the file
      * @returns void promise
      */
-    abstract uploadStream(stream: Readable): Promise<void>
+    abstract uploadStream(stream: Readable): Promise<void>;
 
+    /**
+     * Deletes a file from the container
+     * @returns Promise of void
+     */
+    abstract deleteFile(): Promise<void>;
 }

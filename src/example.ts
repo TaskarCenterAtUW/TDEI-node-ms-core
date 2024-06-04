@@ -16,7 +16,6 @@ require('dotenv').config()
 const delay = ms => new Promise(res => setTimeout(res, ms));
 let coreConfig = new CoreConfig("Azure");
 Core.initialize(coreConfig); // Pre-configures all the services required for the project.
-console.log("Hello");
 // Test the logs one by one
 // let logger = Core.getLogger();
 
@@ -143,7 +142,23 @@ async function testDownload() {
     //     console.log(err);
     // });
 }
-testDownload();
+//testDownload();
+
+
+async function testCloneFile() {
+    await storageClient?.cloneFile("https://tdeisamplestorage.blob.core.windows.net/osw/backend-jobs/1/edges.OSW.geojson", "streams", "backend-jobs/1/edges.OSW.geojson").then((fileEntity) => {
+        console.log("Received file entity");
+        console.log(fileEntity.fileName);
+        console.log(fileEntity.mimeType);
+    });
+}
+// testCloneFile();
+
+async function testDeleteFile() {
+    const container = await storageClient?.getFileFromUrl('https://tdeisamplestorage.blob.core.windows.net/streams/backend-jobs/1/edges.OSW.geojson');
+    container?.deleteFile();
+}
+testDeleteFile();
 
 async function testTopic() {
     const topic = 'gtfs-flex-upload';
