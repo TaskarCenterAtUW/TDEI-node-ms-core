@@ -47,7 +47,7 @@ export class AzureStorageClient implements StorageClient {
         const filePath = url.pathname;
         const fileComponents = filePath.split('/');
         const containerName = fileComponents[1];
-        const fileRelativePath = fileComponents.slice(2).join('/');
+        const fileRelativePath = decodeURI(fileComponents.slice(2).join('/'));
         return {
             containerName,
             fileRelativePath
@@ -98,7 +98,7 @@ export class AzureStorageClient implements StorageClient {
     getFile(containerName: string, fileName: string): Promise<FileEntity> {
         return new Promise((resolve, reject) => {
             const containerClient = this._blobServiceClient.getContainerClient(containerName);
-            const blobClient = containerClient.getBlockBlobClient(fileName);
+            const blobClient = containerClient.getBlockBlobClient(decodeURI(fileName));
             blobClient.getProperties().then((value) => {
                 resolve(new AzureFileEntity(fileName, blobClient, value.contentType));
             }).catch((error: any) => {
@@ -123,10 +123,11 @@ export class AzureStorageClient implements StorageClient {
     getFileFromUrl(fullUrl: string): Promise<FileEntity> {
         // Check the URL for things we need.
         const url = new URL(fullUrl);
+        console.log(url);
         const filePath = url.pathname;
         const fileComponents = filePath.split('/');
         const containerName = fileComponents[1];
-        const fileRelativePath = fileComponents.slice(2).join('/');
+        const fileRelativePath = decodeURI(fileComponents.slice(2).join('/'));
         return this.getFile(containerName, fileRelativePath);
     }
 
