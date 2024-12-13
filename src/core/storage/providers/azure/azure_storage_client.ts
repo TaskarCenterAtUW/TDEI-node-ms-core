@@ -123,7 +123,7 @@ export class AzureStorageClient implements StorageClient {
     getFileFromUrl(fullUrl: string): Promise<FileEntity> {
         // Check the URL for things we need.
         const url = new URL(fullUrl);
-        console.log(url);
+
         const filePath = url.pathname;
         const fileComponents = filePath.split('/');
         const containerName = fileComponents[1];
