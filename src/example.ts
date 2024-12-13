@@ -161,7 +161,7 @@ async function testDownloadStream() {
         console.log(err);
     });
 }
-// testDownloadStream();
+testDownloadStream();
 
 async function testCloneFile() {
     await storageClient?.cloneFile("https://tdeisamplestorage.blob.core.windows.net/osw/2024/11/17655022-acc4-4eaf-8f66-b80892e92d2b/997ca553-9c51-4057-8090-ecbcc21c293f/bbox-intersect-da588914-0772-412f-bf23-f73fdbf7d756 (1).zip", "streams", "booking_rules.zip").then((fileEntity) => {
@@ -170,7 +170,7 @@ async function testCloneFile() {
         console.log(fileEntity.mimeType);
     });
 }
-testCloneFile();
+// testCloneFile();
 
 async function test() {
 
