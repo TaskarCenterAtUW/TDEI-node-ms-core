@@ -1,4 +1,4 @@
-import { BlobSASPermissions,BlobServiceClient, ContainerClient } from "@azure/storage-blob"
+import { BlobSASPermissions, BlobServiceClient, ContainerClient } from "@azure/storage-blob"
 import { AzureStorageContainer } from "../src/core/storage/providers/azure/azure_storage_container"
 import { MockedIterator, getMockFiles } from "./azure.mock"
 import { AzureStorageClient } from "../src/core/storage/providers/azure/azure_storage_client"
@@ -23,7 +23,7 @@ jest.mock('@azure/storage-blob', () => {
                                 contentType: ''
                             });
                         },
-                        generateSasUrl: jest.fn().mockImplementation((permissions: BlobSASPermissions,expiry: Date) => {
+                        generateSasUrl: jest.fn().mockImplementation((permissions: BlobSASPermissions, expiry: Date) => {
                             return 'generated-url';
                         })
                     }
@@ -126,5 +126,27 @@ describe('Azure Storage Client', () => {
         // Assert
         expect(sasUrl).toBeTruthy();
         expect(sasUrl).toBe('generated-url');
+    })
+
+    it('Should get file from URL with spaces', async () => {
+        // Arrange
+        let fileUrl = 'http://sample.com/storage/ abc .zip';
+        let azureConfig = AzureStorageConfig.default();
+        const azureClient = new AzureStorageClient(azureConfig);
+        // Act
+        const file = await azureClient.getFileFromUrl(fileUrl);
+        // Assert
+        expect(file).toBeInstanceOf(AzureFileEntity);
+    })
+
+    it('Should get file from the container name and entity with spaces', async () => {
+        // Arrange
+        let azureConfig = AzureStorageConfig.default();
+        const azureClient = new AzureStorageClient(azureConfig);
+        // Act
+        const file = await azureClient.getFile('sample', ' sample .zip');
+        // Assert
+        expect(file).toBeInstanceOf(AzureFileEntity);
+
     })
 })
