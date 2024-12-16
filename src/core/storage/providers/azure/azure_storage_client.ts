@@ -66,7 +66,7 @@ export class AzureStorageClient implements StorageClient {
         return new Promise(async (resolve, reject) => {
             const sourceContainerClient = this._blobServiceClient.getContainerClient(sourceContainerName);
             const destinationContainerClient = this._blobServiceClient.getContainerClient(destinationContainerName);
-            const blobClient = sourceContainerClient.getBlockBlobClient(sourceFileName);
+            const blobClient = sourceContainerClient.getBlockBlobClient(decodeURI(sourceFileName));
 
             const newBlobClient = destinationContainerClient.getBlockBlobClient(destinationFilePath);
             blobClient.getProperties().then((value) => {
@@ -98,7 +98,7 @@ export class AzureStorageClient implements StorageClient {
     getFile(containerName: string, fileName: string): Promise<FileEntity> {
         return new Promise((resolve, reject) => {
             const containerClient = this._blobServiceClient.getContainerClient(containerName);
-            const blobClient = containerClient.getBlockBlobClient(fileName);
+            const blobClient = containerClient.getBlockBlobClient(decodeURI(fileName));
             blobClient.getProperties().then((value) => {
                 resolve(new AzureFileEntity(fileName, blobClient, value.contentType));
             }).catch((error: any) => {
@@ -123,6 +123,7 @@ export class AzureStorageClient implements StorageClient {
     getFileFromUrl(fullUrl: string): Promise<FileEntity> {
         // Check the URL for things we need.
         const url = new URL(fullUrl);
+
         const filePath = url.pathname;
         const fileComponents = filePath.split('/');
         const containerName = fileComponents[1];
@@ -134,7 +135,7 @@ export class AzureStorageClient implements StorageClient {
         return new Promise((resolve, reject) => {
             // const permissions = BlobSASPermissions.from({read:true})
             const containerClient = this._blobServiceClient.getContainerClient(containerName);
-            const blobClient = containerClient.getBlockBlobClient(filePath);
+            const blobClient = containerClient.getBlockBlobClient(decodeURI(filePath));
             const sasToken = blobClient.generateSasUrl({
                 permissions: BlobSASPermissions.parse("r"),
                 expiresOn: new Date(new Date().valueOf() + 3600 * 1000 * expiryInHours)

@@ -91,7 +91,9 @@ async function testStorageFile() {
 
 // Gets the file in the path
 async function testDownload() {
-    storageClient?.getFile('osw', '2024/4/d8271b7d-a07f-4bc9-a0b9-8de864464277/cdfe4f30f8f54d7390fb2fef24da8fe1/wa.seattle.zip').then(async (fileEntity) => {
+    // https://tdeisamplestorage.blob.core.windows.net/osw/
+    //https://tdeisamplestorage.blob.core.windows.net/osw/2024/11/17655022-acc4-4eaf-8f66-b80892e92d2b/997ca553-9c51-4057-8090-ecbcc21c293f/bbox-intersect-da588914-0772-412f-bf23-f73fdbf7d756 (1).zip
+    storageClient?.getFile('osw', 'backend-jobs/5f80f9d1-c4d2-4aa7-a42e-9db3899326e8/fa8e12ea-6b0c-4d3e-8b38-5b87b268e76b/Island Transit - Orch_v2-spatial_join-jobId_5f80f9d1-c4d2-4aa7-a42e-9db3899326e8.zip.osw.zip').then(async (fileEntity) => {
         // storageClient?.getFile('osw', '2024/4/9f420393-531c-45d0-8628-d3a8336120df/62528b5733764c0880f405fbf728b74d/d441.zip').then(async (fileEntity) => {
         console.log("Received file entity");
         console.log(fileEntity.fileName);
@@ -142,11 +144,27 @@ async function testDownload() {
     //     console.log(err);
     // });
 }
-//testDownload();
+// testDownload();
 
+async function testDownloadStream() {
+
+    storageClient?.getFileFromUrl("https://tdeisamplestorage.blob.core.windows.net/osw/2024/11/17655022-acc4-4eaf-8f66-b80892e92d2b/997ca553-9c51-4057-8090-ecbcc21c293f/bbox-intersect-da588914-0772-412f-bf23-f73fdbf7d756 (1).zip").then((fileEntity) => {
+        console.log("Received file entity");
+        console.log(fileEntity.fileName);
+        console.log(fileEntity.mimeType);
+        // fileEntity.getStream().then((stream)=>{
+        //     console.log("Stream received");
+        // });
+
+    }).catch((err) => {
+        console.log('Error while getting the file information');
+        console.log(err);
+    });
+}
+testDownloadStream();
 
 async function testCloneFile() {
-    await storageClient?.cloneFile("https://tdeisamplestorage.blob.core.windows.net/osw/backend-jobs/1/edges.OSW.geojson", "streams", "backend-jobs/1/edges.OSW.geojson").then((fileEntity) => {
+    await storageClient?.cloneFile("https://tdeisamplestorage.blob.core.windows.net/osw/2024/11/17655022-acc4-4eaf-8f66-b80892e92d2b/997ca553-9c51-4057-8090-ecbcc21c293f/bbox-intersect-da588914-0772-412f-bf23-f73fdbf7d756 (1).zip", "streams", "booking_rules.zip").then((fileEntity) => {
         console.log("Received file entity");
         console.log(fileEntity.fileName);
         console.log(fileEntity.mimeType);
@@ -154,11 +172,25 @@ async function testCloneFile() {
 }
 // testCloneFile();
 
+async function test() {
+
+    // Check the URL for things we need.
+    const url = new URL("https://tdeisamplestorage.blob.core.windows.net/osw/2024/11/17655022-acc4-4eaf-8f66-b80892e92d2b/997ca553-9c51-4057-8090-ecbcc21c293f/bbox-intersect-da588914-0772-412f-bf23-f73fdbf7d756 (1).zip");
+    const filePath = url.pathname;
+    const fileComponents = filePath.split('/');
+    const containerName = fileComponents[1];
+    const fileRelativePath = fileComponents.slice(2).join('/');
+
+    console.log(`containerName: ${containerName}`);
+    console.log(`fileRelativePath: ${fileRelativePath}`);
+}
+// test();
+
 async function testDeleteFile() {
     const container = await storageClient?.getFileFromUrl('https://tdeisamplestorage.blob.core.windows.net/streams/backend-jobs/1/edges.OSW.geojson');
     container?.deleteFile();
 }
-testDeleteFile();
+// testDeleteFile();
 
 async function testTopic() {
     const topic = 'gtfs-flex-upload';
