@@ -1,3 +1,4 @@
+import os from 'os';
 import { IConfig } from "./models/abstracts/iconfig";
 import { Logger } from "./core/logger";
 import { ILoggable } from "./core/logger/abstracts/ILoggable";
@@ -76,12 +77,12 @@ export class Core {
     }
 
 
-    static getTopic( topicName: string,qconfig: IQueueConfig | null = null) {
+    static getTopic( topicName: string, qconfig: IQueueConfig | null = null, maxConcurrentMessages: number = os.cpus().length): Topic {
         if (qconfig == null) {
-            return new Topic(this.config, topicName);
+            return new Topic(this.config, topicName, maxConcurrentMessages);
         }
         else {
-            return new Topic(qconfig, topicName);
+            return new Topic(qconfig, topicName, maxConcurrentMessages);
         }
     }
 

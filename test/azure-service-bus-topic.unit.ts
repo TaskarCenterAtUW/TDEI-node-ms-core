@@ -9,7 +9,7 @@ import { QueueMessage } from "../src/core/queue";
 import { AzureQueueConfig } from "../src/core/queue/providers/azure-queue-config";
 import { AzureServiceBusTopic } from "../src/core/queue/providers/azure-service-bus-topic";
 import { LocalQueueConfig } from "../src/core/queue/providers/local/local-queue-config";
-import { MessageHandlers, ServiceBusMessage, SubscribeOptions, ServiceBusSender } from "@azure/service-bus";
+import { MessageHandlers, ServiceBusMessage, SubscribeOptions, ServiceBusSender, ServiceBusReceiver } from "@azure/service-bus";
 
 const fakeSendMessage = jest.fn();
 const fakeSubscribe = jest.fn();
@@ -66,20 +66,40 @@ describe('Azure service bus topic unit', () => {
     it('Should listen to a subscription using subscribe method', async () => {
         // Arrange
         const azureConfiguration = AzureQueueConfig.default();
-        const azureTopic = new AzureServiceBusTopic(azureConfiguration, 'sample');
+        const azureTopic = new AzureServiceBusTopic(azureConfiguration, 'sample', 2);
+
+        // Mocking onReceive and onError handlers
+        const onReceiveMock = jest.fn((message) => {
+            console.log('Mock onReceive called with message:', message);
+        });
+
+        const onErrorMock = jest.fn((error) => {
+            console.error('Mock onError called with error:', error);
+        });
+
+        // Spy on the sbClient.createReceiver to ensure it is called
+        const createReceiverSpy = jest.spyOn(azureTopic['sbClient'], 'createReceiver').mockReturnValue({
+            receiveMessages: jest.fn().mockResolvedValue([]), // Simulate no messages
+            close: jest.fn(),
+        } as unknown as ServiceBusReceiver);
+
         // Act
         await azureTopic.subscribe('sample', {
-            onReceive(message) {
-
-            },
-            onError(error) {
-
-            },
+            onReceive: onReceiveMock,
+            onError: onErrorMock,
         });
-        // Assert
-        expect(fakeSubscribe).toBeCalledTimes(1);
 
-    })
+        // Assert
+        expect(createReceiverSpy).toHaveBeenCalledTimes(1);
+        expect(createReceiverSpy).toHaveBeenCalledWith('sample', 'sample'); // Verify arguments
+        expect(onReceiveMock).not.toHaveBeenCalled(); // No messages, so onReceive should not be called
+        expect(onErrorMock).not.toHaveBeenCalled(); // No errors, so onError should not be called
+
+        // Cleanup
+        createReceiverSpy.mockRestore();
+    });
+
+
     it('Should be able to call publish on sender when message is sent', async () => {
         // Arrange
         const azureConfiguration = AzureQueueConfig.default();
