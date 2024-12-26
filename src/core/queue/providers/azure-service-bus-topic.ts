@@ -32,7 +32,7 @@ export class AzureServiceBusTopic implements IMessageTopic {
 
                 const receiveMessages = () => {
                     this.listener!
-                        .receiveMessages(this.maxConcurrentMessages, { maxWaitTimeInMs: 5000, autoRenewLockDurationInMs: 60000 })
+                        .receiveMessages(this.maxConcurrentMessages, { maxWaitTimeInMs: 5000})
                         .then((messages) => {
                             if (messages.length === 0) {
                                 return receiveMessages(); // Continue processing if no messages
