@@ -30,12 +30,12 @@ export class AzureServiceBusTopic implements IMessageTopic {
             try {
                 this.listener = this.sbClient.createReceiver(this.topic, subscription);
 
-                const processMessages = () => {
+                const receiveMessages = () => {
                     this.listener!
-                        .receiveMessages(this.maxConcurrentMessages, { maxWaitTimeInMs: 5000 })
+                        .receiveMessages(this.maxConcurrentMessages, { maxWaitTimeInMs: 5000, autoRenewLockDurationInMs: 60000 })
                         .then((messages) => {
                             if (messages.length === 0) {
-                                return processMessages(); // Continue processing if no messages
+                                return receiveMessages(); // Continue processing if no messages
                             }
 
                             const processingPromises = messages.map((message) =>
@@ -43,7 +43,7 @@ export class AzureServiceBusTopic implements IMessageTopic {
                             );
 
                             Promise.allSettled(processingPromises).then(() => {
-                                processMessages(); // Continue after processing the current batch
+                                receiveMessages(); // Continue after processing the current batch
                             });
                         })
                         .catch((error) => {
@@ -52,7 +52,7 @@ export class AzureServiceBusTopic implements IMessageTopic {
                         });
                 };
 
-                processMessages();
+                receiveMessages();
                 resolve();
             } catch (error) {
                 reject(error);
@@ -64,7 +64,7 @@ export class AzureServiceBusTopic implements IMessageTopic {
         message: ServiceBusReceivedMessage,
         handler: ITopicSubscription
     ): Promise<void> {
-        return Promise.resolve(handler.onReceive(QueueMessage.from(message.body)))
+        return handler.onReceive(QueueMessage.from(message.body))
             .then(() => {
                 return this.listener!.completeMessage(message);
             })
