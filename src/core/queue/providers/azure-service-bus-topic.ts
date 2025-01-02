@@ -5,8 +5,6 @@ import { QueueMessage } from "../models/queue-message";
 import { AzureQueueConfig } from "./azure-queue-config";
 
 export class AzureServiceBusTopic implements IMessageTopic {
-
-    // Constructor needed for this
     private sbClient: ServiceBusClient;
     private listener?: ServiceBusReceiver;
     private sender: ServiceBusSender;
@@ -32,14 +30,14 @@ export class AzureServiceBusTopic implements IMessageTopic {
 
                 const receiveMessages = () => {
                     this.listener!
-                        .receiveMessages(this.maxConcurrentMessages, { maxWaitTimeInMs: 5000})
+                        .receiveMessages(this.maxConcurrentMessages, { maxWaitTimeInMs: 5000 })
                         .then((messages) => {
                             if (messages.length === 0) {
                                 return receiveMessages(); // Continue processing if no messages
                             }
 
                             const processingPromises = messages.map((message) =>
-                                this.processMessage(message, handler)
+                                this.processMessageWithLockRenewal(message, handler)
                             );
 
                             Promise.allSettled(processingPromises).then(() => {
@@ -60,19 +58,44 @@ export class AzureServiceBusTopic implements IMessageTopic {
         });
     }
 
-    private processMessage(
+    private async processMessageWithLockRenewal(
         message: ServiceBusReceivedMessage,
         handler: ITopicSubscription
     ): Promise<void> {
-        return handler.onReceive(QueueMessage.from(message.body))
-            .then(() => {
-                return this.listener!.completeMessage(message);
-            })
-            .catch((error) => {
-                console.error("Error processing message:", error);
-                this.listener!.abandonMessage(message);
-                return handler.onError(error);
-            });
+        let isProcessingComplete = false;
+
+        // Start lock renewal
+        const renewalInterval = setInterval(async () => {
+            if (isProcessingComplete) {
+                clearInterval(renewalInterval);
+                return;
+            }
+            try {
+                await this.listener!.renewMessageLock(message);
+                console.log("Message lock renewed");
+            } catch (error) {
+                // @ts-ignore
+                if (error.code === "MessageLockLost") {
+                    console.error("Message lock lost; stopping renewal.");
+                    clearInterval(renewalInterval);
+                } else {
+                    console.error("Error renewing message lock:", error);
+                }
+            }
+        }, 30000); // Renew lock every 30 seconds
+
+        try {
+            await handler.onReceive(QueueMessage.from(message.body));
+            await this.listener!.completeMessage(message);
+        } catch (error) {
+            console.error("Error processing message:", error);
+            await this.listener!.abandonMessage(message);
+            // @ts-ignore
+            await handler.onError(error);
+        } finally {
+            isProcessingComplete = true; // Stop lock renewal
+            clearInterval(renewalInterval); // Ensure interval is cleared
+        }
     }
 
     publish(message: QueueMessage): Promise<void> {
