@@ -10,6 +10,7 @@ export class AzureServiceBusTopic implements IMessageTopic {
     private sender: ServiceBusSender;
     private topic: string;
     private maxConcurrentMessages: number;
+    private lockRenewalTime: number;
 
     constructor(config: IQueueConfig, topic: string, maxConcurrentMessages: number = 1) {
         let azureQueueConfig = AzureQueueConfig.default();
@@ -21,6 +22,7 @@ export class AzureServiceBusTopic implements IMessageTopic {
         this.sender = this.sbClient.createSender(topic);
         this.topic = topic;
         this.maxConcurrentMessages = maxConcurrentMessages;
+        this.lockRenewalTime = 30 * 1000; // 30 seconds
     }
 
     subscribe(subscription: string, handler: ITopicSubscription): Promise<void> {
@@ -82,7 +84,7 @@ export class AzureServiceBusTopic implements IMessageTopic {
                     console.error("Error renewing message lock:", error);
                 }
             }
-        }, 30000); // Renew lock every 30 seconds
+        }, this.lockRenewalTime); // Renew lock every 30 seconds
 
         try {
             await handler.onReceive(QueueMessage.from(message.body));
