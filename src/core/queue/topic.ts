@@ -9,9 +9,9 @@ import { LocalTopic } from "./providers/local/local-topic";
 export class Topic extends MessageTopic implements IMessageTopic {
 
 
-    constructor(config: IQueueConfig, topicName: string) {
+    constructor(config: IQueueConfig, topicName: string, maxConcurrentMessages: number = 1) {
         super();
-        this.initializeProvider(config, topicName);
+        this.initializeProvider(config, topicName, maxConcurrentMessages);
     }
 
     subscribe(subscription: string, handler: ITopicSubscription): Promise<void> {
@@ -31,14 +31,13 @@ export class Topic extends MessageTopic implements IMessageTopic {
         }
     }
 
-    protected initializeProvider(config: IQueueConfig, topicName: string): void {
-
+    protected initializeProvider(config: IQueueConfig, topicName: string, maxConcurrentMessages: number): void {
         if (config.provider === "Azure") {
             try {
-                this.client = new AzureServiceBusTopic(config, topicName);
+                this.client = new AzureServiceBusTopic(config, topicName, maxConcurrentMessages);
 
             } catch (e) {
-                console.log('Faield to initialize topic');
+                console.log('Failed to initialize topic');
                 // console.log(e);
             }
         } if(config.provider === "Local") {
