@@ -67,34 +67,42 @@ describe('Azure service bus topic unit', () => {
         // Arrange
         const azureConfiguration = AzureQueueConfig.default();
         const azureTopic = new AzureServiceBusTopic(azureConfiguration, 'sample', 2);
-
+    
         // Mocking onReceive and onError handlers
         const onReceiveMock = jest.fn((message) => {
             console.log('Mock onReceive called with message:', message);
         });
-
+    
         const onErrorMock = jest.fn((error) => {
             console.error('Mock onError called with error:', error);
         });
-
-        // Spy on the sbClient.createReceiver to ensure it is called
+    
+        // Create a custom mock for receiveMessages:
+        // - First call: resolves with an empty array (no messages)
+        // - Subsequent calls: returns a pending promise (to stop recursion)
+        const receiveMessagesMock = jest.fn()
+            .mockImplementationOnce(() => Promise.resolve([]))
+            .mockImplementation(() => new Promise(() => {}));
+    
+        // Spy on the sbClient.createReceiver to ensure it is called and return our custom receiver mock.
         const createReceiverSpy = jest.spyOn(azureTopic['sbClient'], 'createReceiver').mockReturnValue({
-            receiveMessages: jest.fn().mockResolvedValue([]), // Simulate no messages
+            receiveMessages: receiveMessagesMock,
             close: jest.fn(),
+            isClosed: false,
         } as unknown as ServiceBusReceiver);
-
+    
         // Act
         await azureTopic.subscribe('sample', {
             onReceive: onReceiveMock,
             onError: onErrorMock,
         });
-
+    
         // Assert
         expect(createReceiverSpy).toHaveBeenCalledTimes(1);
         expect(createReceiverSpy).toHaveBeenCalledWith('sample', 'sample'); // Verify arguments
         expect(onReceiveMock).not.toHaveBeenCalled(); // No messages, so onReceive should not be called
         expect(onErrorMock).not.toHaveBeenCalled(); // No errors, so onError should not be called
-
+    
         // Cleanup
         createReceiverSpy.mockRestore();
     });
