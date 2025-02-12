@@ -22,20 +22,27 @@ export class AzureServiceBusTopic implements IMessageTopic {
         this.sender = this.sbClient.createSender(topic);
         this.topic = topic;
         this.maxConcurrentMessages = maxConcurrentMessages;
-        this.lockRenewalTime = 30 * 1000; // 30 seconds
+        this.lockRenewalTime = 25 * 1000; // 25 seconds
     }
 
+    /**
+    * Subscribes to the given subscription using a polling loop.
+    * If errors occur, the receiver is recreated if necessary, and polling continues.
+    */
     subscribe(subscription: string, handler: ITopicSubscription): Promise<void> {
         return new Promise((resolve, reject) => {
             try {
+                // Initialize the receiver.
                 this.listener = this.sbClient.createReceiver(this.topic, subscription);
 
                 const receiveMessages = () => {
+                    // Use the current listener to receive messages
                     this.listener!
                         .receiveMessages(this.maxConcurrentMessages, { maxWaitTimeInMs: 5000 })
                         .then((messages) => {
                             if (messages.length === 0) {
-                                return receiveMessages(); // Continue processing if no messages
+                                // No messages received; continue polling
+                                return receiveMessages();
                             }
 
                             const processingPromises = messages.map((message) =>
@@ -43,63 +50,95 @@ export class AzureServiceBusTopic implements IMessageTopic {
                             );
 
                             Promise.allSettled(processingPromises).then(() => {
-                                receiveMessages(); // Continue after processing the current batch
+                                // Continue after processing the current batch
+                                receiveMessages();
                             });
                         })
-                        .catch((error) => {
+                        .catch((error: any) => {
                             console.error("Error in message processing:", error);
-                            reject(error);
+
+                            // Determine if the error requires recreating the receiver.
+                            if (this.shouldRecreateReceiver(error)) {
+                                console.log("Recreating receiver due to error:", error.message);
+                                // Close the current receiver if it's not already closed
+                                if (this.listener && !this.listener.isClosed) {
+                                    this.listener.close().catch(console.error);
+                                }
+                                // Re-create the receiver to recover from connection errors.
+                                this.listener = this.sbClient.createReceiver(this.topic, subscription);
+                            } else {
+                                console.error("Non-fatal error encountered, continuing polling:", error);
+                            }
+                            // Continue polling after a short delay.
+                            setTimeout(receiveMessages, 1000);
                         });
                 };
 
                 receiveMessages();
                 resolve();
             } catch (error) {
-                reject(error);
+                console.error("Failed to subscribe:", error);
             }
         });
     }
 
+    private shouldRecreateReceiver(error: any): boolean {
+        if (!error) return false;
+        if (error.code === "GeneralError" || error.name === "ServiceCommunicationError") return true;
+        if (error.message?.includes("Unknown error occurred") || error.retryable === true) return true;
+
+        console.warn("Unexpected error occurred, considering recreation:", error);
+        return true; // Fallback to recreating the receiver
+    }
+
+    /**
+    * Processes a single message with manual lock renewal using a recursive setTimeout.
+    */
     private async processMessageWithLockRenewal(
         message: ServiceBusReceivedMessage,
         handler: ITopicSubscription
     ): Promise<void> {
         let isProcessingComplete = false;
 
-        // Start lock renewal
-        const renewalInterval = setInterval(async () => {
-            if (isProcessingComplete) {
-                clearInterval(renewalInterval);
-                return;
-            }
+        // Using setInterval for lock renewal.
+        const renewLock = async () => {
+            if (isProcessingComplete) return;
             try {
                 await this.listener!.renewMessageLock(message);
-                console.log("Message lock renewed");
-            } catch (error) {
-                // @ts-ignore
+                // Optionally, log successful renewal.
+                // console.log("Message lock renewed");
+            } catch (error: any) {
+                // If the lock is lost, stop trying to renew it.
                 if (error.code === "MessageLockLost") {
                     console.error("Message lock lost; stopping renewal.");
-                    clearInterval(renewalInterval);
+                    return;
                 } else {
                     console.error("Error renewing message lock:", error);
                 }
             }
-        }, this.lockRenewalTime); // Renew lock every 30 seconds
+            // Schedule the next renewal after lockRenewalTime.
+            setTimeout(renewLock, this.lockRenewalTime);
+        }
+        // Start lock renewal.
+        renewLock();
 
         try {
+            // Process the message using the provided handler.
             await handler.onReceive(QueueMessage.from(message.body));
             await this.listener!.completeMessage(message);
         } catch (error) {
             console.error("Error processing message:", error);
             await this.listener!.abandonMessage(message);
-            // @ts-ignore
+            // @ts-ignore: Assume handler.onError can accept any error.
             await handler.onError(error);
         } finally {
-            isProcessingComplete = true; // Stop lock renewal
-            clearInterval(renewalInterval); // Ensure interval is cleared
+            isProcessingComplete = true; // Stop further lock renewals.
         }
     }
 
+    /**
+    * Publishes a new message to the topic.
+    */
     publish(message: QueueMessage): Promise<void> {
         return this.sender.sendMessages({ body: message });
     }
