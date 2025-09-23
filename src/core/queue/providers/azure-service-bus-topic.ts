@@ -4,7 +4,7 @@ import { IMessageTopic, ITopicSubscription } from "../abstracts/IMessage-topic";
 import { QueueMessage } from "../models/queue-message";
 import { AzureQueueConfig } from "./azure-queue-config";
 
-const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+// const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
 export class AzureServiceBusTopic implements IMessageTopic {
     private sbClient: ServiceBusClient;
@@ -74,8 +74,9 @@ export class AzureServiceBusTopic implements IMessageTopic {
                                 console.error("Non-fatal error encountered, continuing polling:", error);
                             }
                             // Continue polling after a short delay.
-                            await delay(1000);
-                            receiveMessages();
+                            setTimeout(receiveMessages, 1000);
+                            // await delay(1000);
+                            // receiveMessages();
                         });
                 };
 
