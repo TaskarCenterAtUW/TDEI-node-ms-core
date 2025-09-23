@@ -1,4 +1,6 @@
 # Change log
+### v0.0.18
+- Added additional debug logs
 
 ### v0.0.17
 - Introduced a new helper method `shouldRecreateReceiver` that inspects errors (e.g., `GeneralError`, `ServiceCommunicationError`, errors containing "Unknown error occurred", or when `retryable` is true) to determine if the receiver should be reinitialized. This change ensures that transient or fatal connection errors do not break the polling loop.

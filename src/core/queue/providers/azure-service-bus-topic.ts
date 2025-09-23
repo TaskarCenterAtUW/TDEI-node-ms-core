@@ -4,6 +4,8 @@ import { IMessageTopic, ITopicSubscription } from "../abstracts/IMessage-topic";
 import { QueueMessage } from "../models/queue-message";
 import { AzureQueueConfig } from "./azure-queue-config";
 
+const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+
 export class AzureServiceBusTopic implements IMessageTopic {
     private sbClient: ServiceBusClient;
     private listener?: ServiceBusReceiver;
@@ -36,6 +38,7 @@ export class AzureServiceBusTopic implements IMessageTopic {
                 this.listener = this.sbClient.createReceiver(this.topic, subscription);
 
                 const receiveMessages = () => {
+                    console.log(`Receiving messages called. Listener active: ${!this.listener?.isClosed}`);
                     // Use the current listener to receive messages
                     this.listener!
                         .receiveMessages(this.maxConcurrentMessages, { maxWaitTimeInMs: 5000 })
@@ -44,17 +47,18 @@ export class AzureServiceBusTopic implements IMessageTopic {
                                 // No messages received; continue polling
                                 return receiveMessages();
                             }
-
+                            console.log(`Received ${messages.length} messages`);
                             const processingPromises = messages.map((message) =>
                                 this.processMessageWithLockRenewal(message, handler)
                             );
 
                             Promise.allSettled(processingPromises).then(() => {
+                                console.log(`Processed ${messages.length} messages`);
                                 // Continue after processing the current batch
                                 receiveMessages();
                             });
                         })
-                        .catch((error: any) => {
+                        .catch(async (error: any) => {
                             console.error("Error in message processing:", error);
 
                             // Determine if the error requires recreating the receiver.
@@ -70,11 +74,13 @@ export class AzureServiceBusTopic implements IMessageTopic {
                                 console.error("Non-fatal error encountered, continuing polling:", error);
                             }
                             // Continue polling after a short delay.
-                            setTimeout(receiveMessages, 1000);
+                            await delay(1000);
+                            receiveMessages();
                         });
                 };
 
                 receiveMessages();
+                console.log('Resolving subscription');
                 resolve();
             } catch (error) {
                 console.error("Failed to subscribe:", error);
@@ -102,7 +108,12 @@ export class AzureServiceBusTopic implements IMessageTopic {
 
         // Using setInterval for lock renewal.
         const renewLock = async () => {
-            if (isProcessingComplete) return;
+            console.log(`Renewing lock for message ID: ${message.messageId}`);
+            if (isProcessingComplete) {
+                console.log(`Process completed. Stopping lock renewal for message ID: ${message.messageId}`);
+                return;
+            }
+
             try {
                 await this.listener!.renewMessageLock(message);
                 // Optionally, log successful renewal.
