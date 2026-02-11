@@ -17,7 +17,7 @@ jest.mock('../src/core/queue/providers/azure-service-bus-topic', () => {
 
             return {
                 subscribe: (subscription: string, handler: ITopicSubscription): Promise<void> => { fakeSubscribe(); return Promise.resolve() },
-                publish: (message: QueueMessage): Promise<void> => { fakePublish(); return Promise.resolve(); }
+                publish: (message: QueueMessage, applicationProperties?: { [key: string]: number | boolean | string | Date | null; }): Promise<void> => { fakePublish(message, applicationProperties); return Promise.resolve(); }
             };
         })
     };
@@ -32,7 +32,7 @@ jest.mock('../src/core/queue/providers/local/local-topic', () => {
 
             return {
                 subscribe: (subscription: string, handler: ITopicSubscription): Promise<void> => { fakeLocalSubscribe(); return Promise.resolve() },
-                publish: (message: QueueMessage): Promise<void> => { fakeLocalPublish(); return Promise.resolve(); }
+                publish: (message: QueueMessage, applicationProperties?: { [key: string]: number | boolean | string | Date | null; }): Promise<void> => { fakeLocalPublish(message, applicationProperties); return Promise.resolve(); }
             };
         })
     }
@@ -68,6 +68,19 @@ describe('Azure service bus topic', () => {
         // Assert
         expect(fakePublish).toHaveBeenCalledTimes(1);
 
+    })
+
+    it('Should forward applicationProperties on publish', () => {
+        // Arrange
+        const topic = Core.getTopic('sampletopic', configuration);
+        const applicationProperties = {
+            requestId: "abc-123",
+            retryCount: 2
+        };
+        // Act
+        topic.publish(queuemessage, applicationProperties);
+        // Assert
+        expect(fakePublish).toHaveBeenCalledWith(queuemessage, applicationProperties);
     })
 
     it('Should listen to the said subscription appropriately', () => {
@@ -126,7 +139,7 @@ describe('Local topic', () => {
         const topic = Core.getTopic('sampletopic', configuration);
 
         topic.publish(queuemessage);
-        expect(fakePublish).toHaveBeenCalledTimes(1);
+        expect(fakeLocalPublish).toHaveBeenCalledTimes(1);
 
     })
 
@@ -137,7 +150,7 @@ describe('Local topic', () => {
             onReceive(message: QueueMessage) { },
             onError(error: Error) { }
         });
-        expect(fakeSubscribe).toHaveBeenCalledTimes(1);
+        expect(fakeLocalSubscribe).toHaveBeenCalledTimes(1);
     })
 
     it('Should throw error when the client is not available', async () => {

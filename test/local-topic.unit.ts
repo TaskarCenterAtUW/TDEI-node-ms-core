@@ -89,6 +89,17 @@ describe('Local topic unit test', () => {
         expect(fakePublish).toHaveBeenCalledTimes(1);
 
     })
+    it('Should accept applicationProperties while publishing', async () => {
+        // Arrange
+        const localConfig = LocalQueueConfig.default();
+        const localTopic = new LocalTopic(topicName, localConfig);
+        await delay(300);
+        const applicationProperties = { requestId: "req-1", retryCount: 1 };
+        // Act
+        await localTopic.publish(queuemessage, applicationProperties);
+        // Assert
+        expect(fakePublish).toHaveBeenCalledTimes(2);
+    })
     it('Should consume from the channel with consume', async () => {
         // Arrange
         const localTopic = new LocalTopic(topicName, LocalQueueConfig.default());

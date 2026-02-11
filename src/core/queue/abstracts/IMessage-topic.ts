@@ -7,7 +7,9 @@ export interface IMessageTopic {
 
     subscribe(subscription: string, handler: ITopicSubscription): Promise<void>;
 
-    publish(message: TopicMessage): Promise<void>;
+    publish(message: TopicMessage, applicationProperties?: {
+        [key: string]: number | boolean | string | Date | null;
+    }): Promise<void>;
 
 }
 

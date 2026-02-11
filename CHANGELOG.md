@@ -1,9 +1,11 @@
 # Change log
 ### v0.0.19
-- Added optional queue message field `fileSizeMb` with payload alias support for `file_size_mb`.
-- Added coverage for `file_size_mb` mapping in `test/queue-message.unit.ts`.
 - Stabilized authorizer integration tests by mocking `axios` responses instead of relying on external DNS/network.
 - Updated Jest configuration to ignore `/lib/` and `/src/test.ts` so non-test runner files are not executed as tests.
+- Added optional `applicationProperties` argument to topic `publish(...)` API.
+- Updated Azure Service Bus topic publish implementation to send `applicationProperties` with message body.
+- Updated local topic and topic abstraction signatures for compatibility with the new publish contract.
+- Added/updated unit tests to verify `applicationProperties` forwarding and publish behavior across Azure/local topic paths.
 
 
 ### v0.0.18

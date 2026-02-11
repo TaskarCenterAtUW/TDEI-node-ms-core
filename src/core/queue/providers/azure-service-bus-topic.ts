@@ -151,7 +151,13 @@ export class AzureServiceBusTopic implements IMessageTopic {
     /**
     * Publishes a new message to the topic.
     */
-    publish(message: QueueMessage): Promise<void> {
-        return this.sender.sendMessages({ body: message });
+    publish(message: QueueMessage, applicationProperties?: {
+        [key: string]: number | boolean | string | Date | null;
+    }): Promise<void> {
+        const serviceBusMessage = {
+            body: message,
+            applicationProperties: applicationProperties || {}
+        };
+        return this.sender.sendMessages(serviceBusMessage);
     }
 }

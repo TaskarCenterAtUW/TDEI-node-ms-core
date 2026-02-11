@@ -9,7 +9,7 @@ import { QueueMessage } from "../src/core/queue";
 import { AzureQueueConfig } from "../src/core/queue/providers/azure-queue-config";
 import { AzureServiceBusTopic } from "../src/core/queue/providers/azure-service-bus-topic";
 import { LocalQueueConfig } from "../src/core/queue/providers/local/local-queue-config";
-import { MessageHandlers, ServiceBusMessage, SubscribeOptions, ServiceBusSender, ServiceBusReceiver } from "@azure/service-bus";
+import { MessageHandlers, SubscribeOptions, ServiceBusReceiver } from "@azure/service-bus";
 
 const fakeSendMessage = jest.fn();
 const fakeSubscribe = jest.fn();
@@ -20,7 +20,7 @@ jest.mock('@azure/service-bus', () => {
             return {
                 createSender: jest.fn().mockImplementation(() => {
                     return {
-                        sendMessages: (messages: ServiceBusMessage[]): Promise<void> => { fakeSendMessage(); return Promise.resolve() }
+                        sendMessages: (message: any): Promise<void> => { fakeSendMessage(message); return Promise.resolve() }
                     }
                 }),
                 createReceiver: jest.fn().mockImplementation(() => {
@@ -112,10 +112,20 @@ describe('Azure service bus topic unit', () => {
         // Arrange
         const azureConfiguration = AzureQueueConfig.default();
         const azureTopic = new AzureServiceBusTopic(azureConfiguration, 'sample');
+        const applicationProperties = {
+            key: "value",
+            retryCount: 1,
+            enabled: true,
+            publishedDate: new Date("2026-02-11T00:00:00.000Z")
+        };
         // Act
-        await azureTopic.publish(queuemessage)
+        await azureTopic.publish(queuemessage, applicationProperties);
         // Assert
         expect(fakeSendMessage).toBeCalledTimes(1);
+        expect(fakeSendMessage).toHaveBeenCalledWith({
+            body: queuemessage,
+            applicationProperties
+        });
 
     })
 

@@ -51,7 +51,10 @@ export class LocalTopic implements IMessageTopic {
          return Promise.resolve();
     }
 
-    publish(message: QueueMessage): Promise<void> {
+    publish(message: QueueMessage, applicationProperties?: {
+        [key: string]: number | boolean | string | Date | null;
+    }): Promise<void> {
+        void applicationProperties;
         this.channel?.publish(this.exchangeName,'',Buffer.from(JSON.stringify(message.toJSON())));
         return Promise.resolve();
     }
