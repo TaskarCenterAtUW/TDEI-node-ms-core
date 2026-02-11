@@ -1,4 +1,11 @@
 # Change log
+### v0.0.19
+- Added optional queue message field `fileSizeMb` with payload alias support for `file_size_mb`.
+- Added coverage for `file_size_mb` mapping in `test/queue-message.unit.ts`.
+- Stabilized authorizer integration tests by mocking `axios` responses instead of relying on external DNS/network.
+- Updated Jest configuration to ignore `/lib/` and `/src/test.ts` so non-test runner files are not executed as tests.
+
+
 ### v0.0.18
 - Added additional debug logs
 

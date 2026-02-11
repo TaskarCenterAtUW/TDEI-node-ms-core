@@ -8,6 +8,7 @@ import { AbstractDomainEntity } from "../../../models/base/abstract-domain-entit
  * remaining types based on the event type
  */
 export class QueueMessage extends AbstractDomainEntity {
+    private _fileSizeMb?: number;
 
     /**
      * Unique message ID to represent this message
@@ -39,5 +40,22 @@ export class QueueMessage extends AbstractDomainEntity {
      */
     @Prop()
     data: any;
+
+    /**
+     * Optional file size associated with the message in megabytes.
+     */
+    @Prop('file_size_mb')
+    set fileSizeMb(value: number | string | undefined) {
+        if (value === undefined || value === null) {
+            this._fileSizeMb = undefined;
+            return;
+        }
+        const numericValue = typeof value === "number" ? value : Number(value);
+        this._fileSizeMb = Number.isFinite(numericValue) ? numericValue : undefined;
+    }
+
+    get fileSizeMb(): number | undefined {
+        return this._fileSizeMb;
+    }
 
 }
