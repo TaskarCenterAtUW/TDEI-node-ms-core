@@ -23,9 +23,11 @@ export class Topic extends MessageTopic implements IMessageTopic {
     }
 
 
-    publish(message: QueueMessage): Promise<void> {
+    publish(message: QueueMessage, applicationProperties?: {
+        [key: string]: number | boolean | string | Date | null;
+    }): Promise<void> {
         if (this.client) {
-            return this.client.publish(message);
+            return this.client.publish(message, applicationProperties);
         } else {
             return Promise.reject(new BadRequestResourceError());
         }

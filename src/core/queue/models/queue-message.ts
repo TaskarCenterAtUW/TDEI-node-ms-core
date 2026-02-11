@@ -8,7 +8,6 @@ import { AbstractDomainEntity } from "../../../models/base/abstract-domain-entit
  * remaining types based on the event type
  */
 export class QueueMessage extends AbstractDomainEntity {
-
     /**
      * Unique message ID to represent this message
      */

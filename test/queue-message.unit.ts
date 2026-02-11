@@ -36,6 +36,6 @@ describe('QueueMessage', () => {
         const queueMessage = QueueMessage.from();
         // Assert
         expect(queueMessage).toBeInstanceOf(QueueMessage);
-    })
+    });
 
 })

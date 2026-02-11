@@ -2,8 +2,11 @@ import { Core } from "../src/core";
 import { PermissionRequest } from "../src/core/auth/model/permission_request";
 import { HostedAuthorizer } from "../src/core/auth/provider/hosted/hosted_authorizer";
 import { SimulatedAuthorizer } from "../src/core/auth/provider/simulated/simulated_authorizer";
+import axios from "axios";
 
 require('dotenv').config()
+jest.mock("axios");
+const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe('Authorizer (Hosted and Simulated)', () => {
 
@@ -82,6 +85,7 @@ describe('Authorizer (Hosted and Simulated)', () => {
 
     it('Should respond true when user has permission', async () => {
         // Arrange
+        mockedAxios.get.mockResolvedValueOnce({ data: true } as any);
         const authorizer = Core.getAuthorizer({ provider: "Hosted", apiUrl: "https://tdei-auth-n-z-dev.azurewebsites.net/api/v1/hasPermission" });
         const permissionRequest = new PermissionRequest({
             userId: "7961d767-a352-464f-95b6-cd1c5189a93c",
@@ -96,6 +100,7 @@ describe('Authorizer (Hosted and Simulated)', () => {
 
     it('Should respond false if user does not have permission', async () => {
         // Arrange
+        mockedAxios.get.mockResolvedValueOnce({ data: false } as any);
         const authorizer = Core.getAuthorizer({ provider: "Hosted", apiUrl: "https://tdei-auth-n-z-dev.azurewebsites.net/api/v1/hasPermission" });
         var permissionRequest = new PermissionRequest({
             userId: "sample user id",
@@ -109,6 +114,7 @@ describe('Authorizer (Hosted and Simulated)', () => {
 
     it('Should respond true if user has all the permissions required', async () => {
         // Arrange
+        mockedAxios.get.mockResolvedValueOnce({ data: false } as any);
         const authorizer = Core.getAuthorizer({ provider: "Hosted", apiUrl: "https://tdei-auth-n-z-dev.azurewebsites.net/api/v1/hasPermission" });
         var permissionRequest = new PermissionRequest({
             userId: "sample user id",
@@ -123,6 +129,7 @@ describe('Authorizer (Hosted and Simulated)', () => {
 
     it('Should reject if the URL is malformed', async () => {
         // Arrange
+        mockedAxios.get.mockRejectedValueOnce(new Error("Malformed URL"));
         const authorizer = Core.getAuthorizer({ provider: "Hosted", apiUrl: "<sample URL>" });
         var permissionRequest = new PermissionRequest({
             userId: "7961d767-a352-464f-95b6-cd1c5189a93c",
