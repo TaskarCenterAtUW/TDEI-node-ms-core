@@ -315,53 +315,10 @@ QUEUECONNECTION=
 # connection string to Azure storage if the provider is Azure
 # Same can be used for root folder in Local provider
 STORAGECONNECTION=
-# Name of the queue that the logger writes to.
-# This is optional and defaults value tdei-ms-log
-LOGGERQUEUE=
-
 ```
+
 This file will have to be generated or shared offline as per the developer requirement.
 
-### Logger
-Offers helper classes to help log the information. It is also used to record the audit messages
-as well as the analytics information required.
-
-Use `Core.getLogger()` to log the following
-
-`queueMessage`  : Message received or sent to Queues. This helps in keeping track of the messages received and sent from the queue.
-
-`metric`    : Any specific metric that needs to be recorded
-
-`request` : App HTTP request that needs to be logged (for response time, path, method and other information)
-
-Audit messages are logged using the `Core.getLogger().getAuditor()` method. This provides an instance 
-of auditor which can perform the following operations
-
-`addRequest` : Adds request for auditing
-`updateRequst` : Updates a given request
-`addEvent` : Adds a specific event to the request (tree heirarchy)
-`updateEvent`: Updates the given audit event.
-The complete details are available at [Logger flow](https://dev.azure.com/TDEI-UW/TDEI/_git/internaldocs?path=/adr/logger-flow.md&_a=preview)
-
-Eg.
-```typescript
-
-let tdeiLogger = Core.getLogger();
-// Record message
-tdeiLogger.recordMessage(queueMessage, true); // True if published and false if received
-
-// Record a metric
-tdeiLogger.recordMetric('userlogin',1); // Metric and value
-
-// Record a request
-tdeiLogger.recordRequest(request,response);
-
-```
-Note:
-
-* All the `debug`, `info`, `warn`, `error` logs can be logged with `console` and will be injected into appInsight traces.
-* All the requests of the application can be logged by using `requestLogger` (check `index.ts`). This acts as a middleware for logging all the requests
-* All the QueueMessages received and sent within the application are already logged. You may use the above methods just in case there is more information to be logged.
 
 ### Model
 Offers easy ways to define and parse the model classes from the JSON based input received from either HTTP request or from the queue message. This acts as the base for defining all the models. `AbstractDomainEntity` can be subclassed and used for all the models used within the project. This combined with `Prop()` decorator will make it easy for modelling.
@@ -625,4 +582,14 @@ From the `IAuthorizer` object received from the above, use the method `hasPermis
 
 #### How does simualted authentication work?
 With simulated authentication, the method `hasPermission` simply returns the value given in `shouldSatisfyAll` property in the permission request.
+
+# Deployment:
+
+The package is deployed into npmjs repository [nodets-ms-core](https://www.npmjs.com/package/nodets-ms-core)
+- The deployment is done based on the release done in the repository 
+- Draft a new [release](https://github.com/TaskarCenterAtUW/TDEI-node-ms-core/releases/new)
+- Make a tag in the format `*.*.*` (eg. 0.0.13)
+- Create the release after generating and editing the release notes.
+- The workflow `publish_to_npm` will take care of the deployment to npmjs repository
+- This workflow can be triggered manually also through the github Actions.
 
